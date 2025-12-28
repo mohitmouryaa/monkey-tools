@@ -16,7 +16,6 @@ enum Status {
 
 model Job {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  sessionId   String
   tool        String
   status      Status    @default(IN_PROGRESS)
   inputFile   String

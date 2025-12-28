@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/queue",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "bullmq": "^5.66.4",
+    "dotenv": "^17.2.3",
+    "ioredis": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "typescript": "^5.9.3"
+  }
+}
