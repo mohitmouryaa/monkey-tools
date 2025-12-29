@@ -1,4 +1,3 @@
 {
-  "tailwindCSS.experimental.configFile": "packages/ui/src/styles/globals.css",
-  "prisma.pinToPrisma6": true
+  "tailwindCSS.experimental.configFile": "packages/ui/src/styles/globals.css"
 }

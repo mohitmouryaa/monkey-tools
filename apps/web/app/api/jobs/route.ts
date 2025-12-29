@@ -1,9 +1,10 @@
 import { myQueue } from "@workspace/queue";
 import { NextResponse } from "next/server";
 import { getDownloadUrl } from "@workspace/storage";
-import { prisma, Status } from "@workspace/database";
+import { JobModel, Status, connectToDatabase } from "@workspace/database";
 
 export async function POST(req: Request) {
+  await connectToDatabase();
   try {
     // Validate request method
     if (req.method !== "POST") {
@@ -34,13 +35,11 @@ export async function POST(req: Request) {
     // biome-ignore lint/suspicious/noImplicitAnyLet: <No proper type defination is available>
     let job;
     try {
-      job = await prisma.job.create({
-        data: {
-          tool: body.tool,
-          status: Status.IN_PROGRESS,
-          inputFile: body.inputFile || null,
-          metadata: body.metadata || {},
-        },
+      job = await JobModel.create({
+        tool: body.tool,
+        status: Status.IN_PROGRESS,
+        inputFile: body.inputFile || null,
+        metadata: body.metadata || {},
       });
     } catch (dbError) {
       console.error("Database error creating job:", dbError);
@@ -61,10 +60,7 @@ export async function POST(req: Request) {
 
       // Update job status to failed since queue addition failed
       try {
-        await prisma.job.update({
-          where: { id: job.id },
-          data: { status: Status.FAILED },
-        });
+        await JobModel.findByIdAndUpdate(job.id, { status: Status.FAILED });
       } catch (updateError) {
         console.error("Failed to update job status:", updateError);
       }
@@ -83,6 +79,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  await connectToDatabase();
   try {
     const { searchParams } = new URL(req.url);
     const jobId = searchParams.get("jobId");
@@ -91,9 +88,7 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Missing jobId parameter" }, { status: 400 });
     }
 
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
-    });
+    const job = await JobModel.findById(jobId);
 
     if (!job) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });

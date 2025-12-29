@@ -4,7 +4,9 @@
     "outDir": "dist",
     "rootDir": "src",
     "module": "esnext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src"]
 }
