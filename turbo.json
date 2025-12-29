@@ -1,15 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": [
-    "DO_SPACES_ENDPOINT",
-    "DO_SPACES_REGION",
-    "DO_SPACES_ACCESS_KEY",
-    "DO_SPACES_SECRET_KEY",
-    "DO_SPACES_BUCKET",
-    "DATABASE_URL",
-    "REDIS_URL"
-  ],
+  "globalEnv": ["DATABASE_URL"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
