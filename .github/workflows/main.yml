@@ -1,0 +1,30 @@
+name: Deploy App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Sync code to app server
+        run: |
+          rsync -az --delete \
+            --exclude=".git" \
+            --exclude="node_modules" \
+            --exclude=".env" \
+            --exclude="uploads/" \
+            ./ root@${{ secrets.APP_DROPLET_IP }}:/var/www/app
+
+      - name: Docker compose deploy
+        run: |
+          ssh root@${{ secrets.APP_DROPLET_IP }} "
+            cd /var/www/app &&
+            docker compose down &&
+            docker compose up -d --build
+          "
