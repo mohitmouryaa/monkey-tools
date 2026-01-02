@@ -19,11 +19,11 @@ jobs:
             --exclude="node_modules" \
             --exclude=".env" \
             --exclude="uploads/" \
-            ./ root@${{ secrets.APP_DROPLET_IP }}:/var/www/app
+            ./ root@${{ secrets.WORKER_1_IP }}:/var/www/app
 
       - name: Docker compose deploy
         run: |
-          ssh root@${{ secrets.APP_DROPLET_IP }} "
+          ssh root@${{ secrets.WORKER_1_IP }} "
             cd /var/www/app &&
             docker compose down &&
             docker compose up -d --build
