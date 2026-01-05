@@ -26,10 +26,10 @@ export const ToolsEmpty = () => {
   const router = useRouter();
 
   const handleCreate = () => {
-    router.push("/dashboard/quick-create");
+    router.push("/dashboard/tools/create");
   };
 
-  return <EmptyView message="No workflows found. Get started by creating a workflow" onNew={handleCreate} />;
+  return <EmptyView message="No tools found. Get started by creating a tool" onNew={handleCreate} />;
 };
 
 export const ToolItem = ({ data }: { data: Tool }) => {

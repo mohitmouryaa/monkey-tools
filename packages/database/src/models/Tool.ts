@@ -20,7 +20,6 @@ export enum ToolCategory {
   },
 })
 export class Tool {
-  @prop()
   public _id?: string;
 
   @prop({ required: true, minlength: 2 })

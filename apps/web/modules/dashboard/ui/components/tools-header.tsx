@@ -6,7 +6,7 @@ export const ToolsHeader = ({ disabled }: { disabled?: boolean }) => {
   const router = useRouter();
 
   const handleCreate = () => {
-    router.push("/dashboard/quick-create");
+    router.push("/dashboard/tools/create");
   };
   return (
     <EntityHeader

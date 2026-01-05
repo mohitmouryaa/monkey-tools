@@ -157,21 +157,13 @@ export const toolsRouter = createTRPCRouter({
       }
     }),
 
-  delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+  delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ input }) => {
     try {
       const tool = await ToolModel.findById(input.id);
       if (!tool) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Tool not found",
-        });
-      }
-
-      // Check if user owns the tool or is admin
-      if (tool.createdBy !== ctx.auth.id) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Unauthorized to delete this tool",
         });
       }
 

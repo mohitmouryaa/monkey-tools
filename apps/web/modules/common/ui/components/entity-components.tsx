@@ -19,25 +19,27 @@ export const EntityHeader = (props: EntityHeaderProps) => {
   const { title, description, newButtonLabel, disabled, isCreating, onNew, newButtonHref } = props;
 
   return (
-    <div className="flex flex-row items-center justify-between gap-x-4">
-      <div className="flex flex-col">
-        <h1 className="text-lg font-semibold md:text-xl">{title}</h1>
-        {description && <p className="text-xs md:text-sm text-muted-foreground">{description}</p>}
+    <div className="flex flex-col gap-6 pb-6 border-b border-border sm:flex-row sm:items-center sm:justify-between sm:pb-8">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{title}</h1>
+        {description && <p className="text-base text-muted-foreground">{description}</p>}
       </div>
-      {onNew && !newButtonHref && (
-        <Button onClick={onNew} disabled={disabled || isCreating} size="sm">
-          <PlusIcon className="size-4" />
-          {newButtonLabel}
-        </Button>
-      )}
-      {newButtonHref && !onNew && (
-        <Button asChild size="sm">
-          <Link href={newButtonHref}>
+      <div className="shrink-0">
+        {onNew && !newButtonHref && (
+          <Button onClick={onNew} disabled={disabled || isCreating} className="w-full sm:w-auto">
             <PlusIcon className="size-4" />
             {newButtonLabel}
-          </Link>
-        </Button>
-      )}
+          </Button>
+        )}
+        {newButtonHref && !onNew && (
+          <Button asChild className="w-full sm:w-auto">
+            <Link href={newButtonHref}>
+              <PlusIcon className="size-4" />
+              {newButtonLabel}
+            </Link>
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
@@ -51,8 +53,8 @@ type EntityContainerProps = {
 
 export const EntityContainer = ({ children, header, search, pagination }: EntityContainerProps) => {
   return (
-    <div className="h-full p-4 md:px-10 md:py-6">
-      <div className="flex flex-col w-full h-full mx-auto max-w-screen gap-y-8">
+    <div className="h-full px-4 py-6 md:px-8 md:py-8">
+      <div className="flex flex-col w-full h-full mx-auto max-w-7xl gap-y-6">
         {header}
         <div className="flex flex-col h-full gap-y-4">
           {search}
@@ -72,13 +74,13 @@ interface EntitySearchProps {
 
 export const EntitySearch = ({ value, onChange, placeholder }: EntitySearchProps) => {
   return (
-    <div className="relative ml-auto">
+    <div className="relative">
       <SearchIcon className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
       <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="pl-8 shadow-none max-w-50 bg-background border-border"
+        className="py-5 pl-8 shadow-none max-w-72 bg-background border-border"
       />
     </div>
   );
@@ -156,7 +158,7 @@ interface EmptyViewProps {
 
 export const EmptyView = ({ message, onNew }: EmptyViewProps) => {
   return (
-    <Empty className="bg-white border border-dashed">
+    <Empty className="border border-dashed bg-background">
       <EmptyHeader>
         <EmptyMedia variant={"icon"}>
           <PackageOpenIcon />
@@ -185,7 +187,7 @@ export function EntityList<T>({ items, emptyView, className = "", renderItem, ge
   if (items.length === 0 && emptyView) {
     return (
       <div className="flex items-center justify-center flex-1">
-        <div className="max-w-sm mx-auto">{emptyView}</div>
+        <div className="max-w-md mx-auto">{emptyView}</div>
       </div>
     );
   }
