@@ -1,6 +1,7 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { ToolModel } from "@workspace/database";
+import { PAGINATION } from "@/modules/common/constants";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
 
@@ -16,16 +17,12 @@ export const toolsRouter = createTRPCRouter({
         seoKeywords: input.seoKeywords,
         createdBy: ctx.auth.id,
         isActive: true,
-        usageCount: 0,
       });
 
       const savedTool = await tool.save();
+      const toolObj = savedTool.toObject();
 
-      return {
-        success: true,
-        tool: savedTool.toObject(),
-        message: "Tool created successfully",
-      };
+      return { ...toolObj, _id: toolObj._id.toString() };
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
@@ -34,24 +31,62 @@ export const toolsRouter = createTRPCRouter({
     }
   }),
 
-  getAll: protectedProcedure.query(async () => {
-    try {
-      // Use .lean() to return plain JavaScript objects instead of Mongoose documents
-      const tools = await ToolModel.find({ isActive: true }).sort({ createdAt: -1 }).lean();
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().default(PAGINATION.DEFAULT_PAGE),
+        pageSize: z.number().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
+        search: z.string().default(""),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, pageSize, search } = input;
 
-      return {
-        success: true,
-        tools,
-      };
-    } catch (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to fetch tools: ${error instanceof Error ? error.message : "Unknown error"}`,
-      });
-    }
-  }),
+      try {
+        const searchRegex = new RegExp(search, "i");
 
-  getById: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+        const [items, totalCount] = await Promise.all([
+          ToolModel.find({
+            createdBy: ctx.auth.id,
+            isActive: true,
+            title: { $regex: searchRegex },
+          })
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+            .lean(),
+          ToolModel.countDocuments({
+            createdBy: ctx.auth.id,
+            isActive: true,
+            title: { $regex: searchRegex },
+          }),
+        ]);
+
+        const totalPages = Math.ceil(totalCount / pageSize);
+        const hasNextPage = page < totalPages;
+        const hasPreviousPage = page > 1;
+
+        return {
+          items: items.map((tool) => ({
+            ...tool,
+            _id: tool._id.toString(),
+          })),
+          page,
+          pageSize,
+          totalCount,
+          totalPages,
+          hasNextPage,
+          hasPreviousPage,
+        };
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to fetch tools: ${error instanceof Error ? error.message : "Unknown error"}`,
+        });
+      }
+    }),
+
+  getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
     try {
       const tool = await ToolModel.findById(input.id).lean();
       if (!tool) {
@@ -63,7 +98,7 @@ export const toolsRouter = createTRPCRouter({
 
       return {
         success: true,
-        tool,
+        tool: { ...tool, _id: tool._id.toString() },
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;
@@ -110,7 +145,7 @@ export const toolsRouter = createTRPCRouter({
 
         return {
           success: true,
-          tool: updatedTool,
+          tool: { ...updatedTool, _id: updatedTool._id.toString() },
           message: "Tool updated successfully",
         };
       } catch (error) {
@@ -143,8 +178,8 @@ export const toolsRouter = createTRPCRouter({
       await ToolModel.findByIdAndDelete(input.id);
 
       return {
-        success: true,
-        message: "Tool deleted successfully",
+        id: tool._id.toString(),
+        title: tool.title,
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;

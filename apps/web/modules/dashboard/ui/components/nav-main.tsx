@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { PlusCircle, type LucideIcon } from "lucide-react";
 import {
   SidebarGroup,
@@ -20,6 +20,7 @@ interface NavMainProps {
 
 export function NavMain({ items }: NavMainProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleNavigation = (url: string) => {
     router.push(url);
@@ -33,6 +34,7 @@ export function NavMain({ items }: NavMainProps) {
             <SidebarMenuButton
               onClick={() => handleNavigation("/dashboard/quick-create")}
               tooltip="Quick Create"
+              isActive={pathname === "/dashboard/quick-create"}
               className="duration-200 ease-linear bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8"
             >
               <PlusCircle />
@@ -43,7 +45,7 @@ export function NavMain({ items }: NavMainProps) {
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title}>
+              <SidebarMenuButton tooltip={item.title} onClick={() => handleNavigation(item.url)} isActive={pathname === item.url}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>

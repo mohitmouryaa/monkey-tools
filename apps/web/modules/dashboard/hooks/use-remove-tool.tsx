@@ -1,19 +1,19 @@
+"use client";
+
 import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useCreateTool = () => {
+export const useRemoveTool = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation(
-    trpc.tools.create.mutationOptions({
+    trpc.tools.delete.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Tool "${data.title}" created`);
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
-      },
-      onError: (error) => {
-        toast.error(`Failed to create tool: ${error.message}`);
+        queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data.id }));
+        toast.success(`Tool "${data.title}" removed`);
       },
     }),
   );

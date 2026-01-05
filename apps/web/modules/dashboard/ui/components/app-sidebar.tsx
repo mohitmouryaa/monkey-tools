@@ -5,6 +5,7 @@ import Image from "next/image";
 import { NavUser } from "@/modules/dashboard/ui/components/nav-user";
 import { NavMain } from "@/modules/dashboard/ui/components/nav-main";
 import { NavSecondary } from "@/modules/dashboard/ui/components/nav-secondary";
+import { LayoutDashboard, Folder, Search, Settings, Users, Wrench, Tag } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,20 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
-import {
-  Camera,
-  BarChart3,
-  LayoutDashboard,
-  Database,
-  FileText,
-  Bot,
-  Folder,
-  List,
-  FileBarChart,
-  Search,
-  Settings,
-  Users,
-} from "lucide-react";
 
 const data = {
   user: {
@@ -38,105 +25,40 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: List,
+      title: "Tools",
+      url: "/dashboard/tools",
+      icon: Wrench,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: BarChart3,
+      title: "Categories",
+      url: "/dashboard/categories",
+      icon: Tag,
     },
     {
       title: "Projects",
-      url: "#",
+      url: "/dashboard/projects",
       icon: Folder,
     },
     {
       title: "Team",
-      url: "#",
+      url: "/dashboard/team",
       icon: Users,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: Camera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: FileText,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: Bot,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
     {
       title: "Settings",
-      url: "#",
+      url: "/dashboard/settings",
       icon: Settings,
     },
     {
       title: "Search",
       url: "#",
       icon: Search,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: Database,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: FileBarChart,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: FileText,
     },
   ],
 };

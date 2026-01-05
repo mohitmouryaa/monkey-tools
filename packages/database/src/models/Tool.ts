@@ -20,6 +20,9 @@ export enum ToolCategory {
   },
 })
 export class Tool {
+  @prop()
+  public _id?: string;
+
   @prop({ required: true, minlength: 2 })
   public title!: string;
 
@@ -64,9 +67,6 @@ export class Tool {
 
   @prop({ default: true })
   public isActive!: boolean;
-
-  @prop({ default: 0 })
-  public usageCount!: number;
 
   @prop()
   // biome-ignore lint/suspicious/noExplicitAny: <No proper type defination is available>
