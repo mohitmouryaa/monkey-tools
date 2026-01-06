@@ -95,8 +95,8 @@ export const categoriesRouter = createTRPCRouter({
       }
 
       return {
-        success: true,
-        category: { ...category, _id: category._id.toString() },
+        ...category,
+        _id: category._id.toString(),
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;

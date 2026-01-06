@@ -116,12 +116,9 @@ export const toolsRouter = createTRPCRouter({
       }
 
       return {
-        success: true,
-        tool: {
-          ...tool,
-          _id: tool._id.toString(),
-          category: tool.category ? { ...(tool.category as Category), _id: (tool.category as Category)?._id?.toString() } : null,
-        },
+        ...tool,
+        _id: tool._id.toString(),
+        category: tool.category ? { ...(tool.category as Category), _id: (tool.category as Category)?._id?.toString() } : null,
       };
     } catch (error) {
       if (error instanceof TRPCError) throw error;

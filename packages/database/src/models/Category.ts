@@ -31,6 +31,9 @@ export class Category {
 
   @prop({ required: true })
   public createdBy!: string;
+
+  public createdAt?: Date;
+  public updatedAt?: Date;
 }
 
 export const CategoryModel =

@@ -71,6 +71,9 @@ export class Tool {
   @prop()
   // biome-ignore lint/suspicious/noExplicitAny: <No proper type defination is available>
   public metadata?: Record<string, any>;
+
+  public createdAt?: Date;
+  public updatedAt?: Date;
 }
 
 export const ToolModel = (mongoose.models.Tool as ReturnType<typeof getModelForClass<typeof Tool>>) || getModelForClass(Tool);
