@@ -1,15 +1,7 @@
 import "reflect-metadata";
 import mongoose from "mongoose";
-import { prop, getModelForClass, modelOptions, Severity, type Ref } from "@typegoose/typegoose";
 import { Category } from "./Category.js";
-
-export enum ToolCategory {
-  PDF_TOOLS = "PDF Tools",
-  IMAGE_TOOLS = "Image Tools",
-  TEXT_TOOLS = "Text Tools",
-  AI_WRITE = "AI Write",
-  ALL_TOOLS = "All Tools",
-}
+import { prop, getModelForClass, modelOptions, Severity, type Ref } from "@typegoose/typegoose";
 
 @modelOptions({
   schemaOptions: {
@@ -37,9 +29,6 @@ export class Tool {
 
   @prop({ ref: () => Category, required: true })
   public category!: Ref<Category>;
-
-  @prop({ enum: ToolCategory, default: ToolCategory.ALL_TOOLS })
-  public type!: ToolCategory;
 
   // Visual properties
   @prop()

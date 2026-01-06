@@ -65,12 +65,6 @@ export const HeroSection = async () => {
 
                 <ArrowRight className="absolute w-5 h-5 text-white transition-opacity duration-300 opacity-0 bottom-5 right-5 group-hover:opacity-100" />
               </div>
-
-              {/* Bottom White Section */}
-              <div className="flex items-center justify-between p-4 text-sm border-b bg-card border-x border-border rounded-b-xl">
-                <span className="text-muted-foreground">Featured Tool:</span>
-                <span className="font-semibold text-blue-500 hover:underline">{"TODO"}</span>
-              </div>
             </Link>
           ))}
         </div>

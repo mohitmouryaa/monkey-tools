@@ -17,7 +17,7 @@ interface CategoryViewProps {
 
 export const CategoryView = ({ id }: CategoryViewProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const category = useSuspenseCategory(id);
+  const category = useSuspenseCategory({ id });
   const updateCategory = useUpdateCategory();
 
   const handleUpdate = (values: CategoryFormValues) => {

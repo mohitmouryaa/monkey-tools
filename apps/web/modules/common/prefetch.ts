@@ -19,3 +19,7 @@ export const prefetchCategories = (params: CategoryInput) => {
 export const prefetchCategory = (id: string) => {
   return prefetch(trpc.categories.getOne.queryOptions({ id }));
 };
+
+export const prefetchCategoryWithTools = (categorySlug: string) => {
+  return prefetch(trpc.categories.getCategoryWithTools.queryOptions({ slug: categorySlug }));
+};

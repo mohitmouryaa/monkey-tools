@@ -4,17 +4,17 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import type { IconName } from "lucide-react/dynamic";
-import { TOOLS } from "@/modules/common/constants";
 import { ToolCard } from "@/modules/common/ui/components/tool-card";
 import { DynamicIcon } from "@/modules/common/ui/components/dynamic-icon";
+import { useSuspenseTools } from "@/modules/dashboard/hooks/use-suspense-tools";
 import { useSuspenseCategories } from "@/modules/dashboard/hooks/use-suspense-categories";
 
 export const ImportantToolsSection = () => {
   const categories = useSuspenseCategories();
-
+  const { data: tools } = useSuspenseTools();
   const [activeTab, setActiveTab] = useState("All Tools");
 
-  const filteredTools = activeTab === "All Tools" ? TOOLS : TOOLS.filter((tool) => tool.type === activeTab);
+  const filteredTools = activeTab === "All Tools" ? tools.items : tools.items.filter((tool) => tool.category?.name === activeTab);
 
   const displayedTools = activeTab === "All Tools" ? filteredTools.slice(0, 12) : filteredTools;
 
@@ -58,7 +58,12 @@ export const ImportantToolsSection = () => {
         {/* Tools Grid */}
         <div className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {displayedTools.map((tool) => (
-            <ToolCard key={tool.title} tool={tool} />
+            <ToolCard
+              key={tool.title}
+              tool={tool}
+              categoryName={tool.category.name}
+              link={`/tools/${tool.category.slug}/${tool.link}`}
+            />
           ))}
         </div>
 

@@ -14,7 +14,7 @@ export const ToolsView = () => {
   return (
     <EntityList
       items={tools.data.items}
-      getKey={(tool) => tool._id}
+      getKey={(tool) => tool._id as string}
       renderItem={(tool) => <ToolItem data={tool as Tool} />}
       emptyView={<ToolsEmpty />}
       className=""

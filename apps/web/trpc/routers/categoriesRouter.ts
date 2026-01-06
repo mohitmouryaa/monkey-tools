@@ -1,6 +1,6 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
-import { CategoryModel } from "@workspace/database";
+import { CategoryModel, ToolModel } from "@workspace/database";
 import { PAGINATION } from "@/modules/common/constants";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createCategorySchema } from "@/modules/dashboard/schema/category";
@@ -95,6 +95,28 @@ export const categoriesRouter = createTRPCRouter({
         message: `Failed to fetch category: ${error instanceof Error ? error.message : "Unknown error"}`,
       });
     }
+  }),
+
+  getCategoryWithTools: protectedProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
+    const category = await CategoryModel.findOne({ slug: input.slug }).lean();
+    if (!category) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Category not found",
+      });
+    }
+
+    const tools = await ToolModel.find({ category: category._id, isActive: true }).lean();
+
+    return {
+      ...category,
+      tools: tools.map((tool) => ({
+        ...tool,
+        category: tool.category.toString(),
+        _id: tool._id.toString(),
+      })),
+      _id: category._id.toString(),
+    };
   }),
 
   update: protectedProcedure

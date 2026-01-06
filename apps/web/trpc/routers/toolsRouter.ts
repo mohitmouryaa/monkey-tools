@@ -1,9 +1,11 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { PAGINATION } from "@/modules/common/constants";
-import { type Category, ToolModel } from "@workspace/database";
+import { type Category, type Tool, ToolModel } from "@workspace/database";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
+
+export type ToolWithCategory = Tool & { category: Category };
 
 export const toolsRouter = createTRPCRouter({
   create: protectedProcedure.input(createToolSchema).mutation(async ({ input }) => {
@@ -41,65 +43,60 @@ export const toolsRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       const { page, pageSize, search } = input;
+      const searchRegex = new RegExp(search, "i");
 
-      try {
-        const searchRegex = new RegExp(search, "i");
-
-        const [items, totalCount] = await Promise.all([
-          ToolModel.aggregate([
-            {
-              $match: {
-                isActive: true,
-                title: { $regex: searchRegex },
-              },
+      const [items, totalCount] = await Promise.all([
+        ToolModel.aggregate([
+          {
+            $match: {
+              isActive: true,
+              title: { $regex: searchRegex },
             },
-            {
-              $lookup: {
-                from: "categories",
-                localField: "category",
-                foreignField: "_id",
-                as: "category",
-              },
+          },
+          {
+            $lookup: {
+              from: "categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "category",
             },
-            {
-              $unwind: {
-                path: "$category",
-                preserveNullAndEmptyArrays: true,
-              },
+          },
+          {
+            $unwind: {
+              path: "$category",
+              preserveNullAndEmptyArrays: true,
             },
-            { $sort: { createdAt: -1 } },
-            { $skip: (page - 1) * pageSize },
-            { $limit: pageSize },
-          ]),
-          ToolModel.countDocuments({
-            isActive: true,
-            title: { $regex: searchRegex },
-          }),
-        ]);
+          },
+          { $sort: { createdAt: -1 } },
+          { $skip: (page - 1) * pageSize },
+          { $limit: pageSize },
+        ]),
+        ToolModel.countDocuments({
+          isActive: true,
+          title: { $regex: searchRegex },
+        }),
+      ]);
 
-        const totalPages = Math.ceil(totalCount / pageSize);
-        const hasNextPage = page < totalPages;
-        const hasPreviousPage = page > 1;
+      const totalPages = Math.ceil(totalCount / pageSize);
+      const hasNextPage = page < totalPages;
+      const hasPreviousPage = page > 1;
 
-        return {
-          items: items.map((tool) => ({
-            ...tool,
-            _id: tool._id.toString(),
-            category: tool.category ? { ...tool.category, _id: tool.category._id.toString() } : null,
-          })),
-          page,
-          pageSize,
-          totalCount,
-          totalPages,
-          hasNextPage,
-          hasPreviousPage,
-        };
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to fetch tools: ${error instanceof Error ? error.message : "Unknown error"}`,
-        });
-      }
+      return {
+        items: items.map((tool) => ({
+          ...tool,
+          _id: tool._id.toString(),
+          category:
+            tool.category && typeof tool.category === "object" && "_id" in tool.category
+              ? { ...tool.category, _id: tool.category._id?.toString() || "" }
+              : null,
+        })) as unknown as ToolWithCategory[],
+        page,
+        pageSize,
+        totalCount,
+        totalPages,
+        hasNextPage,
+        hasPreviousPage,
+      };
     }),
 
   getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
