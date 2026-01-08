@@ -8,7 +8,6 @@ import { Download, Plus, Loader2 } from "lucide-react";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Progress } from "@workspace/ui/components/progress";
 import { usePdfManager } from "@/modules/common/hooks/use-pdf-manager";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { SelectablePDFGrid } from "@/modules/common/ui/components/selectable-pdf-grid";
@@ -143,13 +142,10 @@ export default function SplitPDF() {
   }, [resetManager]);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Split PDF</h1>
-        <p className="my-6 text-base text-center">Select pages from your PDF files and extract them into a new document.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-5xl mx-auto">
           {pages.length === 0 && !isProcessing ? (
@@ -250,16 +246,6 @@ export default function SplitPDF() {
           )}
         </div>
       </div>
-
-      <HowToStep
-        title="How To Split/Extract PDF Pages"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your PDF files" },
-          { title: "Step 2", description: "Click on pages to select the ones you want to extract" },
-          { title: "Step 3", description: "Click 'Split PDF' to download your selected pages" },
-        ]}
-      />
     </div>
   );
 }

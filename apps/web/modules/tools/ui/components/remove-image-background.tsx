@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { useState, useCallback, useEffect } from "react";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { removeBackground, type Config } from "@imgly/background-removal";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
@@ -173,13 +172,10 @@ export default function RemoveImageBackground() {
   };
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Remove Image Background</h1>
-        <p className="my-6 text-base text-center">Remove background from an image automatically using AI.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {files.length === 0 ? (
@@ -364,16 +360,6 @@ export default function RemoveImageBackground() {
           </AlertDescription>
         </Alert>
       </div>
-
-      <HowToStep
-        title="How To Remove Image Background"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your image with a subject to isolate" },
-          { title: "Step 2", description: "Click 'Remove Background' to process" },
-          { title: "Step 3", description: "Compare before & after and download your processed image" },
-        ]}
-      />
     </div>
   );
 }

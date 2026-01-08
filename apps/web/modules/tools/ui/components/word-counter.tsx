@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Trash2, Copy, BookOpen, Clock, TrendingUp, Hash, CheckCircle } from "lucide-react";
@@ -127,13 +126,10 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
   }, [stats.totalWords]);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Word Counter</h1>
-        <p className="my-6 text-base text-center">Analyze word frequency, reading time, and text statistics.</p>
-
         {/* Text Input Section */}
         <section aria-labelledby="text-input" className="max-w-4xl mx-auto">
           <div className="space-y-4">
@@ -309,16 +305,6 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
           </AlertDescription>
         </Alert>
       </div>
-
-      <HowToStep
-        title="How To Use Word Counter"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Enter or paste your text in the input area" },
-          { title: "Step 2", description: "View detailed word statistics and frequency analysis" },
-          { title: "Step 3", description: "Check reading time estimates and word patterns" },
-        ]}
-      />
     </div>
   );
 }

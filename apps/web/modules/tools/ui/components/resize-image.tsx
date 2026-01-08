@@ -7,7 +7,6 @@ import { Label } from "@workspace/ui/components/label";
 import { useState, useRef, useCallback } from "react";
 import { Switch } from "@workspace/ui/components/switch";
 import { Progress } from "@workspace/ui/components/progress";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Download, RotateCcw, Loader2, AlertTriangle } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group";
@@ -220,13 +219,10 @@ export default function ResizeImage() {
   }, [cleanup]);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Resize Image</h1>
-        <p className="my-6 text-base text-center">Resize your images to any dimensions while maintaining quality.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {selectedFile === null ? (
@@ -412,30 +408,7 @@ export default function ResizeImage() {
         )}
 
         {/* How to Use */}
-        <section className="max-w-3xl mx-auto mt-16">
-          <HowToStep
-            title="How to Use"
-            subtitle="Follow these simple steps to resize your images"
-            steps={[
-              {
-                title: "Upload Image",
-                description: "Select an image file from your device",
-              },
-              {
-                title: "Set Dimensions",
-                description: "Enter desired width and height in pixels",
-              },
-              {
-                title: "Choose Mode",
-                description: "Select resize mode and aspect ratio options",
-              },
-              {
-                title: "Download",
-                description: "Download your resized image",
-              },
-            ]}
-          />
-        </section>
+        <section className="max-w-3xl mx-auto mt-16"></section>
 
         {/* Hidden canvas for processing */}
         <canvas ref={canvasRef} className="hidden" />

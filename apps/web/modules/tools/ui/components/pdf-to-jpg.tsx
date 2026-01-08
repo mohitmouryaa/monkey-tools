@@ -7,7 +7,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Download, Loader2, ImageIcon, FileText } from "lucide-react";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
@@ -219,13 +218,10 @@ export default function PdfToJpg() {
   }, []);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">PDF to JPG</h1>
-        <p className="my-6 text-base text-center">Convert PDF pages to high-quality JPG images.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {!file ? (
@@ -332,16 +328,6 @@ export default function PdfToJpg() {
           </div>
         )}
       </div>
-
-      <HowToStep
-        title="How To Convert PDF to JPG"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your PDF file" },
-          { title: "Step 2", description: "Click 'Convert to JPG' to start the conversion" },
-          { title: "Step 3", description: "Download individual pages or all pages as a ZIP file" },
-        ]}
-      />
     </div>
   );
 }

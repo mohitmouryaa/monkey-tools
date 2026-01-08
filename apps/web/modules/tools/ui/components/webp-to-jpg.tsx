@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { useState, useCallback, useEffect } from "react";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
@@ -205,13 +204,10 @@ export default function WebpToJpg() {
   };
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">WebP to JPG Converter</h1>
-        <p className="my-6 text-base text-center">Convert WebP images to widely supported JPG format.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {files.length === 0 ? (
@@ -392,16 +388,6 @@ export default function WebpToJpg() {
           </AlertDescription>
         </Alert>
       </div>
-
-      <HowToStep
-        title="How To Convert WebP to JPG"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your WebP image" },
-          { title: "Step 2", description: "Click 'Convert to JPG' to process" },
-          { title: "Step 3", description: "Compare formats and download your JPG image" },
-        ]}
-      />
     </div>
   );
 }

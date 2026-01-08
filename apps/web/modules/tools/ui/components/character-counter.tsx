@@ -3,7 +3,6 @@
 import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Trash2, Copy, FileText, Hash, Type, AlignLeft, CheckCircle } from "lucide-react";
@@ -84,13 +83,10 @@ Sentences: ${stats.sentences}`;
   }, [stats]);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Character Counter</h1>
-        <p className="my-6 text-base text-center">Count characters, words, and analyze text statistics in real-time.</p>
-
         {/* Text Input Section */}
         <section aria-labelledby="text-input" className="max-w-4xl mx-auto">
           <div className="space-y-4">
@@ -207,16 +203,6 @@ Sentences: ${stats.sentences}`;
           </AlertDescription>
         </Alert>
       </div>
-
-      <HowToStep
-        title="How To Use Character Counter"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Enter or paste your text in the input area" },
-          { title: "Step 2", description: "View real-time statistics as you type" },
-          { title: "Step 3", description: "Copy text or statistics for your reference" },
-        ]}
-      />
     </div>
   );
 }

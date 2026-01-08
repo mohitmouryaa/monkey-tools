@@ -7,7 +7,6 @@ import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Switch } from "@workspace/ui/components/switch";
 import { Progress } from "@workspace/ui/components/progress";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import {
@@ -125,13 +124,10 @@ export default function StrongPasswordGenerator() {
   };
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Strong Password Generator</h1>
-        <p className="my-6 text-base text-center">Generate secure passwords with customizable options and strength analysis.</p>
-
         {/* Options Section */}
         <section aria-labelledby="options-section" className="max-w-2xl mx-auto">
           <div className="space-y-6">
@@ -279,16 +275,6 @@ export default function StrongPasswordGenerator() {
           </Alert>
         )}
       </div>
-
-      <HowToStep
-        title="How To Generate Strong Password"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Configure password length and character types" },
-          { title: "Step 2", description: "Click 'Generate New Password' to create a secure password" },
-          { title: "Step 3", description: "Copy the password and use it for your accounts" },
-        ]}
-      />
     </div>
   );
 }

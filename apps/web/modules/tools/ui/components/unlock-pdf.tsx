@@ -8,7 +8,6 @@ import { Button } from "@workspace/ui/components/button";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Progress } from "@workspace/ui/components/progress";
 import { CircleCheck, Download, Loader2, Unlock } from "lucide-react";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
@@ -174,13 +173,10 @@ export default function UnlockPDF() {
   }, []);
 
   return (
-    <div className="relative w-full py-10 overflow-hidden md:py-14 bg-background text-foreground">
+    <div className="relative w-full overflow-hidden bg-background text-foreground">
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <h1 className="text-5xl font-bold text-center">Unlock PDF</h1>
-        <p className="my-6 text-base text-center">Remove password protection from your PDF files.</p>
-
         {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {!file ? (
@@ -280,16 +276,6 @@ export default function UnlockPDF() {
           </div>
         )}
       </div>
-
-      <HowToStep
-        title="How To Unlock PDF Files"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your password-protected PDF file" },
-          { title: "Step 2", description: "Enter the correct password" },
-          { title: "Step 3", description: "Click 'Unlock PDF' to remove password protection" },
-        ]}
-      />
     </div>
   );
 }
