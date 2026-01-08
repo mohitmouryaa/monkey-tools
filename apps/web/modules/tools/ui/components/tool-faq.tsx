@@ -1,9 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@workspace/ui/components/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@workspace/ui/components/accordion";
 
 interface FAQ {
   question: string;
@@ -20,16 +15,11 @@ export const ToolFAQ = ({ faqs }: ToolFAQProps) => {
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqs.map((faq, index) => (
-        <AccordionItem key={index} value={`item-${index}`}>
-          <AccordionTrigger className="text-left text-lg font-semibold">
-            {faq.question}
-          </AccordionTrigger>
-          <AccordionContent className="text-muted-foreground leading-relaxed">
-            {faq.answer}
-          </AccordionContent>
+        <AccordionItem key={faq.question} value={`item-${index}`}>
+          <AccordionTrigger className="text-left text-lg font-semibold">{faq.question}</AccordionTrigger>
+          <AccordionContent className="text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>
   );
 };
-

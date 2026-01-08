@@ -185,7 +185,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
                 <FormItem>
                   <FormLabel>Icon Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. FileText" {...field} disabled={disabled} />
+                    <Input placeholder="e.g. file-text" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -198,7 +198,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
                 <FormItem>
                   <FormLabel>Icon Color</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. #FF0000 or text-red-500" {...field} disabled={disabled} />
+                    <Input placeholder="e.g. #FF0000" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +213,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
                 <FormItem>
                   <FormLabel>Background Color</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. bg-blue-50" {...field} disabled={disabled} />
+                    <Input placeholder="e.g. #FF0000" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -286,7 +286,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
 
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-foreground">Page Content</h3>
-          
+
           <FormField
             control={form.control}
             name="h1Heading"
@@ -301,7 +301,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="introText"
@@ -316,7 +316,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="stepsTitle"
@@ -331,7 +331,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="visualSteps"
@@ -340,36 +340,28 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
                 <FormLabel>How It Works Steps</FormLabel>
                 <FormDescription>Visual steps with icons (max 5)</FormDescription>
                 <FormControl>
-                  <VisualStepsBuilder
-                    value={field.value || []}
-                    onChange={field.onChange}
-                  />
+                  <VisualStepsBuilder value={field.value || []} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="richContent"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Rich Content</FormLabel>
-                <FormDescription>
-                  Add detailed content: benefits, who it's for, features, etc.
-                </FormDescription>
+                <FormDescription>Add detailed content: benefits, who it's for, features, etc.</FormDescription>
                 <FormControl>
-                  <RichTextEditor
-                    value={field.value || ""}
-                    onChange={field.onChange}
-                  />
+                  <RichTextEditor value={field.value || ""} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="faqs"
@@ -378,16 +370,13 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
                 <FormLabel>FAQs</FormLabel>
                 <FormDescription>Frequently asked questions for this tool</FormDescription>
                 <FormControl>
-                  <FAQManager
-                    faqs={field.value || []}
-                    onChange={field.onChange}
-                  />
+                  <FAQManager faqs={field.value || []} onChange={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="closingText"

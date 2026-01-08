@@ -24,18 +24,26 @@ export const createToolSchema = z.object({
   h1Heading: z.string().optional(),
   introText: z.string().optional(),
   stepsTitle: z.string().optional(),
-  visualSteps: z.array(z.object({
-    icon: z.string(),
-    title: z.string(),
-    description: z.string(),
-    iconColor: z.string().optional(),
-    bgColor: z.string().optional(),
-  })).optional(),
+  visualSteps: z
+    .array(
+      z.object({
+        icon: z.string(),
+        title: z.string(),
+        description: z.string(),
+        iconColor: z.string().optional(),
+        bgColor: z.string().optional(),
+      }),
+    )
+    .optional(),
   richContent: z.string().optional(),
-  faqs: z.array(z.object({
-    question: z.string(),
-    answer: z.string(),
-  })).optional(),
+  faqs: z
+    .array(
+      z.object({
+        question: z.string(),
+        answer: z.string(),
+      }),
+    )
+    .optional(),
   closingText: z.string().optional(),
   isActive: z.boolean(),
 });

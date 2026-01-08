@@ -255,7 +255,11 @@ export const ToolView = ({ id }: ToolViewProps) => {
 
               <div className="flex flex-col gap-1">
                 <Link
-                  href={toolData.link.startsWith("/") ? toolData.link : `/${toolData.link}`}
+                  href={
+                    toolData.link.startsWith("/")
+                      ? `/tools/${toolData.category?.slug}${toolData.link}`
+                      : `/tools/${toolData.category?.slug}/${toolData.link}`
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-between px-0.5 py-3 text-sm font-medium transition-colors text-foreground hover:bg-muted/50"

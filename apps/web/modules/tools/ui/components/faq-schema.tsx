@@ -23,11 +23,6 @@ export const FAQSchema = ({ faqs }: FAQSchemaProps) => {
     })),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
-  );
+  // biome-ignore lint/security/noDangerouslySetInnerHtml: <Required to inject JSON-LD schema>
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />;
 };
-

@@ -21,7 +21,9 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
 
     return {
       title: `${category.name} - Free Online Tools | Monkey Tools`,
-      description: category.description || `Explore our collection of ${category.name.toLowerCase()} to make your work easier. Fast, secure, and free to use.`,
+      description:
+        category.description ||
+        `Explore our collection of ${category.name.toLowerCase()} to make your work easier. Fast, secure, and free to use.`,
       keywords: `${category.name}, online tools, free tools, ${category.slug}`,
       openGraph: {
         title: `${category.name} - Monkey Tools`,
@@ -34,7 +36,7 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
         description: category.description || `Free ${category.name.toLowerCase()}`,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Tools - Monkey Tools",
       description: "Free online tools to make your life easier",

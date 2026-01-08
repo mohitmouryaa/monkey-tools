@@ -10,7 +10,6 @@ import { useFileUpload } from "@/modules/common/hooks/use-file-upload";
 import { useCreateJob } from "@/modules/dashboard/hooks/use-create-job";
 import { useJob } from "@/modules/dashboard/hooks/use-job";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { Loader2, Download, FileIcon, RefreshCw, CheckCircle } from "lucide-react";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 

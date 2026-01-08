@@ -9,9 +9,9 @@ export const useUpdateTool = () => {
   return useMutation(
     trpc.tools.update.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Tool "${data.tool.title}" updated`);
+        toast.success(`Tool "${data.title}" updated`);
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
-        queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data.tool._id }));
+        queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data._id }));
       },
       onError: (error) => {
         toast.error(`Failed to update tool: ${error.message}`);

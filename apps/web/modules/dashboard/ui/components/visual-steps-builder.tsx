@@ -1,11 +1,11 @@
 "use client";
 
+import { IconPicker } from "./icon-picker";
+import { Trash2 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent } from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Trash2 } from "lucide-react";
-import { IconPicker } from "./icon-picker";
+import { Card, CardContent } from "@workspace/ui/components/card";
 
 interface VisualStep {
   icon: string;
@@ -24,19 +24,20 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
   const addStep = () => {
     if (value.length >= 5) return;
     onChange([
-      ...value, 
-      { 
-        icon: "Upload", 
-        title: "", 
+      ...value,
+      {
+        icon: "Upload",
+        title: "",
         description: "",
         iconColor: "#ffffff",
-        bgColor: "#3b82f6"
-      }
+        bgColor: "#3b82f6",
+      },
     ]);
   };
 
   const updateStep = (index: number, field: keyof VisualStep, newValue: string) => {
     const newSteps = [...value];
+    if (!newSteps[index]) return;
     newSteps[index] = { ...newSteps[index], [field]: newValue };
     onChange(newSteps);
   };
@@ -48,16 +49,16 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
   return (
     <div className="space-y-4">
       {value.map((step, index) => (
-        <Card key={index}>
+        <Card key={step.title}>
           <CardContent className="pt-6">
             <div className="space-y-4">
               {/* First Row: Icon, Icon Color, BG Color, Delete */}
               <div className="grid grid-cols-12 gap-4">
                 {/* Icon Picker */}
                 <div className="col-span-4">
-                  <label className="text-sm font-medium mb-2 block">Icon</label>
-                  <IconPicker 
-                    value={step.icon} 
+                  <span className="block mb-2 text-sm font-medium">Icon</span>
+                  <IconPicker
+                    value={step.icon}
                     onChange={(icon) => updateStep(index, "icon", icon)}
                     placeholder="Select icon..."
                   />
@@ -65,7 +66,7 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
                 {/* Icon Color */}
                 <div className="col-span-3">
-                  <label className="text-sm font-medium mb-2 block">Icon Color</label>
+                  <span className="block mb-2 text-sm font-medium">Icon Color</span>
                   <Input
                     type="text"
                     placeholder="#ffffff"
@@ -76,7 +77,7 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
                 {/* Background Color */}
                 <div className="col-span-3">
-                  <label className="text-sm font-medium mb-2 block">BG Color</label>
+                  <span className="block mb-2 text-sm font-medium">BG Color</span>
                   <Input
                     type="text"
                     placeholder="#3b82f6"
@@ -86,16 +87,16 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
                 </div>
 
                 {/* Delete Button */}
-                <div className="col-span-2 flex items-end">
+                <div className="flex items-end col-span-2">
                   <Button type="button" variant="destructive" size="icon" onClick={() => removeStep(index)} className="w-full">
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
 
               {/* Second Row: Title */}
               <div>
-                <label className="text-sm font-medium mb-2 block">Step Title</label>
+                <span className="block mb-2 text-sm font-medium">Step Title</span>
                 <Input
                   placeholder="e.g., Upload your PDF file"
                   value={step.title}
@@ -105,7 +106,7 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
               {/* Third Row: Description */}
               <div>
-                <label className="text-sm font-medium mb-2 block">Step Description</label>
+                <span className="block mb-2 text-sm font-medium">Step Description</span>
                 <Textarea
                   placeholder="Describe this step..."
                   value={step.description}
@@ -125,11 +126,10 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
       )}
 
       {value.length === 0 && (
-        <p className="text-sm text-muted-foreground text-center py-4">
+        <p className="py-4 text-sm text-center text-muted-foreground">
           No steps added yet. Click the button above to add your first step.
         </p>
       )}
     </div>
   );
 };
-

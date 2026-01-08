@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ToolView } from "@/modules/tools/ui/views/tool-view";
 import { caller } from "@/trpc/server";
+import { ToolView } from "@/modules/tools/ui/views/tool-view";
 
 interface ToolsPageProps {
   params: Promise<{
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
         description: toolData.seoDescription || toolData.description,
       },
     };
-  } catch (error) {
+  } catch {
     // Fallback metadata if fetch fails
     return {
       title: "Monkey Tools",

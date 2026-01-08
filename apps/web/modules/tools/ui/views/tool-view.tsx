@@ -32,13 +32,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
       <div className="container mx-auto px-4 py-12">
         {/* H1 + Intro */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {toolData.h1Heading || toolData.title}
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{toolData.h1Heading || toolData.title}</h1>
           {toolData.introText && (
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              {toolData.introText}
-            </p>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">{toolData.introText}</p>
           )}
         </div>
 
@@ -52,9 +48,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         {/* Visual Steps */}
         {toolData.visualSteps && toolData.visualSteps.length > 0 && (
           <section className="my-16">
-            <h2 className="text-3xl font-bold text-center mb-8">
-              {toolData.stepsTitle || `How to use ${toolData.title}`}
-            </h2>
+            <h2 className="text-3xl font-bold text-center mb-8">{toolData.stepsTitle || `How to use ${toolData.title}`}</h2>
             <ToolSteps steps={toolData.visualSteps} />
           </section>
         )}
@@ -85,9 +79,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         {/* FAQs */}
         {toolData.faqs && toolData.faqs.length > 0 && (
           <section className="my-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold mb-8 text-center">
-              Frequently Asked Questions
-            </h2>
+            <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
             <ToolFAQ faqs={toolData.faqs} />
             <FAQSchema faqs={toolData.faqs} />
           </section>
@@ -96,9 +88,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         {/* Closing Text */}
         {toolData.closingText && (
           <section className="my-16 text-center max-w-3xl mx-auto">
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              {toolData.closingText}
-            </p>
+            <p className="text-lg text-muted-foreground leading-relaxed">{toolData.closingText}</p>
           </section>
         )}
       </div>

@@ -143,62 +143,33 @@ export const toolsRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       try {
-        const tool = await ToolModel.findById(input.id);
-        if (!tool) {
+        // Prepare update data, mapping categoryId to category
+        const { categoryId, ...updateData } = input.data;
+        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & { category?: string };
+
+        if (categoryId !== undefined) {
+          finalUpdateData.category = categoryId;
+        }
+
+        const updatedTool = await ToolModel.findByIdAndUpdate(
+          input.id,
+          { $set: finalUpdateData },
+          {
+            new: true,
+            runValidators: true,
+          },
+        ).lean();
+
+        if (!updatedTool) {
           throw new TRPCError({
             code: "NOT_FOUND",
             message: "Tool not found",
           });
         }
 
-        // Build update object with $set operator to ensure new fields are created
-        const updateData: any = {};
-        
-        if (input.data.title !== undefined) updateData.title = input.data.title;
-        if (input.data.link !== undefined) updateData.link = input.data.link;
-        if (input.data.componentName !== undefined) updateData.componentName = input.data.componentName;
-        if (input.data.description !== undefined) updateData.description = input.data.description;
-        if (input.data.categoryId !== undefined) updateData.category = input.data.categoryId;
-        if (input.data.icon !== undefined) updateData.icon = input.data.icon;
-        if (input.data.iconColor !== undefined) updateData.iconColor = input.data.iconColor;
-        if (input.data.bgColor !== undefined) updateData.bgColor = input.data.bgColor;
-        if (input.data.seoTitle !== undefined) updateData.seoTitle = input.data.seoTitle;
-        if (input.data.seoDescription !== undefined) updateData.seoDescription = input.data.seoDescription;
-        if (input.data.seoKeywords !== undefined) updateData.seoKeywords = input.data.seoKeywords;
-        if (input.data.h1Heading !== undefined) updateData.h1Heading = input.data.h1Heading;
-        if (input.data.introText !== undefined) updateData.introText = input.data.introText;
-        if (input.data.stepsTitle !== undefined) updateData.stepsTitle = input.data.stepsTitle;
-        if (input.data.visualSteps !== undefined) updateData.visualSteps = input.data.visualSteps;
-        if (input.data.richContent !== undefined) updateData.richContent = input.data.richContent;
-        if (input.data.faqs !== undefined) updateData.faqs = input.data.faqs;
-        if (input.data.closingText !== undefined) updateData.closingText = input.data.closingText;
-        if (input.data.isActive !== undefined) updateData.isActive = input.data.isActive;
-
-        console.log("Update data stepsTitle:", input.data.stepsTitle, "->", updateData.stepsTitle);
-
-        // Use updateOne with $set to ensure fields are created
-        await ToolModel.updateOne(
-          { _id: input.id },
-          { $set: updateData }
-        );
-
-        // Fetch the updated document with all fields
-        const updatedTool = await ToolModel.findById(input.id).lean().exec();
-
-        if (!updatedTool) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update tool",
-          });
-        }
-
-        console.log("Updated tool stepsTitle:", updatedTool.stepsTitle);
-        console.log("Updated tool keys:", Object.keys(updatedTool));
-
         return {
-          success: true,
-          tool: { ...updatedTool, _id: updatedTool._id.toString() },
-          message: "Tool updated successfully",
+          ...updatedTool,
+          _id: updatedTool._id.toString(),
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;

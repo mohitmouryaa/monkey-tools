@@ -8,7 +8,8 @@ import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 
 export const metadata: Metadata = {
   title: "Monkey Tools - Free Online Tools for Everyone",
-  description: "We offer PDF, text, image and other online tools to make your life easier. Fast, secure, no sign-up required. Convert, compress, merge files in seconds.",
+  description:
+    "We offer PDF, text, image and other online tools to make your life easier. Fast, secure, no sign-up required. Convert, compress, merge files in seconds.",
   keywords: "online tools, free tools, pdf tools, image tools, text tools, converter, compressor",
   openGraph: {
     title: "Monkey Tools - Free Online Tools",

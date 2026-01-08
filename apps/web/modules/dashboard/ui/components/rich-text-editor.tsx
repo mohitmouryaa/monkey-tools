@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { Extension } from "@tiptap/core";
 import Link from "@tiptap/extension-link";
+import StarterKit from "@tiptap/starter-kit";
+import { Color } from "@tiptap/extension-color";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Underline } from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
-import { Color } from "@tiptap/extension-color";
-import { Extension, type Node as TiptapNode } from "@tiptap/core";
+import type { CommandProps } from "@tiptap/core";
 import { Button } from "@workspace/ui/components/button";
+import { useState, useCallback, useEffect } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import {
@@ -37,11 +38,26 @@ interface RichTextEditorProps {
 }
 
 const COLORS = [
-  "#000000", "#374151", "#6B7280", "#9CA3AF",
-  "#DC2626", "#EA580C", "#D97706", "#CA8A04",
-  "#65A30D", "#16A34A", "#059669", "#0D9488",
-  "#0891B2", "#0284C7", "#2563EB", "#4F46E5",
-  "#7C3AED", "#9333EA", "#C026D3", "#DB2777",
+  "#000000",
+  "#374151",
+  "#6B7280",
+  "#9CA3AF",
+  "#DC2626",
+  "#EA580C",
+  "#D97706",
+  "#CA8A04",
+  "#65A30D",
+  "#16A34A",
+  "#059669",
+  "#0D9488",
+  "#0891B2",
+  "#0284C7",
+  "#2563EB",
+  "#4F46E5",
+  "#7C3AED",
+  "#9333EA",
+  "#C026D3",
+  "#DB2777",
 ];
 
 const FONT_SIZES = [
@@ -89,12 +105,12 @@ const FontSize = Extension.create({
     return {
       setFontSize:
         (fontSize: string) =>
-        ({ chain }: any) => {
+        ({ chain }: CommandProps) => {
           return chain().setMark("textStyle", { fontSize }).run();
         },
       unsetFontSize:
         () =>
-        ({ chain }: any) => {
+        ({ chain }: CommandProps) => {
           return chain().setMark("textStyle", { fontSize: null }).removeEmptyTextStyle().run();
         },
     };
@@ -176,7 +192,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="overflow-hidden border rounded-lg">
       {/* Custom styles for lists */}
       <style jsx global>{`
         .ProseMirror {
@@ -233,7 +249,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
       `}</style>
 
       {/* Toolbar */}
-      <div className="border-b p-2 flex flex-wrap gap-1 bg-muted/30 items-center">
+      <div className="flex flex-wrap items-center gap-1 p-2 border-b bg-muted/30">
         {/* Font Size Dropdown */}
         <Select
           value={editor.getAttributes("textStyle").fontSize || "16px"}
@@ -245,7 +261,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
             }
           }}
         >
-          <SelectTrigger className="w-[130px] h-8">
+          <SelectTrigger className="w-32.5 h-8">
             <SelectValue placeholder="Font size" />
           </SelectTrigger>
           <SelectContent>
@@ -258,7 +274,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           </SelectContent>
         </Select>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Text Formatting */}
         <Button
@@ -269,7 +285,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("bold") ? "bg-accent" : ""}
           title="Bold"
         >
-          <Bold className="h-4 w-4" />
+          <Bold className="w-4 h-4" />
         </Button>
 
         <Button
@@ -280,7 +296,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("italic") ? "bg-accent" : ""}
           title="Italic"
         >
-          <Italic className="h-4 w-4" />
+          <Italic className="w-4 h-4" />
         </Button>
 
         <Button
@@ -291,10 +307,10 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("underline") ? "bg-accent" : ""}
           title="Underline"
         >
-          <UnderlineIcon className="h-4 w-4" />
+          <UnderlineIcon className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Headings */}
         <Button
@@ -305,7 +321,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("heading", { level: 2 }) ? "bg-accent" : ""}
           title="Heading 2"
         >
-          <Heading2 className="h-4 w-4" />
+          <Heading2 className="w-4 h-4" />
         </Button>
 
         <Button
@@ -316,10 +332,10 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("heading", { level: 3 }) ? "bg-accent" : ""}
           title="Heading 3"
         >
-          <Heading3 className="h-4 w-4" />
+          <Heading3 className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Lists */}
         <Button
@@ -330,7 +346,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("bulletList") ? "bg-accent" : ""}
           title="Bullet List"
         >
-          <List className="h-4 w-4" />
+          <List className="w-4 h-4" />
         </Button>
 
         <Button
@@ -341,10 +357,10 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("orderedList") ? "bg-accent" : ""}
           title="Numbered List"
         >
-          <ListOrdered className="h-4 w-4" />
+          <ListOrdered className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Alignment */}
         <Button
@@ -355,7 +371,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive({ textAlign: "left" }) ? "bg-accent" : ""}
           title="Align Left"
         >
-          <AlignLeft className="h-4 w-4" />
+          <AlignLeft className="w-4 h-4" />
         </Button>
 
         <Button
@@ -366,7 +382,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive({ textAlign: "center" }) ? "bg-accent" : ""}
           title="Align Center"
         >
-          <AlignCenter className="h-4 w-4" />
+          <AlignCenter className="w-4 h-4" />
         </Button>
 
         <Button
@@ -377,21 +393,16 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive({ textAlign: "right" }) ? "bg-accent" : ""}
           title="Align Right"
         >
-          <AlignRight className="h-4 w-4" />
+          <AlignRight className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Color Picker */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              title="Text Color"
-            >
-              <Palette className="h-4 w-4" />
+            <Button type="button" size="sm" variant="ghost" title="Text Color">
+              <Palette className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-64 p-3">
@@ -400,7 +411,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
                 <button
                   key={color}
                   type="button"
-                  className="w-6 h-6 rounded border border-border hover:scale-110 transition-transform"
+                  className="w-6 h-6 transition-transform border rounded border-border hover:scale-110"
                   style={{ backgroundColor: color }}
                   onClick={() => editor.chain().focus().setColor(color).run()}
                   title={color}
@@ -428,10 +439,10 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={editor.isActive("link") ? "bg-accent" : ""}
           title="Insert Link"
         >
-          <LinkIcon className="h-4 w-4" />
+          <LinkIcon className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* Undo/Redo */}
         <Button
@@ -442,7 +453,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           disabled={!editor.can().undo()}
           title="Undo"
         >
-          <Undo className="h-4 w-4" />
+          <Undo className="w-4 h-4" />
         </Button>
 
         <Button
@@ -453,10 +464,10 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           disabled={!editor.can().redo()}
           title="Redo"
         >
-          <Redo className="h-4 w-4" />
+          <Redo className="w-4 h-4" />
         </Button>
 
-        <div className="w-px h-6 bg-border mx-1" />
+        <div className="w-px h-6 mx-1 bg-border" />
 
         {/* HTML Toggle */}
         <Button
@@ -467,7 +478,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           className={showHTML ? "bg-accent" : ""}
           title="View HTML Source"
         >
-          <Code className="h-4 w-4" />
+          <Code className="w-4 h-4" />
         </Button>
       </div>
 
@@ -477,7 +488,7 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
           <Textarea
             value={htmlContent}
             onChange={(e) => handleHTMLChange(e.target.value)}
-            className="font-mono text-sm min-h-[300px]"
+            className="font-mono text-sm min-h-75"
             placeholder="Edit HTML directly..."
           />
         </div>
@@ -487,4 +498,3 @@ export const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
     </div>
   );
 };
-
