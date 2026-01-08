@@ -1,0 +1,46 @@
+import z from "zod";
+import { myQueue } from "@workspace/queue";
+import { getDownloadUrl } from "@workspace/storage";
+import { JobModel, Status } from "@workspace/database";
+import { createTRPCRouter, protectedProcedure } from "../init";
+
+const createJobSchema = z.object({
+  tool: z.string().min(1, {
+    message: "Tool name is required.",
+  }),
+  inputFile: z.string().min(1, {
+    message: "Input file is required.",
+  }),
+  metadata: z.record(z.string(), z.string()).optional(),
+});
+
+export const jobsRouter = createTRPCRouter({
+  create: protectedProcedure.input(createJobSchema).mutation(async ({ input }) => {
+    const job = await JobModel.create({
+      tool: input.tool,
+      status: Status.IN_PROGRESS,
+      inputFile: input.inputFile,
+      metadata: input.metadata || {},
+    });
+    await myQueue.add(job.tool, {
+      jobId: job.id,
+      tool: job.tool,
+      inputFile: job.inputFile,
+      metadata: job.metadata,
+      status: job.status,
+    });
+
+    return { jobId: job.id, status: job.status };
+  }),
+  getById: protectedProcedure.input(z.object({ jobId: z.string().min(1) })).query(async ({ input }) => {
+    const job = await JobModel.findById(input.jobId).lean();
+    if (!job) {
+      throw new Error("Job not found");
+    }
+    let downloadUrl = "";
+    if (job.outputFile) {
+      downloadUrl = await getDownloadUrl(job.outputFile);
+    }
+    return { ...job, _id: job._id.toString(), downloadUrl };
+  }),
+});

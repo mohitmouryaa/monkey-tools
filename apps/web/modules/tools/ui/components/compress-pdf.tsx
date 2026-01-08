@@ -1,26 +1,40 @@
 "use client";
 
-import axios from "axios";
 import { toast } from "sonner";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { JOB_TYPES } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { useFileUpload } from "@/modules/common/hooks/use-file-upload";
+import { useCreateJob } from "@/modules/dashboard/hooks/use-create-job";
+import { useJob } from "@/modules/dashboard/hooks/use-job";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { HowToStep } from "@/modules/common/ui/components/how-to-step";
 import { Loader2, Download, FileIcon, RefreshCw, CheckCircle } from "lucide-react";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
-import Link from "next/link";
 
 export default function CompressPdf() {
   const [file, setFile] = useState<File | null>(null);
   const [fileKey, setFileKey] = useState<string | null>(null);
-  const [status, setStatus] = useState<"idle" | "uploading" | "uploaded" | "compressing" | "completed" | "failed">("idle");
   const [jobId, setJobId] = useState<string | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const { uploadFile, uploadProgress } = useFileUpload();
+  const createJobMutation = useCreateJob();
+  const { data: jobData, isLoading: isJobLoading } = useJob(jobId);
+
+  // Derive status from job data
+  const getStatus = () => {
+    if (!file && !fileKey) return "idle";
+    if (uploadProgress < 100) return "uploading";
+    if (uploadProgress === 100 && !jobId) return "uploaded";
+    if (jobData?.status === "COMPLETED") return "completed";
+    if (jobData?.status === "FAILED") return "failed";
+    if (jobId && (isJobLoading || jobData?.status === "IN_PROGRESS")) return "compressing";
+    return "idle";
+  };
+
+  const status = getStatus();
 
   const handleFilesSelected = async (files: File[]) => {
     if (files.length === 0) return;
@@ -31,73 +45,51 @@ export default function CompressPdf() {
     setFile(selectedFile);
     setFileKey(null);
     setJobId(null);
-    setDownloadUrl(null);
-    setStatus("uploading");
 
     try {
       const { fileKey } = await uploadFile(selectedFile);
 
       setFileKey(fileKey);
-      setStatus("uploaded");
       toast.success("File uploaded successfully");
     } catch (error) {
       console.error("Upload failed:", error);
-      setStatus("failed");
       toast.error("Failed to upload file");
       setFile(null);
+      setFileKey(null);
     }
   };
 
   const handleCompress = async () => {
     if (!fileKey) return;
 
-    setStatus("compressing");
     try {
-      const { data } = await axios.post("/api/jobs", {
+      const result = await createJobMutation.mutateAsync({
         tool: JOB_TYPES.COMPRESS_PDF,
         inputFile: fileKey,
         metadata: {
           compressionLevel: "medium",
         },
       });
-      setJobId(data.jobId);
+      setJobId(result.jobId);
     } catch (error) {
       console.error("Job creation failed:", error);
-      setStatus("failed");
       toast.error("Failed to start compression");
     }
   };
 
+  // Handle job completion notifications
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (status === "compressing" && jobId) {
-      interval = setInterval(async () => {
-        try {
-          const { data } = await axios.get(`/api/jobs?jobId=${jobId}`);
-          if (data.status === "COMPLETED") {
-            setDownloadUrl(data.downloadUrl || data.outputFile);
-            setStatus("completed");
-            toast.success("Compression completed!");
-          } else if (data.status === "FAILED") {
-            setStatus("failed");
-            toast.error("Compression failed");
-          }
-        } catch (error) {
-          console.error("Polling failed:", error);
-        }
-      }, 3000);
+    if (jobData?.status === "COMPLETED") {
+      toast.success("Compression completed!");
+    } else if (jobData?.status === "FAILED") {
+      toast.error("Compression failed");
     }
-
-    return () => clearInterval(interval);
-  }, [status, jobId]);
+  }, [jobData?.status]);
 
   const handleReset = () => {
     setFile(null);
     setFileKey(null);
-    setStatus("idle");
     setJobId(null);
-    setDownloadUrl(null);
   };
 
   return (
@@ -176,9 +168,9 @@ export default function CompressPdf() {
                 <h3 className="text-xl font-semibold text-green-800 dark:text-green-200">Compression Complete!</h3>
 
                 <div className="flex flex-col space-y-3">
-                  {downloadUrl && (
+                  {jobData?.downloadUrl && (
                     <Button asChild className="w-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all" size="lg">
-                      <Link href={downloadUrl} download target="_blank" rel="noopener noreferrer">
+                      <Link href={jobData.downloadUrl} download="compress-pdf.pdf" rel="noopener noreferrer">
                         <Download className="w-4 h-4 mr-2" />
                         Download Compressed PDF
                       </Link>
