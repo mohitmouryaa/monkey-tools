@@ -50,6 +50,37 @@ export class Tool {
   @prop({ required: true })
   public seoKeywords!: string;
 
+  // Page Content
+  @prop({ default: "" })
+  public h1Heading?: string;
+
+  @prop({ default: "" })
+  public introText?: string;
+
+  @prop({ default: "" })
+  public stepsTitle?: string;
+
+  @prop({ type: () => [Object], default: [] })
+  public visualSteps?: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    iconColor?: string;
+    bgColor?: string;
+  }>;
+
+  @prop({ default: "" })
+  public richContent?: string;
+
+  @prop({ type: () => [Object], default: [] })
+  public faqs?: Array<{
+    question: string;
+    answer: string;
+  }>;
+
+  @prop({ default: "" })
+  public closingText?: string;
+
   @prop({ default: true })
   public isActive!: boolean;
 

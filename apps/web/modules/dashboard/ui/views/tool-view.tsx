@@ -56,6 +56,13 @@ export const ToolView = ({ id }: ToolViewProps) => {
               seoTitle: toolData.seoTitle || "",
               seoDescription: toolData.seoDescription || "",
               seoKeywords: toolData.seoKeywords || "",
+              h1Heading: toolData.h1Heading || "",
+              introText: toolData.introText || "",
+              stepsTitle: toolData.stepsTitle || "",
+              visualSteps: toolData.visualSteps || [],
+              richContent: toolData.richContent || "",
+              faqs: toolData.faqs || [],
+              closingText: toolData.closingText || "",
             }}
             onSubmit={handleUpdate}
             submitLabel="Save Changes"
