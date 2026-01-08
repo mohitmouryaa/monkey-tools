@@ -1,9 +1,9 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
 import { PAGINATION } from "@/modules/common/constants";
-import { type Category, type Tool, ToolModel } from "@workspace/database";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
+import { type Category, mongoose, type Tool, ToolModel } from "@workspace/database";
 
 export type ToolWithCategory = Tool & { category: Category };
 
@@ -50,19 +50,32 @@ export const toolsRouter = createTRPCRouter({
         page: z.number().default(PAGINATION.DEFAULT_PAGE),
         pageSize: z.number().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
         search: z.string().default(""),
+        categoryId: z.string().optional(),
       }),
     )
     .query(async ({ input }) => {
-      const { page, pageSize, search } = input;
+      const { page, pageSize, search, categoryId } = input;
       const searchRegex = new RegExp(search, "i");
+
+      // Build match conditions for aggregation and count
+      const baseMatch: mongoose.AnyObject = {
+        isActive: true,
+        title: { $regex: searchRegex },
+      };
+
+      const aggregationMatch: mongoose.AnyObject = { ...baseMatch };
+      const countMatch: mongoose.AnyObject = { ...baseMatch };
+
+      if (categoryId && mongoose.Types.ObjectId.isValid(categoryId)) {
+        const categoryObjectId = new mongoose.Types.ObjectId(categoryId);
+        aggregationMatch.category = categoryObjectId;
+        countMatch.category = categoryObjectId;
+      }
 
       const [items, totalCount] = await Promise.all([
         ToolModel.aggregate([
           {
-            $match: {
-              isActive: true,
-              title: { $regex: searchRegex },
-            },
+            $match: aggregationMatch,
           },
           {
             $lookup: {
@@ -82,10 +95,7 @@ export const toolsRouter = createTRPCRouter({
           { $skip: (page - 1) * pageSize },
           { $limit: pageSize },
         ]),
-        ToolModel.countDocuments({
-          isActive: true,
-          title: { $regex: searchRegex },
-        }),
+        ToolModel.countDocuments(countMatch),
       ]);
 
       const totalPages = Math.ceil(totalCount / pageSize);

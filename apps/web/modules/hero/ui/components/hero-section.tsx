@@ -1,13 +1,17 @@
 import Link from "next/link";
-import { caller } from "@/trpc/server";
 import type { IconName } from "lucide-react/dynamic";
 import { SearchBar } from "@/modules/common/ui/components/search-bar";
 import { FileText, ArrowRight, Users, File, Wrench } from "lucide-react";
 import { DynamicIcon } from "@/modules/common/ui/components/dynamic-icon";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
-export const HeroSection = async () => {
-  const categories = await caller.categories.getMany({});
+interface HeroSectionProps {
+  // biome-ignore lint/suspicious/noExplicitAny: <Transient types>
+  categoriesPromise: Promise<any>;
+}
+
+export const HeroSection = async ({ categoriesPromise }: HeroSectionProps) => {
+  const categories = await categoriesPromise;
 
   const stats = [
     { value: "1m", label: "Active Users", icon: Users },
@@ -38,7 +42,8 @@ export const HeroSection = async () => {
 
         {/* Tools section */}
         <div className="grid grid-cols-1 gap-6 mb-2 md:grid-cols-2 lg:grid-cols-4">
-          {categories.items.map((category) => (
+          {/* biome-ignore lint/suspicious/noExplicitAny: <Transient types> */}
+          {categories.items.map((category: any) => (
             <Link
               key={category._id}
               href={`/tools/${category.slug}`}

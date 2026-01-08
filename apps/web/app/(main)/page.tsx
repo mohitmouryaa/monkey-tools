@@ -1,10 +1,6 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
-import { HydrateClient } from "@/trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
 import { HeroView } from "@/modules/hero/ui/views/hero-view";
-import { prefetchCategories } from "@/modules/common/prefetch";
-import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 
 export const metadata: Metadata = {
   title: "Monkey Tools - Free Online Tools for Everyone",
@@ -24,14 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  prefetchCategories({});
   return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-        <Suspense fallback={<SuspenseLoader />}>
-          <HeroView />
-        </Suspense>
-      </ErrorBoundary>
-    </HydrateClient>
+    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+      <HeroView />
+    </ErrorBoundary>
   );
 }

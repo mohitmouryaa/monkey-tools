@@ -29,9 +29,6 @@ export class Category {
   @prop({ default: true })
   public isActive!: boolean;
 
-  @prop({ default: 0 })
-  public toolsCount!: number;
-
   @prop({ required: true })
   public color!: string;
 }

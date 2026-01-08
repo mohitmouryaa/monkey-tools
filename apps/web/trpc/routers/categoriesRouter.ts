@@ -41,15 +41,37 @@ export const categoriesRouter = createTRPCRouter({
       const { page, pageSize, search } = input;
       const searchRegex = new RegExp(search, "i");
 
+      // Use aggregation pipeline for better performance - single query with join
       const [items, totalCount] = await Promise.all([
-        CategoryModel.find({
-          isActive: true,
-          name: { $regex: searchRegex },
-        })
-          .sort({ createdAt: 1 })
-          .skip((page - 1) * pageSize)
-          .limit(pageSize)
-          .lean(),
+        CategoryModel.aggregate([
+          {
+            $match: {
+              isActive: true,
+              name: { $regex: searchRegex },
+            },
+          },
+          {
+            $lookup: {
+              from: "tools",
+              localField: "_id",
+              foreignField: "category",
+              as: "tools",
+            },
+          },
+          {
+            $addFields: {
+              toolsCount: { $size: "$tools" },
+            },
+          },
+          {
+            $project: {
+              tools: 0, // Remove tools array, keep only count
+            },
+          },
+          { $sort: { createdAt: 1 } },
+          { $skip: (page - 1) * pageSize },
+          { $limit: pageSize },
+        ]),
         CategoryModel.countDocuments({
           isActive: true,
           name: { $regex: searchRegex },

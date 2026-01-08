@@ -1,28 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 import type { IconName } from "lucide-react/dynamic";
 import { ToolCard } from "@/modules/common/ui/components/tool-card";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 import { DynamicIcon } from "@/modules/common/ui/components/dynamic-icon";
-import { useSuspenseTools } from "@/modules/dashboard/hooks/use-suspense-tools";
-import { useSuspenseCategories } from "@/modules/dashboard/hooks/use-suspense-categories";
 
-export const ImportantToolsSection = () => {
-  const categories = useSuspenseCategories();
-  const { data: tools } = useSuspenseTools();
+interface ImportantToolsSectionProps {
+  // biome-ignore lint/suspicious/noExplicitAny: <Transient types>
+  initialTools: any;
+  // biome-ignore lint/suspicious/noExplicitAny: <Transient types>
+  categories: any;
+}
+
+export const ImportantToolsSection = ({ initialTools, categories }: ImportantToolsSectionProps) => {
+  const trpc = useTRPC();
   const [activeTab, setActiveTab] = useState("All Tools");
 
-  const filteredTools = activeTab === "All Tools" ? tools.items : tools.items.filter((tool) => tool.category?.name === activeTab);
+  const { data: tools } = useQuery({
+    ...trpc.tools.getMany.queryOptions({
+      categoryId: activeTab === "All Tools" ? undefined : activeTab,
+      pageSize: 8,
+      page: 1,
+    }),
+    initialData: activeTab === "All Tools" ? initialTools : undefined,
+  });
 
-  const displayedTools = activeTab === "All Tools" ? filteredTools.slice(0, 12) : filteredTools;
-
-  useEffect(() => {
-    return () => {
-      setActiveTab("All Tools");
-    };
-  }, []);
+  const displayedTools = tools?.items || [];
 
   return (
     <section className="py-16 transition-colors bg-blue-50/50 dark:bg-background" id="important-tools">
@@ -43,7 +50,8 @@ export const ImportantToolsSection = () => {
               onClick={() => setActiveTab("All Tools")}
               isActive={activeTab === "All Tools"}
             />
-            {categories.data.items.map((category) => (
+            {/* biome-ignore lint/suspicious/noExplicitAny: <Transient types> */}
+            {categories.items.slice(0, 5).map((category: any) => (
               <Tab
                 key={category.name}
                 title={category.name}
@@ -57,7 +65,8 @@ export const ImportantToolsSection = () => {
 
         {/* Tools Grid */}
         <div className="grid grid-cols-2 gap-2 md:gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {displayedTools.map((tool) => (
+          {/* biome-ignore lint/suspicious/noExplicitAny: <Transient types> */}
+          {displayedTools.map((tool: any) => (
             <ToolCard
               key={tool.title}
               tool={tool}
