@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Loader2 } from "lucide-react";
 import type { z } from "zod";
@@ -9,10 +10,14 @@ import type { Category } from "@workspace/database";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
+import { Textarea } from "@workspace/ui/components/textarea";
 import { Switch } from "@workspace/ui/components/switch";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@workspace/ui/components/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
+import { VisualStepsBuilder } from "./visual-steps-builder";
+import { RichTextEditor } from "./rich-text-editor";
+import { FAQManager } from "./faq-manager";
 
 export type ToolFormValues = z.infer<typeof createToolSchema>;
 
@@ -41,10 +46,45 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
       seoTitle: "",
       seoDescription: "",
       seoKeywords: "",
+      h1Heading: "",
+      introText: "",
+      stepsTitle: "",
+      visualSteps: [],
+      richContent: "",
+      faqs: [],
+      closingText: "",
       isActive: true,
       ...defaultValues,
     },
   });
+
+  // Reset form when defaultValues change (important for edit mode)
+  useEffect(() => {
+    if (defaultValues) {
+      form.reset({
+        title: "",
+        link: "",
+        componentName: "",
+        description: "",
+        categoryId: "",
+        icon: "",
+        iconColor: "",
+        bgColor: "",
+        seoTitle: "",
+        seoDescription: "",
+        seoKeywords: "",
+        h1Heading: "",
+        introText: "",
+        stepsTitle: "",
+        visualSteps: [],
+        richContent: "",
+        faqs: [],
+        closingText: "",
+        isActive: true,
+        ...defaultValues,
+      });
+    }
+  }, [defaultValues, form]);
 
   return (
     <Form {...form}>
@@ -242,6 +282,126 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               )}
             />
           </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-foreground">Page Content</h3>
+          
+          <FormField
+            control={form.control}
+            name="h1Heading"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>H1 Heading (Optional)</FormLabel>
+                <FormDescription>Custom H1 for the tool page. Leave empty to use tool title.</FormDescription>
+                <FormControl>
+                  <Input placeholder="e.g., Compress PDF: reduce file size online for free" {...field} disabled={disabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="introText"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Introduction Text</FormLabel>
+                <FormDescription>Short intro below H1 heading (80-120 words recommended)</FormDescription>
+                <FormControl>
+                  <Textarea placeholder="Brief introduction to the tool..." {...field} disabled={disabled} rows={3} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="stepsTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Steps Section Title (Optional)</FormLabel>
+                <FormDescription>Custom title for "How It Works" section. Leave empty for default.</FormDescription>
+                <FormControl>
+                  <Input placeholder="e.g., How to Compress PDF Files" {...field} disabled={disabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="visualSteps"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>How It Works Steps</FormLabel>
+                <FormDescription>Visual steps with icons (max 5)</FormDescription>
+                <FormControl>
+                  <VisualStepsBuilder
+                    value={field.value || []}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="richContent"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Rich Content</FormLabel>
+                <FormDescription>
+                  Add detailed content: benefits, who it's for, features, etc.
+                </FormDescription>
+                <FormControl>
+                  <RichTextEditor
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="faqs"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>FAQs</FormLabel>
+                <FormDescription>Frequently asked questions for this tool</FormDescription>
+                <FormControl>
+                  <FAQManager
+                    faqs={field.value || []}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="closingText"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Closing Text</FormLabel>
+                <FormDescription>Final call-to-action or summary (80-120 words recommended)</FormDescription>
+                <FormControl>
+                  <Textarea placeholder="Closing message for the tool page..." {...field} disabled={disabled} rows={3} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="flex justify-end">

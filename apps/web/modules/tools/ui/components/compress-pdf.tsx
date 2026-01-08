@@ -97,12 +97,7 @@ export default function CompressPdf() {
       <BackgroundElements />
 
       <div className="container relative z-10 px-4 mx-auto">
-        <div className="max-w-3xl mx-auto text-center">
-          <h1 className="mb-4 text-2xl font-bold md:text-4xl">Compress PDF</h1>
-          <p className="mb-6 text-base text-muted-foreground md:mb-8 md:text-lg">
-            Reduce the file size of your PDF documents while maintaining quality.
-          </p>
-
+        <div className="max-w-3xl mx-auto">
           <div className="max-w-xl p-4 mx-auto border shadow-xl rounded-2xl bg-card/50 backdrop-blur-sm border-border/50 md:p-8">
             {status === "idle" && (
               <FileUpload
@@ -199,16 +194,6 @@ export default function CompressPdf() {
           </div>
         </div>
       </div>
-
-      <HowToStep
-        title="How To Compress PDF Files"
-        subtitle="follow along with the steps below"
-        steps={[
-          { title: "Step 1", description: "Upload your PDF file" },
-          { title: "Step 2", description: "Click 'Compress PDF' to start the process" },
-          { title: "Step 3", description: "Download your compressed PDF" },
-        ]}
-      />
     </div>
   );
 }
