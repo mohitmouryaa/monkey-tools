@@ -1,5 +1,6 @@
 export const JOB_TYPES = {
   COMPRESS_PDF: "COMPRESS_PDF",
+  ADD_PAGE_NUMBERS_PDF: "ADD_PAGE_NUMBERS_PDF",
   // Add other job types here
 } as const;
 

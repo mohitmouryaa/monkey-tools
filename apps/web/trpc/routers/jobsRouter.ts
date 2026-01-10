@@ -11,7 +11,7 @@ const createJobSchema = z.object({
   inputFile: z.string().min(1, {
     message: "Input file is required.",
   }),
-  metadata: z.record(z.string(), z.string()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 });
 
 export const jobsRouter = createTRPCRouter({

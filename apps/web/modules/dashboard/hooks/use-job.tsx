@@ -1,6 +1,6 @@
 import { useTRPC } from "@/trpc/client";
-import { useQuery, skipToken } from "@tanstack/react-query";
 import { Status } from "@workspace/types";
+import { useQuery, skipToken } from "@tanstack/react-query";
 
 export const useJob = (jobId: string | null) => {
   const trpc = useTRPC();

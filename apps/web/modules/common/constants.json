@@ -48,6 +48,16 @@
       "link": "/pdf/split-pdf"
     },
     {
+      "title": "Add Page Numbers",
+      "category": "Pdf Tools",
+      "description": "Add page numbers to PDF documents",
+      "icon": "hash",
+      "iconColor": "text-blue-600",
+      "bgColor": "bg-blue-50",
+      "type": "PDF Tools",
+      "link": "/pdf/add-page-numbers-to-pdf"
+    },
+    {
       "title": "Compress PDF",
       "category": "Pdf Tools",
       "description": "Reduce PDF file size",
