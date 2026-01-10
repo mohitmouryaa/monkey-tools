@@ -1,17 +1,17 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState, useCallback, useRef, useEffect } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
 import { Input } from "@workspace/ui/components/input";
 import { Slider } from "@workspace/ui/components/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
+import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
-import { Download, Loader2, FileText, Trash2, Type, Settings, CheckCircle } from "lucide-react";
-import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
+import { Download, Loader2, FileText, Trash2, Settings, CheckCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
 interface WatermarkSettings {
   text: string;
@@ -66,13 +66,13 @@ export default function AddWatermarkPDF() {
 
   const truncateFileName = (fileName: string, maxLength: number = 40) => {
     if (fileName.length <= maxLength) return fileName;
-    
-    const extension = fileName.slice(fileName.lastIndexOf('.'));
-    const nameWithoutExt = fileName.slice(0, fileName.lastIndexOf('.'));
-    
+
+    const extension = fileName.slice(fileName.lastIndexOf("."));
+    const nameWithoutExt = fileName.slice(0, fileName.lastIndexOf("."));
+
     const startLength = Math.floor((maxLength - extension.length - 3) / 2);
     const endLength = Math.floor((maxLength - extension.length - 3) / 2);
-    
+
     return `${nameWithoutExt.slice(0, startLength)}...${nameWithoutExt.slice(-endLength)}${extension}`;
   };
 
@@ -106,14 +106,125 @@ export default function AddWatermarkPDF() {
     }
   }, []);
 
+  const addWatermarkToPage = useCallback(
+    async (pdf: PDFDocument, pageIndex: number) => {
+      const page = pdf.getPage(pageIndex);
+      const { width, height } = page.getSize();
+
+      // Load font
+      const fontMap: Record<string, string> = {
+        Helvetica: StandardFonts.Helvetica,
+        "Helvetica-Bold": StandardFonts.HelveticaBold,
+        "Times-Roman": StandardFonts.TimesRoman,
+        "Times-Bold": StandardFonts.TimesRomanBold,
+        Courier: StandardFonts.Courier,
+        "Courier-Bold": StandardFonts.CourierBold,
+      };
+
+      const font = await pdf.embedFont(fontMap[settings.fontFamily] || StandardFonts.HelveticaBold);
+      const textWidth = font.widthOfTextAtSize(settings.text, settings.fontSize);
+
+      // Get approximate text height (for visual positioning)
+      const textHeight = settings.fontSize;
+
+      // Define where the CENTER of the text should be for each position
+      let centerX = width / 2;
+      let centerY = height / 2;
+
+      const margin = 100; // Distance from edges
+
+      switch (settings.position) {
+        case "top-left":
+          centerX = margin;
+          centerY = height - margin;
+          break;
+        case "top-center":
+          centerX = width / 2;
+          centerY = height - margin;
+          break;
+        case "top-right":
+          centerX = width - margin;
+          centerY = height - margin;
+          break;
+        case "center":
+          centerX = width / 2;
+          centerY = height / 2;
+          break;
+        case "bottom-left":
+          centerX = margin;
+          centerY = margin;
+          break;
+        case "bottom-center":
+          centerX = width / 2;
+          centerY = margin;
+          break;
+        case "bottom-right":
+          centerX = width - margin;
+          centerY = margin;
+          break;
+      }
+
+      // Parse color
+      const hexToRgb = (hex: string) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        if (!result) return { r: 0, g: 0, b: 0 };
+
+        const r = result[1] ? parseInt(result[1], 16) / 255 : 0;
+        const g = result[2] ? parseInt(result[2], 16) / 255 : 0;
+        const b = result[3] ? parseInt(result[3], 16) / 255 : 0;
+
+        return { r, g, b };
+      };
+
+      const color = hexToRgb(settings.color);
+
+      // Calculate position with rotation
+      const radians = (settings.rotation * Math.PI) / 180;
+
+      // Start with text centered at anchor point (no rotation)
+      let x = centerX - textWidth / 2;
+      let y = centerY - textHeight / 3; // Slightly above center for better visual alignment
+
+      // Adjust for rotation: rotate the position around the anchor point
+      if (settings.rotation !== 0) {
+        const dx = x - centerX;
+        const dy = y - centerY;
+
+        // Rotate the vector
+        const rotatedDx = dx * Math.cos(radians) - dy * Math.sin(radians);
+        const rotatedDy = dx * Math.sin(radians) + dy * Math.cos(radians);
+
+        x = centerX + rotatedDx;
+        y = centerY + rotatedDy;
+      }
+
+      // Draw watermark
+      const drawOptions = {
+        x,
+        y,
+        size: settings.fontSize,
+        font,
+        color: rgb(color.r, color.g, color.b),
+        opacity: settings.opacity,
+        rotate: degrees(settings.rotation),
+      };
+
+      if (settings.layer === "under") {
+        page.drawText(settings.text, drawOptions);
+      } else {
+        page.drawText(settings.text, drawOptions);
+      }
+    },
+    [settings],
+  );
+
   const renderPreview = useCallback(async () => {
     if (!pdfDoc || !canvasRef.current) return;
 
     setIsUpdatingPreview(true);
 
     try {
-      const page = pdfDoc.getPage(currentPage - 1);
-      const { width, height } = page.getSize();
+      // Removed unused width/height
 
       // Create a temporary PDF for preview
       const tempPdf = await PDFDocument.create();
@@ -127,129 +238,19 @@ export default function AddWatermarkPDF() {
 
       // Render to canvas
       const pdfBytes = await tempPdf.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
 
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-
-      setPreviewUrl(url);
+      setPreviewUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return url;
+      });
     } catch (error) {
       console.error("Error rendering preview:", error);
     } finally {
       setIsUpdatingPreview(false);
     }
-  }, [pdfDoc, currentPage, settings, pageRange]);
-
-  const addWatermarkToPage = async (pdf: PDFDocument, pageIndex: number) => {
-    const page = pdf.getPage(pageIndex);
-    const { width, height } = page.getSize();
-
-    // Load font
-    const fontMap: Record<string, any> = {
-      "Helvetica": StandardFonts.Helvetica,
-      "Helvetica-Bold": StandardFonts.HelveticaBold,
-      "Times-Roman": StandardFonts.TimesRoman,
-      "Times-Bold": StandardFonts.TimesRomanBold,
-      "Courier": StandardFonts.Courier,
-      "Courier-Bold": StandardFonts.CourierBold,
-    };
-
-    const font = await pdf.embedFont(fontMap[settings.fontFamily] || StandardFonts.HelveticaBold);
-    const textWidth = font.widthOfTextAtSize(settings.text, settings.fontSize);
-    
-    // Get approximate text height (for visual positioning)
-    const textHeight = settings.fontSize;
-
-    // Define where the CENTER of the text should be for each position
-    let centerX = width / 2;
-    let centerY = height / 2;
-
-    const margin = 100; // Distance from edges
-
-    switch (settings.position) {
-      case "top-left":
-        centerX = margin;
-        centerY = height - margin;
-        break;
-      case "top-center":
-        centerX = width / 2;
-        centerY = height - margin;
-        break;
-      case "top-right":
-        centerX = width - margin;
-        centerY = height - margin;
-        break;
-      case "center":
-        centerX = width / 2;
-        centerY = height / 2;
-        break;
-      case "bottom-left":
-        centerX = margin;
-        centerY = margin;
-        break;
-      case "bottom-center":
-        centerX = width / 2;
-        centerY = margin;
-        break;
-      case "bottom-right":
-        centerX = width - margin;
-        centerY = margin;
-        break;
-    }
-
-    // Parse color
-    const hexToRgb = (hex: string) => {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result
-        ? {
-            r: parseInt(result[1], 16) / 255,
-            g: parseInt(result[2], 16) / 255,
-            b: parseInt(result[3], 16) / 255,
-          }
-        : { r: 0, g: 0, b: 0 };
-    };
-
-    const color = hexToRgb(settings.color);
-
-    // Calculate position with rotation
-    const radians = (settings.rotation * Math.PI) / 180;
-    
-    // Start with text centered at anchor point (no rotation)
-    let x = centerX - textWidth / 2;
-    let y = centerY - textHeight / 3; // Slightly above center for better visual alignment
-    
-    // Adjust for rotation: rotate the position around the anchor point
-    if (settings.rotation !== 0) {
-      const dx = x - centerX;
-      const dy = y - centerY;
-      
-      // Rotate the vector
-      const rotatedDx = dx * Math.cos(radians) - dy * Math.sin(radians);
-      const rotatedDy = dx * Math.sin(radians) + dy * Math.cos(radians);
-      
-      x = centerX + rotatedDx;
-      y = centerY + rotatedDy;
-    }
-
-    // Draw watermark
-    const drawOptions = {
-      x,
-      y,
-      size: settings.fontSize,
-      font,
-      color: rgb(color.r, color.g, color.b),
-      opacity: settings.opacity,
-      rotate: degrees(settings.rotation),
-    };
-
-    if (settings.layer === "under") {
-      page.drawText(settings.text, drawOptions);
-    } else {
-      page.drawText(settings.text, drawOptions);
-    }
-  };
+  }, [pdfDoc, currentPage, pageRange, addWatermarkToPage]);
 
   const applyWatermark = async () => {
     if (!pdfDoc || !selectedFile) return;
@@ -277,7 +278,7 @@ export default function AddWatermarkPDF() {
 
       // Save and download
       const pdfBytes = await watermarkedPdf.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -326,7 +327,7 @@ export default function AddWatermarkPDF() {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [pdfDoc, settings, currentPage]);
+  }, [pdfDoc, renderPreview]);
 
   const fontOptions = [
     { value: "Helvetica", label: "Helvetica" },
@@ -376,20 +377,20 @@ export default function AddWatermarkPDF() {
 
         {/* Main watermark interface */}
         {selectedFile && pdfDoc && (
-          <div className="max-w-7xl mx-auto my-10">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="mx-auto my-10 max-w-7xl">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               {/* Preview Area */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-6 lg:col-span-2">
                 {/* File Info with Page Navigation */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-muted rounded-lg">
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                <div className="flex flex-col justify-between gap-3 p-3 rounded-lg sm:flex-row sm:items-center bg-muted">
+                  <div className="flex items-center flex-1 min-w-0 gap-2">
                     <FileText className="w-4 h-4 text-muted-foreground shrink-0" />
                     <span className="text-sm font-medium truncate" title={selectedFile.name}>
                       {truncateFileName(selectedFile.name)}
                     </span>
                     <span className="text-sm text-muted-foreground shrink-0">({formatFileSize(selectedFile.size)})</span>
                   </div>
-                  
+
                   {/* Page Navigation */}
                   {totalPages > 1 && (
                     <div className="flex items-center gap-2 shrink-0">
@@ -401,7 +402,7 @@ export default function AddWatermarkPDF() {
                       >
                         Previous
                       </Button>
-                      <span className="text-sm px-2 whitespace-nowrap">
+                      <span className="px-2 text-sm whitespace-nowrap">
                         Page {currentPage} of {totalPages}
                       </span>
                       <Button
@@ -417,24 +418,24 @@ export default function AddWatermarkPDF() {
                 </div>
 
                 {/* Preview */}
-                <div className="bg-muted rounded-lg p-4">
-                  <div className="relative w-full h-[600px] bg-white rounded shadow-lg flex items-center justify-center overflow-hidden">
+                <div className="p-4 rounded-lg bg-muted">
+                  <div className="relative flex items-center justify-center w-full overflow-hidden bg-white rounded shadow-lg h-150">
                     {previewUrl ? (
                       <>
-                        <iframe 
-                          src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`} 
-                          className="w-full h-full border-0" 
+                        <iframe
+                          src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+                          className="w-full h-full border-0"
                           title="PDF Preview"
                           key={previewUrl}
                         />
                         {isUpdatingPreview && (
-                          <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                             <Loader2 className="w-8 h-8 animate-spin text-primary" />
                           </div>
                         )}
                       </>
                     ) : (
-                      <div className="text-muted-foreground flex flex-col items-center gap-2">
+                      <div className="flex flex-col items-center gap-2 text-muted-foreground">
                         <Loader2 className="w-8 h-8 animate-spin" />
                         <span>Loading preview...</span>
                       </div>
@@ -443,7 +444,7 @@ export default function AddWatermarkPDF() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4 justify-center">
+                <div className="flex flex-wrap justify-center gap-4">
                   <Button size="lg" onClick={applyWatermark} disabled={isProcessing}>
                     {isProcessing ? (
                       <>
@@ -466,9 +467,9 @@ export default function AddWatermarkPDF() {
 
               {/* Settings Sidebar */}
               <div className="lg:col-span-1">
-                <div className="sticky top-8 space-y-6">
+                <div className="sticky space-y-6 top-8">
                   {/* Watermark Settings */}
-                  <div className="bg-card border rounded-lg p-6 space-y-6">
+                  <div className="p-6 space-y-6 border rounded-lg bg-card">
                     <div className="flex items-center gap-2">
                       <Settings className="w-5 h-5 text-primary" />
                       <h3 className="text-lg font-semibold">Watermark Settings</h3>
@@ -487,7 +488,10 @@ export default function AddWatermarkPDF() {
                     {/* Font Family */}
                     <div className="space-y-2">
                       <Label>Font Family</Label>
-                      <Select value={settings.fontFamily} onValueChange={(value) => setSettings({ ...settings, fontFamily: value })}>
+                      <Select
+                        value={settings.fontFamily}
+                        onValueChange={(value) => setSettings({ ...settings, fontFamily: value })}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -506,7 +510,7 @@ export default function AddWatermarkPDF() {
                       <Label>Font Size: {settings.fontSize}px</Label>
                       <Slider
                         value={[settings.fontSize]}
-                        onValueChange={([value]) => setSettings({ ...settings, fontSize: value })}
+                        onValueChange={([value]) => value !== undefined && setSettings({ ...settings, fontSize: value })}
                         min={12}
                         max={120}
                         step={1}
@@ -518,7 +522,7 @@ export default function AddWatermarkPDF() {
                       <Label>Opacity: {Math.round(settings.opacity * 100)}%</Label>
                       <Slider
                         value={[settings.opacity * 100]}
-                        onValueChange={([value]) => setSettings({ ...settings, opacity: value / 100 })}
+                        onValueChange={([value]) => value !== undefined && setSettings({ ...settings, opacity: value / 100 })}
                         min={0}
                         max={100}
                         step={1}
@@ -528,7 +532,10 @@ export default function AddWatermarkPDF() {
                     {/* Rotation */}
                     <div className="space-y-2">
                       <Label>Rotation</Label>
-                      <Select value={settings.rotation.toString()} onValueChange={(value) => setSettings({ ...settings, rotation: Number(value) })}>
+                      <Select
+                        value={settings.rotation.toString()}
+                        onValueChange={(value) => setSettings({ ...settings, rotation: Number(value) })}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -608,7 +615,10 @@ export default function AddWatermarkPDF() {
                     {/* Position */}
                     <div className="space-y-2">
                       <Label>Position</Label>
-                      <Select value={settings.position} onValueChange={(value: any) => setSettings({ ...settings, position: value })}>
+                      <Select
+                        value={settings.position}
+                        onValueChange={(value) => setSettings({ ...settings, position: value as WatermarkSettings["position"] })}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -625,7 +635,10 @@ export default function AddWatermarkPDF() {
                     {/* Layer */}
                     <div className="space-y-2">
                       <Label>Layer</Label>
-                      <Select value={settings.layer} onValueChange={(value: any) => setSettings({ ...settings, layer: value })}>
+                      <Select
+                        value={settings.layer}
+                        onValueChange={(value) => setSettings({ ...settings, layer: value as WatermarkSettings["layer"] })}
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
