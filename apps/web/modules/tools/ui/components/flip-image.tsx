@@ -1,8 +1,8 @@
 "use client";
 
+import React from "react";
 import { toast } from "sonner";
 import Image from "next/image";
-import Cropper from "react-easy-crop";
 import { useState, useCallback, useRef } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
@@ -10,30 +10,21 @@ import { Progress } from "@workspace/ui/components/progress";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
-import { Download, Loader2, ImageIcon, Trash2, Crop, CheckCircle } from "lucide-react";
+import { Download, Loader2, ImageIcon, Trash2, FlipHorizontal, FlipVertical, RotateCcw, CheckCircle } from "lucide-react";
 
-interface CropArea {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-interface CroppedImage {
+interface FlippedImage {
   blob: Blob;
   url: string;
   fileName: string;
+  flipType: "horizontal" | "vertical" | "both";
 }
 
-export default function CropImage() {
-  const [zoom, setZoom] = useState(1);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
+export default function FlipImage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
-  const [croppedImage, setCroppedImage] = useState<CroppedImage | null>(null);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<CropArea | null>(null);
+  const [flipType, setFlipType] = useState<"horizontal" | "vertical" | "both">("horizontal");
+  const [flippedImage, setFlippedImage] = useState<FlippedImage | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -50,11 +41,11 @@ export default function CropImage() {
       URL.revokeObjectURL(imageSrc);
       setImageSrc(null);
     }
-    if (croppedImage) {
-      URL.revokeObjectURL(croppedImage.url);
-      setCroppedImage(null);
+    if (flippedImage) {
+      URL.revokeObjectURL(flippedImage.url);
+      setFlippedImage(null);
     }
-  }, [imageSrc, croppedImage]);
+  }, [imageSrc, flippedImage]);
 
   const handleFileSelect = useCallback(
     (files: File[]) => {
@@ -71,7 +62,7 @@ export default function CropImage() {
 
       cleanup();
       setSelectedFile(file);
-      setCroppedImage(null);
+      setFlippedImage(null);
 
       const url = URL.createObjectURL(file);
       setImageSrc(url);
@@ -79,11 +70,7 @@ export default function CropImage() {
     [cleanup],
   );
 
-  const onCropComplete = useCallback((_croppedArea: CropArea, croppedAreaPixels: CropArea) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
-
-  const getCroppedImg = useCallback(async (imageSrc: string, pixelCrop: CropArea): Promise<Blob> => {
+  const flipImage = useCallback(async (imageSrc: string, flipType: "horizontal" | "vertical" | "both"): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const image = new window.Image();
       image.crossOrigin = "anonymous";
@@ -100,20 +87,27 @@ export default function CropImage() {
           return;
         }
 
-        canvas.width = pixelCrop.width;
-        canvas.height = pixelCrop.height;
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-        ctx.drawImage(
-          image,
-          pixelCrop.x,
-          pixelCrop.y,
-          pixelCrop.width,
-          pixelCrop.height,
-          0,
-          0,
-          pixelCrop.width,
-          pixelCrop.height,
-        );
+        // Save the context state
+        ctx.save();
+
+        // Apply flip transformations
+        if (flipType === "horizontal" || flipType === "both") {
+          ctx.scale(-1, 1);
+          ctx.translate(-canvas.width, 0);
+        }
+        if (flipType === "vertical" || flipType === "both") {
+          ctx.scale(1, -1);
+          ctx.translate(0, -canvas.height);
+        }
+
+        // Draw the image
+        ctx.drawImage(image, 0, 0);
+
+        // Restore the context state
+        ctx.restore();
 
         canvas.toBlob(
           (blob) => {
@@ -132,61 +126,71 @@ export default function CropImage() {
     });
   }, []);
 
-  const handleCrop = useCallback(async () => {
-    if (!imageSrc || !croppedAreaPixels || !selectedFile) return;
+  const handleFlip = useCallback(async () => {
+    if (!imageSrc || !selectedFile) return;
 
     setIsProcessing(true);
 
     try {
-      const croppedBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-      const croppedUrl = URL.createObjectURL(croppedBlob);
+      const flippedBlob = await flipImage(imageSrc, flipType);
+      const flippedUrl = URL.createObjectURL(flippedBlob);
 
-      const fileName = `${selectedFile.name.replace(/\.[^/.]+$/, "")}_cropped.jpg`;
+      const fileName = `${selectedFile.name.replace(/\.[^/.]+$/, "")}_flipped_${flipType}.jpg`;
 
-      setCroppedImage({
-        blob: croppedBlob,
-        url: croppedUrl,
+      setFlippedImage({
+        blob: flippedBlob,
+        url: flippedUrl,
         fileName,
+        flipType,
       });
 
-      toast.success("Image cropped successfully!");
+      toast.success(`Image flipped ${flipType === "both" ? "horizontally and vertically" : flipType}!`);
     } catch (error) {
-      console.error("Error cropping image:", error);
-      toast.error("Failed to crop image. Please try again.");
+      console.error("Error flipping image:", error);
+      toast.error("Failed to flip image. Please try again.");
     } finally {
       setIsProcessing(false);
     }
-  }, [imageSrc, croppedAreaPixels, selectedFile, getCroppedImg]);
+  }, [imageSrc, selectedFile, flipType, flipImage]);
 
-  const downloadCroppedImage = useCallback(() => {
-    if (!croppedImage) return;
+  const downloadFlippedImage = useCallback(() => {
+    if (!flippedImage) return;
 
     const link = document.createElement("a");
-    link.href = croppedImage.url;
-    link.download = croppedImage.fileName;
+    link.href = flippedImage.url;
+    link.download = flippedImage.fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     toast.success("Image downloaded!");
-  }, [croppedImage]);
+  }, [flippedImage]);
 
-  const resetCrop = useCallback(() => {
+  const resetFlip = useCallback(() => {
     cleanup();
     setSelectedFile(null);
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-    setAspectRatio(null);
-    setCroppedAreaPixels(null);
+    setFlipType("horizontal");
   }, [cleanup]);
 
-  const aspectRatioOptions = [
-    { label: "Free", value: null },
-    { label: "1:1 (Square)", value: 1 },
-    { label: "4:3", value: 4 / 3 },
-    { label: "16:9", value: 16 / 9 },
-    { label: "3:2", value: 3 / 2 },
-    { label: "2:3", value: 2 / 3 },
+  const flipOptions = [
+    {
+      type: "horizontal" as const,
+      label: "Horizontal",
+      icon: FlipHorizontal,
+      description: "Flip left to right",
+    },
+    {
+      type: "vertical" as const,
+      label: "Vertical",
+      icon: FlipVertical,
+      description: "Flip top to bottom",
+    },
+    {
+      type: "both" as const,
+      label: "Both",
+      icon: RotateCcw,
+      description: "Flip both directions",
+    },
   ];
 
   return (
@@ -208,11 +212,11 @@ export default function CropImage() {
           </section>
         )}
 
-        {/* Main cropping interface with sidebar */}
-        {selectedFile && !croppedImage && (
-          <div className="max-w-7xl mx-auto my-10">
+        {/* Main flipping interface with sidebar */}
+        {selectedFile && !flippedImage && (
+          <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Crop Area */}
+              {/* Main Image Area */}
               <div className="lg:col-span-2 space-y-6">
                 {/* File Info Header */}
                 <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
@@ -221,37 +225,37 @@ export default function CropImage() {
                   <span className="text-sm text-muted-foreground">({formatFileSize(selectedFile.size)})</span>
                 </div>
 
-                {/* Crop Area */}
+                {/* Image Preview */}
                 {imageSrc && (
                   <div className="relative h-96 lg:h-125 bg-muted rounded-lg overflow-hidden">
-                    <Cropper
-                      image={imageSrc}
-                      crop={crop}
-                      zoom={zoom}
-                      aspect={aspectRatio || undefined}
-                      onCropChange={setCrop}
-                      onZoomChange={setZoom}
-                      onCropComplete={onCropComplete}
+                    <Image
+                      src={imageSrc}
+                      alt="Original"
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 1024px) 100vw, 66vw"
                     />
                   </div>
                 )}
 
                 {/* Action Buttons */}
                 <div className="flex gap-4 justify-center">
-                  <Button size="lg" onClick={handleCrop} disabled={!croppedAreaPixels || isProcessing}>
+                  <Button size="lg" onClick={handleFlip} disabled={isProcessing}>
                     {isProcessing ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        Cropping...
+                        Flipping...
                       </>
                     ) : (
                       <>
-                        <Crop className="w-4 h-4" />
-                        Crop Image
+                        {React.createElement(flipOptions.find((opt) => opt.type === flipType)?.icon || FlipHorizontal, {
+                          className: "w-4 h-4",
+                        })}
+                        Flip {flipType === "both" ? "Both Ways" : flipType.charAt(0).toUpperCase() + flipType.slice(1)}
                       </>
                     )}
                   </Button>
-                  <Button size="lg" variant="outline" onClick={resetCrop}>
+                  <Button size="lg" variant="outline" onClick={resetFlip}>
                     <Trash2 className="size-4" />
                     Reset
                   </Button>
@@ -271,72 +275,56 @@ export default function CropImage() {
               {/* Sidebar Controls */}
               <div className="lg:col-span-1">
                 <div className="sticky top-8 space-y-6">
-                  {/* Crop Settings */}
+                  {/* Flip Settings */}
                   <div className="bg-card border rounded-lg p-6 space-y-6">
                     <div className="flex items-center gap-2">
-                      <Crop className="w-5 h-5 text-primary" />
-                      <h3 className="text-lg font-semibold">Crop Settings</h3>
+                      <FlipHorizontal className="w-5 h-5 text-primary" />
+                      <h3 className="text-lg font-semibold">Flip Settings</h3>
                     </div>
 
-                    {/* Aspect Ratio Selection */}
+                    {/* Flip Direction Selection */}
                     <div className="space-y-3">
-                      <Label className="text-sm font-medium">Aspect Ratio</Label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {aspectRatioOptions.map((option) => (
-                          <Button
-                            key={option.label}
-                            variant={aspectRatio === option.value ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setAspectRatio(option.value)}
-                            className="text-xs"
-                          >
-                            {option.label}
-                          </Button>
-                        ))}
+                      <Label className="text-sm font-medium">Flip Direction</Label>
+                      <div className="space-y-2">
+                        {flipOptions.map((option) => {
+                          const Icon = option.icon;
+                          return (
+                            <Button
+                              key={option.type}
+                              variant={flipType === option.type ? "default" : "outline"}
+                              className="w-full justify-start gap-3 h-auto p-3"
+                              onClick={() => setFlipType(option.type)}
+                            >
+                              <Icon className="w-4 h-4 shrink-0" />
+                              <div className="text-left">
+                                <div className="font-medium">{option.label}</div>
+                                <div className="text-xs opacity-70">{option.description}</div>
+                              </div>
+                            </Button>
+                          );
+                        })}
                       </div>
                     </div>
 
-                    {/* Zoom Control */}
-                    <div className="space-y-3">
-                      <Label className="text-sm font-medium">Zoom: {Math.round(zoom * 100)}%</Label>
-                      <input
-                        type="range"
-                        min={1}
-                        max={3}
-                        step={0.1}
-                        value={zoom}
-                        onChange={(e) => setZoom(Number(e.target.value))}
-                        className="w-full"
-                      />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>100%</span>
-                        <span>300%</span>
+                    {/* Preview Info */}
+                    <div className="space-y-2 p-3 bg-muted rounded-lg">
+                      <h4 className="text-sm font-medium">Selected Flip</h4>
+                      <div className="text-xs text-muted-foreground">
+                        {flipOptions.find((opt) => opt.type === flipType)?.description}
                       </div>
                     </div>
-
-                    {/* Crop Info */}
-                    {croppedAreaPixels && (
-                      <div className="space-y-2 p-3 bg-muted rounded-lg">
-                        <h4 className="text-sm font-medium">Selection Info</h4>
-                        <div className="text-xs text-muted-foreground space-y-1">
-                          <div>Width: {Math.round(croppedAreaPixels.width)}px</div>
-                          <div>Height: {Math.round(croppedAreaPixels.height)}px</div>
-                          <div>Aspect: {(croppedAreaPixels.width / croppedAreaPixels.height).toFixed(2)}</div>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {/* Tips */}
                   <Alert>
                     <CheckCircle className="w-4 h-4" />
-                    <AlertTitle>Cropping Tips</AlertTitle>
+                    <AlertTitle>Flipping Tips</AlertTitle>
                     <AlertDescription className="text-sm">
                       <ul className="mt-2 space-y-1">
-                        <li>• Drag to reposition the crop area</li>
-                        <li>• Use zoom for precise selection</li>
-                        <li>• Choose aspect ratios for consistency</li>
-                        <li>• Click "Crop Image" when ready</li>
+                        <li>• Horizontal flip mirrors left to right</li>
+                        <li>• Vertical flip mirrors top to bottom</li>
+                        <li>• Both flips both directions</li>
+                        <li>• Original file remains unchanged</li>
                       </ul>
                     </AlertDescription>
                   </Alert>
@@ -347,12 +335,12 @@ export default function CropImage() {
         )}
 
         {/* Results - Always show when available */}
-        {croppedImage && (
+        {flippedImage && (
           <section className="max-w-4xl mx-auto my-8">
             <div className="space-y-6">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <h2 className="text-xl font-semibold">Cropped Image</h2>
+                <h2 className="text-xl font-semibold">Flipped Image</h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -370,13 +358,15 @@ export default function CropImage() {
                   </div>
                 </div>
 
-                {/* Cropped */}
+                {/* Flipped */}
                 <div className="space-y-2">
-                  <h3 className="text-sm font-medium text-muted-foreground">Cropped</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">
+                    Flipped ({flippedImage.flipType.charAt(0).toUpperCase() + flippedImage.flipType.slice(1)})
+                  </h3>
                   <div className="relative min-h-50 max-h-100 bg-muted rounded-lg overflow-hidden">
                     <Image
-                      src={croppedImage.url}
-                      alt="Cropped"
+                      src={flippedImage.url}
+                      alt="Flipped"
                       fill
                       className="object-contain"
                       sizes="(max-width: 1024px) 100vw, 50vw"
@@ -389,16 +379,16 @@ export default function CropImage() {
                 <div className="flex items-center gap-2 min-w-0 flex-1">
                   <ImageIcon className="w-4 h-4 text-muted-foreground shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <span className="text-sm font-medium block truncate">{croppedImage.fileName}</span>
-                    <span className="text-sm text-muted-foreground">({formatFileSize(croppedImage.blob.size)})</span>
+                    <span className="text-sm font-medium block truncate">{flippedImage.fileName}</span>
+                    <span className="text-sm text-muted-foreground">({formatFileSize(flippedImage.blob.size)})</span>
                   </div>
                 </div>
                 <div className="flex gap-2 shrink-0">
-                  <Button onClick={downloadCroppedImage} className="gap-2">
+                  <Button onClick={downloadFlippedImage} className="gap-2">
                     <Download className="size-4" />
                     Download
                   </Button>
-                  <Button variant="secondary" onClick={resetCrop} className="gap-2">
+                  <Button variant="secondary" onClick={resetFlip} className="gap-2">
                     <Trash2 className="size-4" />
                     Reset
                   </Button>

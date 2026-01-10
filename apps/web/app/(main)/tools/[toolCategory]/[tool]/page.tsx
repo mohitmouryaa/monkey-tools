@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
     const category = await caller.categories.getCategoryWithTools({ slug: toolCategory });
 
     // Find the specific tool by matching the link
-    const toolData = category.tools.find((t) => t.link === tool);
+    const toolData = category.tools.find((t) => [`/${tool}`, tool].includes(t.link));
 
     if (!toolData) {
       return {
