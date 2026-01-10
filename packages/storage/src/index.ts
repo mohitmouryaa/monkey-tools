@@ -28,8 +28,12 @@ export async function getUploadUrl(key: string, contentType: string) {
 }
 
 // 2. Generate URL for downloading processed files
-export async function getDownloadUrl(key: string) {
-  const command = new GetObjectCommand({ Bucket: BUCKET_NAME, Key: key });
+export async function getDownloadUrl(key: string, filename?: string) {
+  const command = new GetObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+    ResponseContentDisposition: filename ? `attachment; filename="${filename}"` : "attachment",
+  });
   return getSignedUrl(s3, command, { expiresIn: 3600 });
 }
 
