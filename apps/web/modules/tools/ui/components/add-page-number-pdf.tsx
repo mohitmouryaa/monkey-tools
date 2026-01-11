@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import { FileUpload } from "@/modules/common/ui/components/file-upload";
+import { toast } from "sonner";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { Slider } from "@workspace/ui/components/slider";
+import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Download, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
-import { toast } from "sonner";
-import { PDFDocument, StandardFonts, rgb, degrees } from "pdf-lib";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
 type Position = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
 type Margin = "small" | "recommended" | "large";
@@ -42,11 +42,11 @@ export default function AddPageNumberPDF() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isUpdatingPreview, setIsUpdatingPreview] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   // Local state for input fields to allow free typing
-  const [fromInput, setFromInput] = useState<string>('1');
-  const [toInput, setToInput] = useState<string>('1');
-  const [firstNumberInput, setFirstNumberInput] = useState<string>('1');
+  const [fromInput, setFromInput] = useState<string>("1");
+  const [toInput, setToInput] = useState<string>("1");
+  const [firstNumberInput, setFirstNumberInput] = useState<string>("1");
 
   const [settings, setSettings] = useState<PageNumberSettings>({
     fontFamily: "Helvetica-Bold",
@@ -68,64 +68,74 @@ export default function AddPageNumberPDF() {
     setSettings((prev) => ({ ...prev, ...updates }));
   };
 
-  // Debounced preview update
-  useEffect(() => {
-    if (!pdfDoc) return;
+  const addPageNumberToPage = useCallback(
+    async (pdf: PDFDocument, pageIndex: number, actualPageNumber: number) => {
+      const page = pdf.getPage(pageIndex);
+      const { width, height } = page.getSize();
 
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
+      // Load font
+      // biome-ignore lint/suspicious/noExplicitAny: <No exact type available>
+      const fontMap: Record<string, any> = {
+        Helvetica: StandardFonts.Helvetica,
+        "Helvetica-Bold": StandardFonts.HelveticaBold,
+        "Times-Roman": StandardFonts.TimesRoman,
+        "Times-Bold": StandardFonts.TimesRomanBold,
+        Courier: StandardFonts.Courier,
+        "Courier-Bold": StandardFonts.CourierBold,
+      };
 
-    debounceTimer.current = setTimeout(() => {
-      renderPreview();
-    }, 300);
+      const font = await pdf.embedFont(fontMap[settings.fontFamily] || StandardFonts.HelveticaBold);
 
-    return () => {
-      if (debounceTimer.current) {
-        clearTimeout(debounceTimer.current);
+      // Calculate page number to display
+      const displayNumber = settings.firstNumber + (actualPageNumber - settings.pageRange.from);
+      const pageNumberText = displayNumber.toString();
+
+      const textWidth = font.widthOfTextAtSize(pageNumberText, settings.fontSize);
+      const margin = marginValues[settings.margin];
+
+      // Calculate position
+      let x = width / 2 - textWidth / 2;
+      let y = margin;
+
+      switch (settings.position) {
+        case "top-left":
+          x = margin;
+          y = height - margin;
+          break;
+        case "top-center":
+          x = width / 2 - textWidth / 2;
+          y = height - margin;
+          break;
+        case "top-right":
+          x = width - margin - textWidth;
+          y = height - margin;
+          break;
+        case "bottom-left":
+          x = margin;
+          y = margin;
+          break;
+        case "bottom-center":
+          x = width / 2 - textWidth / 2;
+          y = margin;
+          break;
+        case "bottom-right":
+          x = width - margin - textWidth;
+          y = margin;
+          break;
       }
-    };
-  }, [pdfDoc, currentPage, settings]);
 
-  const truncateFileName = (name: string, maxLength: number = 30) => {
-    if (name.length <= maxLength) return name;
-    const extension = name.split(".").pop();
-    const nameWithoutExt = name.substring(0, name.lastIndexOf("."));
-    const truncated = nameWithoutExt.substring(0, maxLength - 3 - (extension?.length || 0));
-    return `${truncated}...${extension}`;
-  };
-
-  const handleFileSelect = useCallback(async (files: File[]) => {
-    const selectedFile = files[0];
-    if (!selectedFile) return;
-    
-    setFile(selectedFile);
-    setIsProcessing(true);
-
-    try {
-      const arrayBuffer = await selectedFile.arrayBuffer();
-      const pdf = await PDFDocument.load(arrayBuffer);
-      const pages = pdf.getPageCount();
-
-      setPdfDoc(pdf);
-      setTotalPages(pages);
-      setCurrentPage(1);
-      setFromInput('1');
-      setToInput(pages.toString());
-      setFirstNumberInput('1');
-      setSettings((prev) => ({
-        ...prev,
-        pageRange: { from: 1, to: pages },
-      }));
-
-      toast.success("PDF loaded successfully!");
-    } catch (error) {
-      console.error("Error loading PDF:", error);
-      toast.error("Failed to load PDF. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
-  }, []);
+      // Draw page number
+      page.drawText(pageNumberText, {
+        x,
+        y,
+        size: settings.fontSize,
+        font,
+        color: rgb(0, 0, 0),
+        opacity: settings.opacity,
+      });
+    },
+    [settings],
+  );
 
   const renderPreview = useCallback(async () => {
     if (!pdfDoc || !canvasRef.current) return;
@@ -133,9 +143,6 @@ export default function AddPageNumberPDF() {
     setIsUpdatingPreview(true);
 
     try {
-      const page = pdfDoc.getPage(currentPage - 1);
-      const { width, height } = page.getSize();
-
       // Create a temporary PDF for preview
       const tempPdf = await PDFDocument.create();
       const [copiedPage] = await tempPdf.copyPages(pdfDoc, [currentPage - 1]);
@@ -162,72 +169,66 @@ export default function AddPageNumberPDF() {
     } finally {
       setIsUpdatingPreview(false);
     }
-  }, [pdfDoc, currentPage, settings, previewUrl]);
+  }, [pdfDoc, currentPage, settings, previewUrl, addPageNumberToPage]);
 
-  const addPageNumberToPage = async (pdf: PDFDocument, pageIndex: number, actualPageNumber: number) => {
-    const page = pdf.getPage(pageIndex);
-    const { width, height } = page.getSize();
+  // Debounced preview update
+  useEffect(() => {
+    if (!pdfDoc) return;
 
-    // Load font
-    const fontMap: Record<string, any> = {
-      "Helvetica": StandardFonts.Helvetica,
-      "Helvetica-Bold": StandardFonts.HelveticaBold,
-      "Times-Roman": StandardFonts.TimesRoman,
-      "Times-Bold": StandardFonts.TimesRomanBold,
-      "Courier": StandardFonts.Courier,
-      "Courier-Bold": StandardFonts.CourierBold,
-    };
-
-    const font = await pdf.embedFont(fontMap[settings.fontFamily] || StandardFonts.HelveticaBold);
-    
-    // Calculate page number to display
-    const displayNumber = settings.firstNumber + (actualPageNumber - settings.pageRange.from);
-    const pageNumberText = displayNumber.toString();
-    
-    const textWidth = font.widthOfTextAtSize(pageNumberText, settings.fontSize);
-    const margin = marginValues[settings.margin];
-
-    // Calculate position
-    let x = width / 2 - textWidth / 2;
-    let y = margin;
-
-    switch (settings.position) {
-      case "top-left":
-        x = margin;
-        y = height - margin;
-        break;
-      case "top-center":
-        x = width / 2 - textWidth / 2;
-        y = height - margin;
-        break;
-      case "top-right":
-        x = width - margin - textWidth;
-        y = height - margin;
-        break;
-      case "bottom-left":
-        x = margin;
-        y = margin;
-        break;
-      case "bottom-center":
-        x = width / 2 - textWidth / 2;
-        y = margin;
-        break;
-      case "bottom-right":
-        x = width - margin - textWidth;
-        y = margin;
-        break;
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
     }
 
-    // Draw page number
-    page.drawText(pageNumberText, {
-      x,
-      y,
-      size: settings.fontSize,
-      font,
-      color: rgb(0, 0, 0),
-      opacity: settings.opacity,
-    });
+    debounceTimer.current = setTimeout(() => {
+      renderPreview();
+    }, 300);
+
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [pdfDoc, renderPreview]);
+
+  const truncateFileName = (name: string, maxLength: number = 30) => {
+    if (name.length <= maxLength) return name;
+    const extension = name.split(".").pop();
+    const nameWithoutExt = name.substring(0, name.lastIndexOf("."));
+    const truncated = nameWithoutExt.substring(0, maxLength - 3 - (extension?.length || 0));
+    return `${truncated}...${extension}`;
   };
+
+  const handleFileSelect = useCallback(async (files: File[]) => {
+    const selectedFile = files[0];
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+    setIsProcessing(true);
+
+    try {
+      const arrayBuffer = await selectedFile.arrayBuffer();
+      const pdf = await PDFDocument.load(arrayBuffer);
+      const pages = pdf.getPageCount();
+
+      setPdfDoc(pdf);
+      setTotalPages(pages);
+      setCurrentPage(1);
+      setFromInput("1");
+      setToInput(pages.toString());
+      setFirstNumberInput("1");
+      setSettings((prev) => ({
+        ...prev,
+        pageRange: { from: 1, to: pages },
+      }));
+
+      toast.success("PDF loaded successfully!");
+    } catch (error) {
+      console.error("Error loading PDF:", error);
+      toast.error("Failed to load PDF. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  }, []);
 
   const handleDownload = async () => {
     if (!pdfDoc || !file) {
@@ -239,7 +240,6 @@ export default function AddPageNumberPDF() {
 
     try {
       const pdfDocCopy = await PDFDocument.load(await pdfDoc.save());
-      const pages = pdfDocCopy.getPages();
 
       // Add page numbers to pages within range
       for (let i = settings.pageRange.from - 1; i < settings.pageRange.to; i++) {
@@ -273,9 +273,9 @@ export default function AddPageNumberPDF() {
     setPdfDoc(null);
     setTotalPages(0);
     setCurrentPage(1);
-    setFromInput('1');
-    setToInput('1');
-    setFirstNumberInput('1');
+    setFromInput("1");
+    setToInput("1");
+    setFirstNumberInput("1");
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
@@ -319,51 +319,41 @@ export default function AddPageNumberPDF() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto mt-5">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="w-full mx-auto mt-5 max-w-7xl">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Preview Area */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="p-6 bg-white border rounded-lg shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">{truncateFileName(file.name)}</span>
                 <span className="text-xs text-gray-500">({totalPages} pages)</span>
               </div>
               <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={goToPreviousPage}
-                  disabled={currentPage <= settings.pageRange.from}
-                >
+                <Button size="sm" variant="outline" onClick={goToPreviousPage} disabled={currentPage <= settings.pageRange.from}>
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
                 <span className="text-sm">
                   Page {currentPage} of {totalPages}
                 </span>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={goToNextPage}
-                  disabled={currentPage >= settings.pageRange.to}
-                >
+                <Button size="sm" variant="outline" onClick={goToNextPage} disabled={currentPage >= settings.pageRange.to}>
                   <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
             </div>
 
             {/* PDF Preview */}
-            <div className="relative bg-gray-100 rounded overflow-hidden">
+            <div className="relative overflow-hidden bg-gray-100 rounded">
               {isUpdatingPreview && (
-                <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50">
+                  <div className="w-8 h-8 border-b-2 rounded-full animate-spin border-primary"></div>
                 </div>
               )}
               {previewUrl && (
                 <iframe
                   key={previewUrl}
                   src={`${previewUrl}#toolbar=0&navpanes=0&scrollbar=0&view=Fit`}
-                  className="w-full h-[500px] border-0"
+                  className="w-full border-0 h-125"
                   title="PDF Preview"
                 />
               )}
@@ -373,8 +363,8 @@ export default function AddPageNumberPDF() {
         </div>
 
         {/* Settings Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border p-6 space-y-6">
+        <div className="space-y-6 lg:col-span-1">
+          <div className="p-6 space-y-6 bg-white border rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold">Page Number Settings</h3>
 
             {/* Position */}
@@ -384,21 +374,18 @@ export default function AddPageNumberPDF() {
                 {(["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"] as Position[]).map(
                   (pos) => (
                     <button
+                      type="button"
                       key={pos}
                       onClick={() => updateSettings({ position: pos })}
                       className={`h-10 rounded border-2 ${
-                        settings.position === pos
-                          ? "bg-primary border-primary"
-                          : "bg-white border-gray-300 hover:border-gray-400"
+                        settings.position === pos ? "bg-primary border-primary" : "bg-white border-gray-300 hover:border-gray-400"
                       }`}
                       title={pos.replace("-", " ")}
                     />
-                  )
+                  ),
                 )}
               </div>
             </div>
-
-        
 
             {/* First Number */}
             <div className="space-y-2">
@@ -410,18 +397,18 @@ export default function AddPageNumberPDF() {
                 onChange={(e) => {
                   const value = e.target.value;
                   // Only allow numbers
-                  if (value === '' || /^\d+$/.test(value)) {
+                  if (value === "" || /^\d+$/.test(value)) {
                     setFirstNumberInput(value);
-                    const numValue = parseInt(value);
-                    if (!isNaN(numValue) && numValue >= 1) {
+                    const numValue = parseInt(value, 10);
+                    if (!Number.isNaN(numValue) && numValue >= 1) {
                       updateSettings({ firstNumber: numValue });
                     }
                   }
                 }}
                 onBlur={() => {
-                  const numValue = parseInt(firstNumberInput);
-                  if (isNaN(numValue) || numValue < 1) {
-                    setFirstNumberInput('1');
+                  const numValue = parseInt(firstNumberInput, 10);
+                  if (Number.isNaN(numValue) || numValue < 1) {
+                    setFirstNumberInput("1");
                     updateSettings({ firstNumber: 1 });
                   } else {
                     setFirstNumberInput(numValue.toString());
@@ -435,10 +422,7 @@ export default function AddPageNumberPDF() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>Font Family</Label>
-                <Select
-                  value={settings.fontFamily}
-                  onValueChange={(value) => updateSettings({ fontFamily: value })}
-                >
+                <Select value={settings.fontFamily} onValueChange={(value) => updateSettings({ fontFamily: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -455,10 +439,7 @@ export default function AddPageNumberPDF() {
 
               <div className="space-y-2">
                 <Label>Margin</Label>
-                <Select
-                  value={settings.margin}
-                  onValueChange={(value: Margin) => updateSettings({ margin: value })}
-                >
+                <Select value={settings.margin} onValueChange={(value: Margin) => updateSettings({ margin: value })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -508,18 +489,18 @@ export default function AddPageNumberPDF() {
                     onChange={(e) => {
                       const value = e.target.value;
                       // Only allow numbers
-                      if (value === '' || /^\d+$/.test(value)) {
+                      if (value === "" || /^\d+$/.test(value)) {
                         setFromInput(value);
-                        const numValue = parseInt(value);
-                        if (!isNaN(numValue) && numValue >= 1 && numValue <= totalPages) {
+                        const numValue = parseInt(value, 10);
+                        if (!Number.isNaN(numValue) && numValue >= 1 && numValue <= totalPages) {
                           updateSettings({ pageRange: { ...settings.pageRange, from: numValue } });
                         }
                       }
                     }}
                     onBlur={() => {
-                      const numValue = parseInt(fromInput);
-                      if (isNaN(numValue) || numValue < 1) {
-                        setFromInput('1');
+                      const numValue = parseInt(fromInput, 10);
+                      if (Number.isNaN(numValue) || numValue < 1) {
+                        setFromInput("1");
                         updateSettings({ pageRange: { ...settings.pageRange, from: 1 } });
                         if (currentPage < 1) setCurrentPage(1);
                       } else if (numValue > settings.pageRange.to) {
@@ -543,17 +524,17 @@ export default function AddPageNumberPDF() {
                     onChange={(e) => {
                       const value = e.target.value;
                       // Only allow numbers
-                      if (value === '' || /^\d+$/.test(value)) {
+                      if (value === "" || /^\d+$/.test(value)) {
                         setToInput(value);
-                        const numValue = parseInt(value);
-                        if (!isNaN(numValue) && numValue >= 1 && numValue <= totalPages) {
+                        const numValue = parseInt(value, 10);
+                        if (!Number.isNaN(numValue) && numValue >= 1 && numValue <= totalPages) {
                           updateSettings({ pageRange: { ...settings.pageRange, to: numValue } });
                         }
                       }
                     }}
                     onBlur={() => {
-                      const numValue = parseInt(toInput);
-                      if (isNaN(numValue) || numValue > totalPages) {
+                      const numValue = parseInt(toInput, 10);
+                      if (Number.isNaN(numValue) || numValue > totalPages) {
                         setToInput(totalPages.toString());
                         updateSettings({ pageRange: { ...settings.pageRange, to: totalPages } });
                         if (currentPage > totalPages) setCurrentPage(totalPages);
@@ -576,7 +557,7 @@ export default function AddPageNumberPDF() {
             </div>
 
             {/* Actions */}
-            <div className="space-y-2 pt-4 border-t">
+            <div className="pt-4 space-y-2 border-t">
               <Button onClick={handleDownload} disabled={isProcessing} className="w-full">
                 <Download className="w-4 h-4 mr-2" />
                 Download PDF

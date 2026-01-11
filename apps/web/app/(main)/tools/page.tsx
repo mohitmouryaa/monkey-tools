@@ -1,5 +1,5 @@
 import { caller } from "@/trpc/server";
-import { AllToolsClient } from "./all-tools-client";
+import { AllToolsClient } from "@/modules/tools/ui/views/all-tools-client";
 
 export default async function AllToolsPage() {
   // Fetch all tools and categories on the server

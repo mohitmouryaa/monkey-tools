@@ -16,9 +16,7 @@ export const AdPlaceholder = ({ position }: AdPlaceholderProps) => {
   };
 
   return (
-    <div
-      className={`w-full ${getSize()} bg-card border border-dashed border-border rounded-lg flex items-center justify-center`}
-    >
+    <div className={`w-full ${getSize()} bg-card border border-dashed border-border rounded-lg flex items-center justify-center`}>
       <span className="text-muted-foreground text-sm">Advertisement</span>
     </div>
   );

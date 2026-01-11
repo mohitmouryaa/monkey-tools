@@ -128,10 +128,7 @@ export default function CompressPdf() {
             <Button variant="outline" onClick={handleReset} className="flex-1">
               Cancel
             </Button>
-            <Button
-              onClick={handleCompress}
-              className="flex-1"
-            >
+            <Button onClick={handleCompress} className="flex-1">
               Compress PDF
             </Button>
           </div>

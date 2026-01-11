@@ -41,12 +41,8 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
           <div className="flex-1">
             {/* Tool Header */}
             <div className="mb-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                {toolData.h1Heading || toolData.title}
-              </h1>
-              {toolData.introText && (
-                <p className="text-muted-foreground">{toolData.introText}</p>
-              )}
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{toolData.h1Heading || toolData.title}</h1>
+              {toolData.introText && <p className="text-muted-foreground">{toolData.introText}</p>}
             </div>
 
             {/* Tool Card */}

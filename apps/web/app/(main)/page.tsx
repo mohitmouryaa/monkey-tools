@@ -25,14 +25,14 @@ export const metadata: Metadata = {
 export default async function Home() {
   // Fetch categories
   const categories = await caller.categories.getMany({});
-  
+
   // Fetch 5 tools per category
   const toolsByCategory = await Promise.all(
     categories.items.slice(0, 4).map(async (category) => {
-      const tools = await caller.tools.getMany({ 
-        categoryId: category._id, 
-        pageSize: 5, 
-        page: 1 
+      const tools = await caller.tools.getMany({
+        categoryId: category._id,
+        pageSize: 5,
+        page: 1,
       });
       return {
         category: {
@@ -40,19 +40,21 @@ export default async function Home() {
           name: category.name,
           slug: category.slug,
         },
-        tools: tools.items.map(tool => ({
-          _id: tool._id,
-          title: tool.title,
-          description: tool.description,
-          link: tool.link,
-          category: {
-            _id: category._id,
-            name: category.name,
-            slug: category.slug,
-          }
-        }))
+        tools: tools.items
+          .filter((tool) => tool._id) // Filter out tools without _id
+          .map((tool) => ({
+            _id: tool._id as string, // Type assertion since we filtered
+            title: tool.title,
+            description: tool.description,
+            link: tool.link,
+            category: {
+              _id: category._id,
+              name: category.name,
+              slug: category.slug,
+            },
+          })),
       };
-    })
+    }),
   );
 
   return (
