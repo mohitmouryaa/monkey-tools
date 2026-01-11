@@ -4,7 +4,6 @@ import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Trash2, Copy, BookOpen, Clock, TrendingUp, Hash, CheckCircle } from "lucide-react";
 
 interface WordStats {
@@ -126,11 +125,8 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
   }, [stats.totalWords]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Text Input Section */}
+    <div className="w-full">
+      {/* Text Input Section */}
         <section aria-labelledby="text-input" className="max-w-4xl mx-auto">
           <div className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -166,7 +162,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
             <div className="space-y-6">
               {/* Main Stats Grid */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="p-4 border rounded-lg bg-card border-border">
                   <div className="flex items-center gap-2 mb-2">
                     <Hash className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-muted-foreground">Total Words</span>
@@ -174,7 +170,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                   <div className="text-2xl font-bold">{stats.totalWords.toLocaleString()}</div>
                 </div>
 
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="p-4 border rounded-lg bg-card border-border">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-muted-foreground">Unique Words</span>
@@ -185,7 +181,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                   </div>
                 </div>
 
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="p-4 border rounded-lg bg-card border-border">
                   <div className="flex items-center gap-2 mb-2">
                     <BookOpen className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-muted-foreground">Avg Word Length</span>
@@ -194,7 +190,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                   <div className="text-xs text-muted-foreground">characters</div>
                 </div>
 
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border sm:col-span-2 lg:col-span-1">
+                <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-1">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-muted-foreground">Reading Time</span>
@@ -209,7 +205,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
               {/* Word Analysis */}
               <div className="grid gap-6 lg:grid-cols-2">
                 {/* Word Length Analysis */}
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="p-4 border rounded-lg bg-card border-border">
                   <h3 className="mb-3 text-sm font-medium text-muted-foreground">Word Length Analysis</h3>
                   <div className="space-y-2">
                     <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
@@ -228,7 +224,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                 </div>
 
                 {/* Most Frequent Words */}
-                <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="p-4 border rounded-lg bg-card border-border">
                   <div className="flex flex-col gap-3 mb-3 sm:flex-row sm:items-center sm:justify-between">
                     <h3 className="text-sm font-medium text-muted-foreground">Most Frequent Words</h3>
                     <Button variant="outline" size="sm" onClick={copyStats} className="w-full text-xs h-7 sm:w-auto">
@@ -257,7 +253,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
               </div>
 
               {/* Reading Time Details */}
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+              <div className="p-4 border rounded-lg bg-card border-border">
                 <h3 className="mb-3 text-sm font-medium text-muted-foreground">Reading Time Estimates</h3>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div className="p-3 text-center rounded-lg bg-green-50 dark:bg-green-950/20">
@@ -305,6 +301,5 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
           </AlertDescription>
         </Alert>
       </div>
-    </div>
   );
 }

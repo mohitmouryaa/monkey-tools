@@ -63,5 +63,4 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
         ))}
       </div>
     </div>
-  );
-};
+  )}

@@ -9,7 +9,6 @@ import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Progress } from "@workspace/ui/components/progress";
 import { CircleCheck, Download, Loader2, Unlock } from "lucide-react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
 interface UploadedFile {
   file: File;
@@ -173,11 +172,8 @@ export default function UnlockPDF() {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {!file ? (
             <FileUpload
@@ -191,7 +187,7 @@ export default function UnlockPDF() {
           ) : (
             <div className="space-y-6">
               {/* File Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <Unlock className="w-8 h-8 text-primary" />
                   <div>
@@ -276,6 +272,5 @@ export default function UnlockPDF() {
           </div>
         )}
       </div>
-    </div>
   );
 }

@@ -8,7 +8,6 @@ import { Label } from "@workspace/ui/components/label";
 import { Switch } from "@workspace/ui/components/switch";
 import { Progress } from "@workspace/ui/components/progress";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import {
   Copy,
   RefreshCw,
@@ -124,11 +123,8 @@ export default function StrongPasswordGenerator() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Options Section */}
+    <div className="w-full">
+      {/* Options Section */}
         <section aria-labelledby="options-section" className="max-w-2xl mx-auto">
           <div className="space-y-6">
             {/* Password Length */}
@@ -159,28 +155,28 @@ export default function StrongPasswordGenerator() {
               <Label className="text-sm font-medium">Character Types</Label>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="flex items-center justify-between p-3 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium">Uppercase (A-Z)</span>
                   </div>
                   <Switch checked={options.uppercase} onCheckedChange={(checked) => updateOption("uppercase", checked)} />
                 </div>
 
-                <div className="flex items-center justify-between p-3 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium">Lowercase (a-z)</span>
                   </div>
                   <Switch checked={options.lowercase} onCheckedChange={(checked) => updateOption("lowercase", checked)} />
                 </div>
 
-                <div className="flex items-center justify-between p-3 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium">Numbers (0-9)</span>
                   </div>
                   <Switch checked={options.numbers} onCheckedChange={(checked) => updateOption("numbers", checked)} />
                 </div>
 
-                <div className="flex items-center justify-between p-3 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+                <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                   <div className="flex items-center space-x-3">
                     <span className="text-sm font-medium">Symbols (!@#$%)</span>
                   </div>
@@ -221,7 +217,7 @@ export default function StrongPasswordGenerator() {
           <section aria-labelledby="password-display" className="max-w-2xl mx-auto mt-8">
             <div className="space-y-6">
               {/* Password Display */}
-              <div className="p-6 border rounded-xl bg-card/50 backdrop-blur-sm border-border">
+              <div className="p-6 border rounded-xl bg-card border-border">
                 <div className="flex items-center justify-between mb-4">
                   <Label className="text-sm font-medium">Generated Password</Label>
                   <div className="flex gap-2">
@@ -274,7 +270,7 @@ export default function StrongPasswordGenerator() {
             </AlertDescription>
           </Alert>
         )}
-      </div>
+
     </div>
   );
 }

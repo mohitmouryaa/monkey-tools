@@ -11,7 +11,6 @@ import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Download, RotateCcw, Loader2, AlertTriangle } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@workspace/ui/components/radio-group";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
 interface ResizeOptions {
   width: number;
@@ -219,11 +218,8 @@ export default function ResizeImage() {
   }, [cleanup]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {selectedFile === null ? (
             <FileUpload
@@ -238,7 +234,7 @@ export default function ResizeImage() {
           ) : (
             <div className="space-y-6">
               {/* Files Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
                     <Download className="w-4 h-4 text-primary" />
@@ -255,7 +251,7 @@ export default function ResizeImage() {
 
               {/* Original Dimensions */}
               {originalDimensions && (
-                <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+                <div className="p-4 border rounded-xl bg-card">
                   <h4 className="mb-2 text-sm font-medium text-foreground">Original Dimensions</h4>
                   <p className="text-sm text-muted-foreground">
                     {originalDimensions.width} × {originalDimensions.height} pixels
@@ -264,7 +260,7 @@ export default function ResizeImage() {
               )}
 
               {/* Resize Options */}
-              <div className="p-6 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-6 border rounded-xl bg-card">
                 <h4 className="mb-4 text-sm font-medium text-foreground">Resize Options</h4>
 
                 {/* Resize Mode */}
@@ -413,6 +409,5 @@ export default function ResizeImage() {
         {/* Hidden canvas for processing */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
-    </div>
   );
 }

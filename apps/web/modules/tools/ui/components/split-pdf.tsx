@@ -9,7 +9,6 @@ import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Progress } from "@workspace/ui/components/progress";
 import { usePdfManager } from "@/modules/common/hooks/use-pdf-manager";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { SelectablePDFGrid } from "@/modules/common/ui/components/selectable-pdf-grid";
 
 export default function SplitPDF() {
@@ -142,11 +141,8 @@ export default function SplitPDF() {
   }, [resetManager]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-5xl mx-auto">
           {pages.length === 0 && !isProcessing ? (
             <FileUpload
@@ -158,7 +154,7 @@ export default function SplitPDF() {
           ) : (
             <div className="flex flex-col gap-6">
               {/* Toolbar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <h3 className="text-lg font-semibold">
                     {pages.length} Page{pages.length !== 1 ? "s" : ""}
@@ -246,6 +242,5 @@ export default function SplitPDF() {
           )}
         </div>
       </div>
-    </div>
   );
 }

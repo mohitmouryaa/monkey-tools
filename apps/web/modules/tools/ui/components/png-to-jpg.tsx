@@ -6,7 +6,6 @@ import { Progress } from "@workspace/ui/components/progress";
 import { useState, useCallback, useEffect } from "react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, Loader2, ImageIcon, AlertTriangle, Trash2, Shuffle, CheckCircle } from "lucide-react";
 
 interface UploadedFile {
@@ -204,11 +203,8 @@ export default function PngToJpg() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {files.length === 0 ? (
             <FileUpload
@@ -223,7 +219,7 @@ export default function PngToJpg() {
           ) : (
             <div className="space-y-6">
               {/* Files Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <ImageIcon className="w-8 h-8 text-primary" />
                   <div className="flex-1">
@@ -332,7 +328,7 @@ export default function PngToJpg() {
                         <span className="text-sm font-medium text-muted-foreground">Original PNG</span>
                         <span className="text-xs text-muted-foreground">{formatFileSize(files[0]?.file.size || 0)}</span>
                       </div>
-                      <div className="relative overflow-hidden border rounded-xl aspect-square bg-muted/50 border-border">
+                      <div className="relative overflow-hidden border rounded-xl aspect-square bg-secondary border-border">
                         {files[0]?.preview && (
                           // biome-ignore lint/performance/noImgElement: <Required for image preview because nextjs Image cannot be used for object URLs>
                           <img src={files[0].preview} alt="Original" className="absolute inset-0 object-contain" />
@@ -348,7 +344,7 @@ export default function PngToJpg() {
                           {formatFileSize(convertedImages[0]?.convertedBlob.size || 0)}
                         </span>
                       </div>
-                      <div className="relative overflow-hidden border border-orange-200 rounded-xl aspect-square bg-muted/50 dark:border-orange-900">
+                      <div className="relative overflow-hidden border border-orange-200 rounded-xl aspect-square bg-secondary dark:border-orange-900">
                         {/* biome-ignore lint/performance/noImgElement: <Required for image preview because nextjs Image cannot be used for object URLs> */}
                         <img src={convertedImages[0]?.convertedUrl} alt="Converted" className="absolute inset-0 object-contain" />
                       </div>
@@ -380,6 +376,5 @@ export default function PngToJpg() {
           </AlertDescription>
         </Alert>
       </div>
-    </div>
   );
 }

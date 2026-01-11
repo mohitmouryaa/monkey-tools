@@ -10,7 +10,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, Table as TableIcon, Trash2, Code, FileSpreadsheet, RefreshCw } from "lucide-react";
 
 type InputMode = "paste" | "upload";
@@ -195,9 +194,7 @@ export default function JsonToExcelConverter() {
 
   return (
     <div className="relative w-full min-h-screen bg-background text-foreground">
-      <BackgroundElements />
 
-      <div className="container relative z-10 px-4 py-10 mx-auto">
         <div className="max-w-4xl mx-auto space-y-12">
           <div className="space-y-8">
             {/* Input Section */}
@@ -326,7 +323,7 @@ export default function JsonToExcelConverter() {
                               const row = flattenObject(originalRow);
 
                               return (
-                                <tr key={`row-${i * 2}`} className="transition-colors hover:bg-muted/50">
+                                <tr key={`row-${i * 2}`} className="transition-colors hover:bg-secondary">
                                   {headers.map((header) => (
                                     <td
                                       key={`${i}-${header}`}
@@ -349,7 +346,7 @@ export default function JsonToExcelConverter() {
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center w-full h-75 text-muted-foreground">
-                        <div className="p-4 mb-4 rounded-full bg-muted/50">
+                        <div className="p-4 mb-4 rounded-full bg-secondary">
                           <FileSpreadsheet className="w-8 h-8 opacity-40" />
                         </div>
                         <p className="font-medium">No data loaded</p>
@@ -383,7 +380,6 @@ export default function JsonToExcelConverter() {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

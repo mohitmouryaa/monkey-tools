@@ -8,7 +8,6 @@ import { Progress } from "@workspace/ui/components/progress";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import ReactCrop, { type Crop as CropType, type PixelCrop } from "react-image-crop";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, Loader2, ImageIcon, Trash2, Crop, CheckCircle } from "lucide-react";
 import "react-image-crop/dist/ReactCrop.css";
 
@@ -186,11 +185,8 @@ export default function CropImage() {
   }, [cleanup]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Show upload interface only when no file selected */}
+    <div className="w-full">
+      {/* Show upload interface only when no file selected */}
         {!selectedFile && (
           <section className="max-w-4xl mx-auto mb-8">
             <div className="space-y-4">
@@ -374,6 +370,5 @@ export default function CropImage() {
         {/* Hidden Canvas for Processing */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
-    </div>
   );
 }

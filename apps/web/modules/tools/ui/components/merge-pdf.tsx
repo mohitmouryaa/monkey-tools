@@ -11,7 +11,6 @@ import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { usePdfManager } from "@/modules/common/hooks/use-pdf-manager";
 import type { UploadedFile } from "@/modules/common/hooks/use-pdf-manager";
 import { Download, Trash2, Plus, Loader2, ArrowUp, ArrowDown } from "lucide-react";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { type PDFPage, SortablePDFGrid } from "@/modules/common/ui/components/sortable-pdf-grid";
 
 export default function MergePDF() {
@@ -163,11 +162,8 @@ export default function MergePDF() {
   }, [resetManager]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-5xl mx-auto">
           {pages.length === 0 && !isProcessing ? (
             <FileUpload
@@ -179,7 +175,7 @@ export default function MergePDF() {
           ) : (
             <div className="flex flex-col gap-6">
               {/* Toolbar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <div className="inline-flex items-center p-1 rounded-md bg-muted/40">
                     <button
@@ -347,7 +343,7 @@ export default function MergePDF() {
             </Button>
           )}
         </div>
-      </div>
+
     </div>
   );
 }

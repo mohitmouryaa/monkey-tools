@@ -7,7 +7,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, QrCode, Loader2, AlertTriangle, CheckCircle, Link } from "lucide-react";
 
 export default function QRCodeGenerator() {
@@ -73,11 +72,8 @@ export default function QRCodeGenerator() {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Input Section */}
+    <div className="w-full">
+      {/* Input Section */}
         <section aria-labelledby="input-section" className="max-w-2xl mx-auto">
           <div className="space-y-6">
             {/* URL Input */}
@@ -202,6 +198,5 @@ export default function QRCodeGenerator() {
           </Alert>
         )}
       </div>
-    </div>
   );
 }

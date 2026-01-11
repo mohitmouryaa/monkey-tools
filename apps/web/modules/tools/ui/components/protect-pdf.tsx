@@ -10,7 +10,6 @@ import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { encryptPDF } from "@pdfsmaller/pdf-encrypt-lite";
 import { CircleCheck, Download, Loader2, Lock } from "lucide-react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
 interface UploadedFile {
   file: File;
@@ -123,11 +122,8 @@ export default function ProtectPDF() {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {!file ? (
             <FileUpload
@@ -141,7 +137,7 @@ export default function ProtectPDF() {
           ) : (
             <div className="space-y-6">
               {/* File Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <Lock className="w-8 h-8 text-primary" />
                   <div>
@@ -225,7 +221,7 @@ export default function ProtectPDF() {
             <Progress value={protectProgress} className="w-full h-2" />
           </div>
         )}
-      </div>
+
     </div>
   );
 }

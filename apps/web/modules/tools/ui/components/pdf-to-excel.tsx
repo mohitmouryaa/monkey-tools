@@ -5,7 +5,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { FileSpreadsheet, X, FileText, Download } from "lucide-react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
 export default function PdfToExcel() {
   const [file, setFile] = useState<File | null>(null);
@@ -53,15 +52,12 @@ export default function PdfToExcel() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
+    <div className="w-full">
       {/* Maintenance Mode Banner */}
       <div className="w-full py-3 font-semibold text-center text-yellow-900 bg-yellow-500">
         🚧 PDF to Excel Converter is currently under maintenance 🚧
       </div>
 
-      <div className="container relative z-10 px-4 mx-auto mt-5">
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {!file ? (
             <FileUpload
@@ -77,7 +73,7 @@ export default function PdfToExcel() {
           ) : (
             <div className="space-y-6">
               {/* File Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <FileText className="w-8 h-8 text-primary" />
                   <div>
@@ -148,7 +144,6 @@ export default function PdfToExcel() {
             </div>
           )}
         </section>
-      </div>
 
       {/* Maintenance Notice */}
       <div className="max-w-3xl p-4 mx-auto mt-6 text-orange-800 border border-orange-200 rounded-lg bg-orange-50 dark:bg-orange-950/20 dark:border-orange-800 dark:text-orange-200">

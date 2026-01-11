@@ -9,7 +9,6 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, Loader2, FileText, Trash2, Settings, CheckCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
@@ -357,11 +356,8 @@ export default function AddWatermarkPDF() {
   ];
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload interface */}
+    <div className="w-full">
+      {/* Upload interface */}
         {!selectedFile && (
           <section className="max-w-4xl mx-auto mb-8">
             <div className="space-y-4">
@@ -691,6 +687,5 @@ export default function AddWatermarkPDF() {
         {/* Hidden Canvas */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
-    </div>
   );
 }

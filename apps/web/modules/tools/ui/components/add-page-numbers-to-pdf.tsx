@@ -13,7 +13,6 @@ import { useFileUpload } from "@/modules/common/hooks/use-file-upload";
 import { useCreateJob } from "@/modules/dashboard/hooks/use-create-job";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Loader2, Download, FileIcon, RefreshCw, Hash, AlertCircle } from "lucide-react";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
 interface PageNumberSettings {
@@ -99,11 +98,9 @@ export default function AddPageNumbersToPdf() {
 
   return (
     <div className="relative w-full min-h-screen bg-background text-foreground">
-      <BackgroundElements />
 
-      <div className="container relative z-10 px-4 py-10 mx-auto">
         <div className="max-w-3xl mx-auto space-y-8">
-          <Card className="p-6 border shadow-xl bg-card/50 backdrop-blur-sm">
+          <Card className="p-6 border shadow-xl bg-card">
             {status === "idle" && (
               <FileUpload
                 onFilesSelected={handleFilesSelected}
@@ -133,7 +130,7 @@ export default function AddPageNumbersToPdf() {
             {(status === "uploaded" || status === "processing" || status === "completed" || status === "failed") && file && (
               <div className="space-y-6">
                 {/* File Info */}
-                <div className="flex items-center p-4 border rounded-lg bg-muted/50">
+                <div className="flex items-center p-4 border rounded-lg bg-secondary">
                   <FileIcon className="w-8 h-8 mr-4 text-red-500" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{file.name}</p>
@@ -315,7 +312,6 @@ export default function AddPageNumbersToPdf() {
             )}
           </Card>
         </div>
-      </div>
     </div>
   );
 }

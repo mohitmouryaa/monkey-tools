@@ -4,7 +4,6 @@ import { useState, useCallback, useMemo } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Label } from "@workspace/ui/components/label";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Trash2, Copy, FileText, Hash, Type, AlignLeft, CheckCircle } from "lucide-react";
 
 interface TextStats {
@@ -83,11 +82,8 @@ Sentences: ${stats.sentences}`;
   }, [stats]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Text Input Section */}
+    <div className="w-full">
+      {/* Text Input Section */}
         <section aria-labelledby="text-input" className="max-w-4xl mx-auto">
           <div className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -122,7 +118,7 @@ Sentences: ${stats.sentences}`;
           <div className="space-y-6">
             {/* Main Stats Grid */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+              <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <Hash className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">Characters</span>
@@ -131,7 +127,7 @@ Sentences: ${stats.sentences}`;
                 <div className="text-xs text-muted-foreground">{stats.charactersNoSpaces.toLocaleString()} without spaces</div>
               </div>
 
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+              <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <Type className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">Words</span>
@@ -142,7 +138,7 @@ Sentences: ${stats.sentences}`;
                 </div>
               </div>
 
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border sm:col-span-2 lg:col-span-1">
+              <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-2 mb-2">
                   <AlignLeft className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">Lines</span>
@@ -151,7 +147,7 @@ Sentences: ${stats.sentences}`;
                 <div className="text-xs text-muted-foreground">{stats.paragraphs.toLocaleString()} paragraphs</div>
               </div>
 
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border sm:col-span-2 lg:col-span-2">
+              <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-2">
                 <div className="flex items-center gap-2 mb-2">
                   <FileText className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">Sentences</span>
@@ -168,7 +164,7 @@ Sentences: ${stats.sentences}`;
 
             {/* Reading Time Estimate */}
             {stats.words > 0 && (
-              <div className="p-4 border rounded-lg bg-card/50 backdrop-blur-sm border-border">
+              <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="text-center sm:text-left">
                     <div className="text-sm font-medium text-muted-foreground">Estimated Reading Time</div>
@@ -203,6 +199,5 @@ Sentences: ${stats.sentences}`;
           </AlertDescription>
         </Alert>
       </div>
-    </div>
   );
 }

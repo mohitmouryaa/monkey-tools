@@ -9,7 +9,6 @@ import { Progress } from "@workspace/ui/components/progress";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Download, Loader2, FileSpreadsheet, AlertTriangle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 
 interface UploadedFile {
   file: File;
@@ -194,11 +193,8 @@ export default function ExcelToPDF() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Upload Section */}
+    <div className="w-full">
+      {/* Upload Section */}
         <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
           {files.length === 0 ? (
             <FileUpload
@@ -216,7 +212,7 @@ export default function ExcelToPDF() {
           ) : (
             <div className="space-y-6">
               {/* Files Info */}
-              <div className="p-4 border rounded-xl bg-card/50 backdrop-blur-sm">
+              <div className="p-4 border rounded-xl bg-card">
                 <div className="flex items-center gap-3">
                   <FileSpreadsheet className="w-8 h-8 text-primary" />
                   <div className="flex-1">
@@ -321,6 +317,5 @@ export default function ExcelToPDF() {
           </AlertDescription>
         </Alert>
       </div>
-    </div>
   );
 }

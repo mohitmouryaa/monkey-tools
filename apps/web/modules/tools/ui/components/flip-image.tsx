@@ -6,7 +6,6 @@ import { useState, useCallback, useRef } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
-import { BackgroundElements } from "@/modules/common/ui/components/background-elements";
 import { Download, ImageIcon, Trash2, FlipHorizontal, FlipVertical, RotateCcw, CheckCircle } from "lucide-react";
 
 export default function FlipImage() {
@@ -166,11 +165,8 @@ export default function FlipImage() {
   }, [cleanup]);
 
   return (
-    <div className="relative w-full overflow-hidden bg-background text-foreground">
-      <BackgroundElements />
-
-      <div className="container relative z-10 px-4 mx-auto">
-        {/* Show upload interface only when no file selected */}
+    <div className="w-full">
+      {/* Show upload interface only when no file selected */}
         {!selectedFile && (
           <section className="max-w-4xl mx-auto mb-8">
             <div className="space-y-4">
@@ -321,6 +317,5 @@ export default function FlipImage() {
         {/* Hidden Canvas for Processing */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
-    </div>
   );
 }
