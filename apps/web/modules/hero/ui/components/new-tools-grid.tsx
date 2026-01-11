@@ -7,6 +7,9 @@ interface Tool {
   title: string;
   description: string;
   link: string;
+  icon: string;
+  iconColor: string;
+  bgColor: string;
   category: {
     _id: string;
     name: string;
@@ -40,10 +43,10 @@ export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
     <section className="py-12 bg-background" id="tools">
       <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Most commonly used tools</h2>
+          <h2 className="text-2xl font-bold text-foreground">Ferramentas mais usadas</h2>
           <Link href="/tools">
-            <Button variant="ghost" className="text-primary hover:text-primary/80 hover:bg-secondary">
-              View all tools
+            <Button variant="ghost" className="text-primary hover:text-primary/80 hover:bg-muted">
+              Ver todas as ferramentas
             </Button>
           </Link>
         </div>
@@ -56,6 +59,9 @@ export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
               category={tool.category.name}
               categorySlug={tool.category.slug}
               toolSlug={tool.link}
+              icon={tool.icon}
+              iconColor={tool.iconColor}
+              bgColor={tool.bgColor}
             />
           ))}
         </div>

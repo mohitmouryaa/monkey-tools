@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { FileText } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 
 interface ToolCardProps {
@@ -7,38 +10,62 @@ interface ToolCardProps {
   category: string;
   categorySlug: string;
   toolSlug: string;
+  icon?: string;
   iconColor?: string;
   bgColor?: string;
 }
 
-const categoryBorderColors: Record<string, string> = {
-  "pdf-tools": "border-[hsl(25_100%_55%)]",
-  "image-tools": "border-[hsl(120_100%_55%)]",
-  "text-tools": "border-[hsl(200_100%_55%)]",
-  "text-ai-tools": "border-[hsl(200_100%_55%)]",
-  converters: "border-[hsl(45_100%_55%)]",
+// Type-safe helper function to get icon by name
+const getIconComponent = (iconName?: string): LucideIcon => {
+  if (!iconName) return FileText;
+
+  // Use a type-safe approach to access Lucide icons
+  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
+
+  // Try the icon name as-is first
+  let IconComponent = icons[iconName];
+
+  if (!IconComponent) {
+    // Capitalize first letter (e.g., "repeat" -> "Repeat")
+    const capitalized = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    IconComponent = icons[capitalized];
+  }
+
+  return IconComponent || FileText;
 };
 
-export const ToolCard = ({ name, description, category, categorySlug, toolSlug }: ToolCardProps) => {
-  const borderColor = categoryBorderColors[categorySlug] || "border-primary/30";
+// Category-specific icon colors
+const categoryIconColors: Record<string, string> = {
+  "pdf-tools": "#ef4444", // red-500
+  "image-tools": "#00E5A8", // neon green (secondary)
+  "text-tools": "#635BFF", // purple-blue (primary)
+  "text-ai-tools": "#635BFF", // purple-blue (primary)
+  converters: "#eab308", // yellow-500
+};
+
+export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon }: ToolCardProps) => {
+  const IconComponent = getIconComponent(icon);
+  const categoryColor = categoryIconColors[categorySlug] || "#635BFF";
 
   return (
-    <Link href={`/tools/${categorySlug}/${toolSlug}`} className="block">
-      <div
-        className={`bg-card border-2 ${borderColor} rounded-lg p-5 transition-all hover:border-primary hover:shadow-lg hover:shadow-primary/10`}
-      >
-        <div className="flex items-start justify-between mb-3">
-          <span className="text-xs font-medium tracking-wide uppercase text-muted-foreground">{category}</span>
+    <Link href={`/tools/${categorySlug}/${toolSlug}`} className="block group">
+      <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary card-glow h-full flex flex-col">
+        {/* Icon and Category Badge */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+            <IconComponent className="w-6 h-6" style={{ color: categoryColor }} />
+          </div>
+          <span className="text-xs font-medium tracking-wide uppercase px-3 py-1 rounded-full bg-muted text-muted-foreground">
+            {category}
+          </span>
         </div>
-        <h3 className="mb-2 text-base font-semibold text-foreground">{name}</h3>
-        <p className="mb-4 text-sm text-muted-foreground line-clamp-1">{description}</p>
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full border-primary text-primary hover:bg-primary! hover:text-primary-foreground! transition-colors"
-        >
-          Open tool
-        </Button>
+
+        {/* Content */}
+        <h3 className="mb-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{name}</h3>
+        <p className="mb-5 text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
+
+        {/* Button */}
+        <Button className="w-full rounded-xl btn-gradient-primary text-primary-foreground font-medium">Usar</Button>
       </div>
     </Link>
   );
