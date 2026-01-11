@@ -31,9 +31,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   maxFileSize = 10, // 10MB default
   className,
   disabled = false,
-  label = "Upload Files",
-  description = "Drag and drop files here or click to browse",
-  disclaimer = "Files are not preserved and will be deleted immediately after processing",
+  label = "Enviar Arquivos",
+  description = "Arraste e solte os arquivos aqui ou clique para navegar",
+  disclaimer = "Os arquivos não são preservados e serão excluídos imediatamente após o processamento",
   mode = "accumulate",
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
@@ -44,7 +44,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     (file: File): string | null => {
       // Check file size
       if (file.size > maxFileSize * 1024 * 1024) {
-        return `File size must be less than ${maxFileSize}MB`;
+        return `O tamanho do arquivo deve ser menor que ${maxFileSize}MB`;
       }
 
       // Check file type
@@ -57,7 +57,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       });
 
       if (!isAccepted) {
-        return `File type not supported. Accepted types: ${acceptedFileTypes.join(", ")}`;
+        return `Tipo de arquivo não suportado. Tipos aceitos: ${acceptedFileTypes.join(", ")}`;
       }
 
       return null;
@@ -81,7 +81,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
         // Check if we would exceed max files
         if (mode === "accumulate" && files.length + newFiles.length >= maxFiles) {
-          errors.push(`Maximum ${maxFiles} files allowed`);
+          errors.push(`Máximo de ${maxFiles} arquivos permitidos`);
           return;
         }
 
@@ -184,7 +184,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         <label
           htmlFor="file-upload-input"
           className={cn(
-            "relative block border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl",
+            "relative block border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl",
             isDragOver
               ? "border-primary bg-primary/10 dark:bg-primary/20 scale-105 shadow-primary/20"
               : "border-primary/30 bg-card hover:border-primary",
@@ -226,7 +226,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 {description}
               </p>
               <p className="text-sm font-medium text-muted-foreground/80">
-                Max {maxFiles} files, up to {maxFileSize}MB each
+                Máx. {maxFiles} arquivos, até {maxFileSize}MB cada
               </p>
             </div>
 
@@ -235,10 +235,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               variant="default"
               size="lg"
               disabled={disabled}
-              className="px-8 py-3 mt-4 font-semibold transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+              className="px-8 py-3 mt-4 font-semibold transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 rounded-xl"
               asChild
             >
-              <span>Choose Files</span>
+              <span>Escolher Arquivos</span>
             </Button>
           </div>
         </label>
@@ -263,7 +263,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {files.length > 0 && (
         <div className="space-y-3">
           <h4 className="text-sm font-medium text-foreground">
-            Selected Files ({files.length}/{maxFiles})
+            Arquivos Selecionados ({files.length}/{maxFiles})
           </h4>
 
           <div className="space-y-2">

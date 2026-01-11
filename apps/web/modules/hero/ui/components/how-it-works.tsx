@@ -1,46 +1,90 @@
-import { Upload, Settings, Download, Trash2 } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-const steps = [
-  {
-    icon: Upload,
-    title: "Upload",
-    description: "Send your file to the tool",
-  },
-  {
-    icon: Settings,
-    title: "Configure",
-    description: "Adjust the options as needed",
-  },
-  {
-    icon: Download,
-    title: "Download",
-    description: "Download the result",
-  },
-  {
-    icon: Trash2,
-    title: "Insurance",
-    description: "We automatically deleted your files",
-  },
-];
+interface HowItWorksStep {
+  iconName: string;
+  title: string;
+  description: string;
+  order: number;
+}
 
-export const HowItWorks = () => {
+interface HowItWorksSection {
+  title: string;
+  subtitle: string;
+  steps: HowItWorksStep[];
+}
+
+interface HowItWorksProps {
+  howItWorksSection?: HowItWorksSection;
+}
+
+// Type-safe helper function to get icon by name
+const getIconComponent = (iconName: string): LucideIcon => {
+  // Use a type-safe approach to access Lucide icons
+  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
+  const IconComponent = icons[iconName];
+  return IconComponent ?? LucideIcons.Upload; // Fallback to Upload icon if not found
+};
+
+export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
+  // Fallback to default content if not provided
+  const defaultSteps = [
+    {
+      iconName: "Upload",
+      title: "Envie seu arquivo",
+      description: "Arraste ou selecione o arquivo que deseja processar",
+      order: 0,
+    },
+    {
+      iconName: "Settings",
+      title: "Processamento automático",
+      description: "Nossa ferramenta processa seu arquivo em segundos",
+      order: 1,
+    },
+    {
+      iconName: "Download",
+      title: "Baixe o resultado",
+      description: "Faça o download do arquivo processado gratuitamente",
+      order: 2,
+    },
+  ];
+
+  const content = howItWorksSection || {
+    title: "Como Funciona",
+    subtitle: "Três passos simples para usar qualquer ferramenta",
+    steps: defaultSteps,
+  };
+
+  // Sort steps by order and take only first 3
+  const sortedSteps = [...content.steps].sort((a, b) => a.order - b.order).slice(0, 3);
+
   return (
-    <section className="py-16 bg-card">
+    <section className="py-20 bg-card">
       <div className="container px-4 mx-auto">
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-2xl font-bold md:text-3xl text-foreground">How it works</h2>
-          <p className="text-muted-foreground">It's that simple. In 4 steps you can complete any mission.</p>
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl text-foreground">{content.title}</h2>
+          <p className="text-lg text-muted-foreground">{content.subtitle}</p>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step) => (
-            <div key={step.title} className="text-center">
-              <div className="inline-flex items-center justify-center mb-4 border rounded-full w-14 h-14 bg-secondary border-primary/20">
-                <step.icon className="w-6 h-6 text-primary" />
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 max-w-5xl mx-auto">
+          {sortedSteps.map((step, index) => {
+            const IconComponent = getIconComponent(step.iconName);
+            return (
+              <div key={step.title} className="text-center">
+                <div className="relative inline-flex items-center justify-center mb-6">
+                  {/* Icon Container */}
+                  <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center">
+                    <IconComponent className="w-10 h-10 text-primary" />
+                  </div>
+                  {/* Number Badge */}
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-secondary text-background flex items-center justify-center font-bold text-sm">
+                    {index + 1}
+                  </div>
+                </div>
+                <h3 className="mb-3 text-xl font-semibold text-foreground">{step.title}</h3>
+                <p className="text-base text-muted-foreground">{step.description}</p>
               </div>
-              <h3 className="mb-2 text-base font-semibold text-foreground">{step.title}</h3>
-              <p className="text-sm text-muted-foreground">{step.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

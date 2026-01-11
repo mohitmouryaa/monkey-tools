@@ -7,9 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/componen
 interface AllToolsClientProps {
   tools: Tool[];
   categories: Category[];
+  h1Heading?: string;
+  description?: string;
 }
 
-export function AllToolsClient({ tools, categories }: AllToolsClientProps) {
+export function AllToolsClient({ tools, categories, h1Heading, description }: AllToolsClientProps) {
   // Group tools by category
   const getToolsByCategory = (categoryId?: string) => {
     if (!categoryId) return tools;
@@ -20,25 +22,26 @@ export function AllToolsClient({ tools, categories }: AllToolsClientProps) {
     <div className="flex flex-col min-h-screen bg-background">
       <main className="container flex-1 px-4 py-8 mx-auto">
         <div className="mb-8 text-center">
-          <h1 className="mb-3 text-3xl font-bold md:text-4xl text-foreground">All Tools</h1>
+          <h1 className="mb-3 text-3xl font-bold md:text-4xl text-foreground">{h1Heading || "Todas as Ferramentas"}</h1>
           <p className="max-w-2xl mx-auto text-muted-foreground">
-            Explore our complete collection of free online tools for PDF, images, text and conversions.
+            {description ||
+              "Explore nossa coleção completa de ferramentas online gratuitas para PDF, imagens, texto e conversões."}
           </p>
         </div>
 
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="flex flex-wrap justify-center w-full h-auto gap-1 p-2 mb-8 bg-muted/50">
+          <TabsList className="flex flex-wrap justify-center w-full h-auto gap-2 p-2 mb-8 bg-card rounded-2xl border border-border">
             <TabsTrigger
               value="all"
-              className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-secondary/80"
+              className="px-4 py-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-muted"
             >
-              All
+              Todas
             </TabsTrigger>
             {categories.map((cat) => (
               <TabsTrigger
                 key={cat._id}
                 value={cat._id || ""}
-                className="px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-secondary/80"
+                className="px-4 py-2 rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-muted"
               >
                 {cat.name}
               </TabsTrigger>
@@ -55,6 +58,9 @@ export function AllToolsClient({ tools, categories }: AllToolsClientProps) {
                   category={typeof tool.category === "object" ? tool.category?.name || "Tools" : "Tools"}
                   categorySlug={typeof tool.category === "object" ? tool.category?.slug || "tools" : "tools"}
                   toolSlug={tool.link}
+                  icon={tool.icon}
+                  iconColor={tool.iconColor}
+                  bgColor={tool.bgColor}
                 />
               ))}
             </div>
@@ -71,6 +77,9 @@ export function AllToolsClient({ tools, categories }: AllToolsClientProps) {
                     category={cat.name}
                     categorySlug={cat.slug}
                     toolSlug={tool.link}
+                    icon={tool.icon}
+                    iconColor={tool.iconColor}
+                    bgColor={tool.bgColor}
                   />
                 ))}
               </div>

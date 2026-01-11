@@ -247,6 +247,9 @@ importers:
       '@typegoose/typegoose':
         specifier: ^13.0.0
         version: 13.0.0(mongoose@9.1.1(socks@2.8.7))
+      '@workspace/types':
+        specifier: workspace:*
+        version: link:../types
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3

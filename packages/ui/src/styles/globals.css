@@ -8,41 +8,43 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Dark theme - Monkey.com.br Design System */
-  --background: 120 5% 5%;
+  /* DesignOnline Dark Theme - Blue-Purple + Neon Green */
+  --background: 222 47% 7%;
   --foreground: 0 0% 100%;
   
-  --card: 120 5% 9%;
+  --card: 222 40% 12%;
   --card-foreground: 0 0% 100%;
   
-  --popover: 120 5% 9%;
+  --popover: 222 40% 12%;
   --popover-foreground: 0 0% 100%;
   
-  --primary: 120 100% 55%;
-  --primary-foreground: 120 5% 5%;
+  /* Primary: Deep blue-purple (#635BFF) */
+  --primary: 243 100% 68%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 120 5% 12%;
-  --secondary-foreground: 0 0% 100%;
+  /* Secondary: Neon green (#00E5A8) */
+  --secondary: 162 100% 45%;
+  --secondary-foreground: 222 47% 7%;
   
-  --muted: 120 5% 15%;
-  --muted-foreground: 120 5% 60%;
+  --muted: 222 30% 20%;
+  --muted-foreground: 222 20% 70%;
   
-  --accent: 120 100% 55%;
-  --accent-foreground: 120 5% 5%;
+  --accent: 162 100% 45%;
+  --accent-foreground: 222 47% 7%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   
-  --border: 120 10% 18%;
-  --input: 120 10% 18%;
-  --ring: 120 100% 55%;
+  --border: 222 30% 20%;
+  --input: 222 30% 20%;
+  --ring: 243 100% 68%;
   
-  --radius: 0.5rem;
+  --radius: 1rem;
   
-  /* Category colors - neon style */
-  --category-pdf: 25 100% 55%;
-  --category-image: 120 100% 55%;
-  --category-text: 200 100% 55%;
+  /* Category colors */
+  --category-pdf: 0 85% 60%;
+  --category-image: 162 100% 45%;
+  --category-text: 243 100% 68%;
   --category-converter: 45 100% 55%;
   
   /* Chart colors (keep existing) */
@@ -53,45 +55,49 @@
   --chart-5: 0.769 0.188 70.08;
   
   /* Sidebar (match dark theme) */
-  --sidebar: 120 5% 9%;
+  --sidebar: 222 40% 12%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 120 100% 55%;
-  --sidebar-primary-foreground: 120 5% 5%;
-  --sidebar-accent: 120 5% 12%;
+  --sidebar-primary: 243 100% 68%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 30% 20%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 120 10% 18%;
-  --sidebar-ring: 120 100% 55%;
+  --sidebar-border: 222 30% 20%;
+  --sidebar-ring: 243 100% 68%;
+  
+  /* Logo colors */
+  --logo-primary: 243 100% 68%;
+  --logo-secondary: 162 100% 45%;
 }
 
 .dark {
   /* Same as root for consistent dark theme */
-  --background: 120 5% 5%;
+  --background: 222 47% 7%;
   --foreground: 0 0% 100%;
   
-  --card: 120 5% 9%;
+  --card: 222 40% 12%;
   --card-foreground: 0 0% 100%;
   
-  --popover: 120 5% 9%;
+  --popover: 222 40% 12%;
   --popover-foreground: 0 0% 100%;
   
-  --primary: 120 100% 55%;
-  --primary-foreground: 120 5% 5%;
+  --primary: 243 100% 68%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 120 5% 12%;
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 162 100% 45%;
+  --secondary-foreground: 222 47% 7%;
   
-  --muted: 120 5% 15%;
-  --muted-foreground: 120 5% 60%;
+  --muted: 222 30% 20%;
+  --muted-foreground: 222 20% 70%;
   
-  --accent: 120 100% 55%;
-  --accent-foreground: 120 5% 5%;
+  --accent: 162 100% 45%;
+  --accent-foreground: 222 47% 7%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   
-  --border: 120 10% 18%;
-  --input: 120 10% 18%;
-  --ring: 120 100% 55%;
+  --border: 222 30% 20%;
+  --input: 222 30% 20%;
+  --ring: 243 100% 68%;
   
   /* Chart colors (keep existing) */
   --chart-1: 0.488 0.243 264.376;
@@ -101,14 +107,14 @@
   --chart-5: 0.645 0.246 16.439;
   
   /* Sidebar */
-  --sidebar: 120 5% 9%;
+  --sidebar: 222 40% 12%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 120 100% 55%;
-  --sidebar-primary-foreground: 120 5% 5%;
-  --sidebar-accent: 120 5% 12%;
+  --sidebar-primary: 243 100% 68%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 222 30% 20%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 120 10% 18%;
-  --sidebar-ring: 120 100% 55%;
+  --sidebar-border: 222 30% 20%;
+  --sidebar-ring: 243 100% 68%;
 }
 
 @theme inline {
@@ -170,4 +176,18 @@
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+}
+
+/* Custom button gradients */
+.btn-gradient-primary {
+  background: linear-gradient(135deg, hsl(243 100% 68%) 0%, hsl(260 100% 65%) 100%);
+}
+
+.btn-gradient-secondary {
+  background: linear-gradient(135deg, hsl(162 100% 45%) 0%, hsl(170 100% 40%) 100%);
+}
+
+/* Card hover glow effect */
+.card-glow:hover {
+  box-shadow: 0 0 30px -5px hsl(243 100% 68% / 0.4);
 }

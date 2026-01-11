@@ -1,8 +1,9 @@
 import type { Job } from "bullmq";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { Status } from "@workspace/types";
+import { JobModel } from "@workspace/database";
 import { runGhostscript } from "../../utils/ghostscript.js";
-import { JobModel, Status } from "@workspace/database";
 import { downloadFile, uploadFromFile } from "@workspace/storage";
 
 export async function compressPdf(job: Job) {

@@ -1,12 +1,7 @@
 import "reflect-metadata";
 import mongoose from "mongoose";
+import { Status } from "@workspace/types";
 import { prop, getModelForClass, modelOptions, Severity } from "@typegoose/typegoose";
-
-export enum Status {
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-}
 
 @modelOptions({
   schemaOptions: {
