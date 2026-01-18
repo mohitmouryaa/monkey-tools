@@ -40,8 +40,9 @@ COPY --from=deps /app .
 RUN pnpm deploy --filter=worker --prod --legacy /deploy
 
 FROM node:${NODE_VERSION}-bookworm-slim AS runner
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ghostscript libreoffice default-jre ca-certificates \
+ && apt-get install -y --no-install-recommends ghostscript libreoffice libreoffice-java-common default-jre ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 WORKDIR /app
