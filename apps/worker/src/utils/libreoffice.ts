@@ -43,8 +43,8 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
   // soffice --headless --convert-to docx --outdir /tmp /tmp/123-input.pdf
 
   return new Promise((resolve, reject) => {
-    // 60 second timeout for PDF to Word (can be heavier)
-    const timeout = 60000;
+    // 5 minutes timeout for PDF to Word (can be heavier)
+    const timeout = 300000;
 
     // Command: soffice --headless --infilter="writer_pdf_import" --convert-to docx --outdir <outputDir> <inputPath>
     const args = ["--headless", "--infilter=writer_pdf_import", "--convert-to", "docx", "--outdir", outputDir, inputPath];
