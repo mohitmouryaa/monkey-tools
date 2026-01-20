@@ -1,6 +1,10 @@
 import path from "node:path";
-import { execFile } from "node:child_process";
+import { execFile, exec } from "node:child_process";
 import fs from "node:fs/promises";
+import { promisify } from "node:util";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+
+const execAsync = promisify(exec);
 
 async function optimizePdf(inputPath: string): Promise<string> {
   const optimizedPath = inputPath.replace(".pdf", "_opt.pdf");
@@ -31,13 +35,6 @@ async function optimizePdf(inputPath: string): Promise<string> {
 }
 
 export async function convertToPdf(inputPath: string, outputDir: string): Promise<string> {
-  // Security: Ensure input path is absolute and exists
-  // The execute function itself doesn't need to check too much if the worker is isolated,
-  // but it's good practice.
-
-  // We expect inputPath like /tmp/123-input.docx
-  // soffice --headless --convert-to pdf --outdir /tmp /tmp/123-input.docx
-
   return new Promise((resolve, reject) => {
     // 30 second timeout
     const timeout = 30000;
@@ -72,6 +69,46 @@ export async function convertToPdf(inputPath: string, outputDir: string): Promis
   });
 }
 
+async function fallbackToPdfToText(inputPath: string, outputPath: string): Promise<void> {
+  // Fallback: Use pdftotext to recover text content when LibreOffice crashes
+  try {
+    // -layout maintains physical layout of text
+    const { stdout } = await execAsync(`pdftotext -layout "${inputPath}" -`);
+
+    // Sanitize control characters that XML/DOCX might hate (optional but safe)
+    // Keep tabs, newlines, carriage returns
+    // Biome/ESLint safe regex construction
+    // biome-ignore lint/complexity/useRegexLiterals: <No complex regex literals>
+    const controlCharsRegex = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]", "g");
+    const cleanText = stdout.replace(controlCharsRegex, "");
+
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: cleanText.split("\n").map(
+            (line) =>
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: line,
+                    font: "Courier New", // Monospace helps preserve layout from pdftotext -layout
+                    size: 20, // 10pt
+                  }),
+                ],
+              }),
+          ),
+        },
+      ],
+    });
+
+    const buffer = await Packer.toBuffer(doc);
+    await fs.writeFile(outputPath, buffer);
+  } catch (e) {
+    throw new Error(`Fallback conversion failed: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
 export async function convertToWord(inputPath: string, outputDir: string): Promise<string> {
   // 1. Optimize PDF first using Ghostscript
   console.log("Optimizing PDF with Ghostscript...");
@@ -84,11 +121,12 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
     // 60s timeout - fail fast as recommended
     const timeout = 60000;
 
-    // Command: soffice -env:UserInstallation=file:///tmp/LibreOffice_Conversion_${unique_id} --headless --infilter="writer_pdf_import" --convert-to docx --outdir <outputDir> <inputPath>
+    // Isolate user profile for parallel execution safety
     const userProfileDir = `/tmp/LibreOffice_Conversion_${path.basename(processingPath)}`;
     const args = [
       `-env:UserInstallation=file://${userProfileDir}`,
       "--headless",
+      "--norestore",
       "--infilter=writer_pdf_import",
       "--convert-to",
       "docx",
@@ -97,23 +135,37 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
       processingPath,
     ];
 
-    execFile("soffice", args, { timeout }, (error) => {
-      // Cleanup optimized file if different
-      if (processingPath !== inputPath) {
-        fs.unlink(processingPath).catch(() => {});
-      }
-
-      if (error) {
-        // Check for timeout
-        if (error instanceof Error && "signal" in error && error.signal === "SIGTERM") {
-          return reject(new Error("Conversion timed out - File too complex for LibreOffice"));
-        }
-        return reject(error);
-      }
-
-      // LibreOffice usually names the output file same as input but with .docx extension
+    execFile("soffice", args, { timeout }, async (error) => {
+      // Expected output filename
       const filename = path.basename(processingPath, path.extname(processingPath));
       const expectedOutputPath = path.join(outputDir, `${filename}.docx`);
+
+      const cleanup = () => {
+        if (processingPath !== inputPath) {
+          fs.unlink(processingPath).catch(() => {});
+        }
+      };
+
+      if (error) {
+        const errorCode = (error as NodeJS.ErrnoException).code || "unknown";
+        console.warn(`LibreOffice conversion failed (code ${errorCode}). Attempting text-only fallback...`);
+
+        try {
+          await fallbackToPdfToText(inputPath, expectedOutputPath);
+          cleanup();
+          return resolve(expectedOutputPath);
+        } catch (fallbackError) {
+          cleanup();
+          // Check for timeout
+          if (error instanceof Error && "signal" in error && error.signal === "SIGTERM") {
+            return reject(new Error("Conversion timed out - File too complex for LibreOffice"));
+          }
+          console.error("Fallback failed:", fallbackError);
+          return reject(error);
+        }
+      }
+
+      cleanup();
       resolve(expectedOutputPath);
     });
   });
