@@ -73,41 +73,55 @@ export async function convertToPdf(inputPath: string, outputDir: string): Promis
 
 async function fallbackToPdfToText(inputPath: string, outputPath: string): Promise<void> {
   // Fallback: Use pdftotext to recover text content when LibreOffice crashes
+  // Write to temp file instead of stdout to handle large PDFs (avoid maxBuffer exceeded)
+  const tempTextPath = inputPath.replace(".pdf", "_extracted.txt");
+
   try {
-    // -layout maintains physical layout of text
-    const { stdout } = await execAsync(`pdftotext -layout "${inputPath}" -`);
+    // -layout maintains physical layout of text, write to file instead of stdout
+    await execAsync(`pdftotext -layout "${inputPath}" "${tempTextPath}"`);
+
+    // Read the extracted text from file
+    const rawText = await fs.readFile(tempTextPath, "utf-8");
 
     // Sanitize control characters that XML/DOCX might hate (optional but safe)
     // Keep tabs, newlines, carriage returns
-    // Biome/ESLint safe regex construction
     // biome-ignore lint/complexity/useRegexLiterals: <No complex regex literals>
     const controlCharsRegex = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]", "g");
-    const cleanText = stdout.replace(controlCharsRegex, "");
+    const cleanText = rawText.replace(controlCharsRegex, "");
 
-    const doc = new Document({
-      sections: [
-        {
-          properties: {},
-          children: cleanText.split("\n").map(
-            (line) =>
-              new Paragraph({
-                children: [
-                  new TextRun({
-                    text: line,
-                    font: "Courier New", // Monospace helps preserve layout from pdftotext -layout
-                    size: 20, // 10pt
-                  }),
-                ],
-              }),
-          ),
-        },
-      ],
-    });
+    // Split into lines and process in chunks to avoid memory issues with huge docs
+    const lines = cleanText.split("\n");
+    const MAX_LINES_PER_SECTION = 5000; // Process in chunks for memory efficiency
+
+    const sections = [];
+    for (let i = 0; i < lines.length; i += MAX_LINES_PER_SECTION) {
+      const chunk = lines.slice(i, i + MAX_LINES_PER_SECTION);
+      sections.push({
+        properties: {},
+        children: chunk.map(
+          (line) =>
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: line,
+                  font: "Courier New", // Monospace helps preserve layout from pdftotext -layout
+                  size: 20, // 10pt
+                }),
+              ],
+            }),
+        ),
+      });
+    }
+
+    const doc = new Document({ sections });
 
     const buffer = await Packer.toBuffer(doc);
     await fs.writeFile(outputPath, buffer);
   } catch (e) {
     throw new Error(`Fallback conversion failed: ${e instanceof Error ? e.message : String(e)}`);
+  } finally {
+    // Clean up temp text file
+    await fs.unlink(tempTextPath).catch(() => {});
   }
 }
 
