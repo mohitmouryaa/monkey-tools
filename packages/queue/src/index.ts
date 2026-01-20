@@ -8,7 +8,7 @@ export const QUEUE_NAME = "job-queue";
 export const myQueue = new Queue(QUEUE_NAME, {
   connection,
   defaultJobOptions: {
-    attempts: 3, // Retry failed jobs 3 times
+    attempts: 1,
     backoff: {
       type: "exponential",
       delay: 1000,
@@ -22,9 +22,10 @@ export const createWorker = (processor: string | ((job: any) => Promise<any>)) =
   return new Worker(QUEUE_NAME, processor, {
     connection,
     concurrency: 10, // Increased from 5 to 10 for better throughput
+    lockDuration: 600000, // 10 minutes (Cover long running conversions)
     useWorkerThreads: true, // SANDBOXING: Runs jobs in separate threads
     limiter: {
-      max: 50, // Increased from 20 to 50 jobs processed...
+      max: 20, // Increased from 20 jobs processed...
       duration: 1000, // ...per second (Protect your database!)
     },
     settings: {

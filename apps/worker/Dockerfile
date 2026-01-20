@@ -42,10 +42,11 @@ RUN pnpm deploy --filter=worker --prod --legacy /deploy
 FROM node:${NODE_VERSION}-bookworm-slim AS runner
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ghostscript libreoffice libreoffice-java-common default-jre ca-certificates \
+ && apt-get install -y --no-install-recommends ghostscript poppler-utils libreoffice libreoffice-java-common default-jre ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 ENV NODE_ENV=production
 ENV JAVA_HOME=/usr/lib/jvm/default-java
+ENV SAL_USE_VCLPLUGIN=svp
 WORKDIR /app
 # Copy the deployed worker with all its dependencies
 COPY --from=deploy /deploy .
