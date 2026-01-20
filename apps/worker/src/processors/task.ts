@@ -1,6 +1,7 @@
 import type { Job } from "bullmq";
 import { JOB_TYPES } from "@workspace/types";
 import { compressPdf } from "../handlers/pdf/compress-pdf.js";
+import { advancedCompressPdf } from "../handlers/pdf/advanced-compress-pdf.js";
 import { wordToPdf } from "../handlers/office/word-to-pdf.js";
 import { pdfToWord } from "../handlers/office/pdf-to-word.js";
 
@@ -9,6 +10,9 @@ export default async function (job: Job) {
   switch (job.data.tool) {
     case JOB_TYPES.COMPRESS_PDF:
       return await compressPdf(job);
+
+    case JOB_TYPES.ADVANCED_COMPRESS_PDF:
+      return await advancedCompressPdf(job);
 
     case JOB_TYPES.WORD_TO_PDF:
       return await wordToPdf(job);
