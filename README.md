@@ -40,7 +40,7 @@ monkey-tools/
 │   ├── queue/        # BullMQ (Redis) Job Queue Configuration
 │   ├── storage/      # S3/DigitalOcean Spaces upload logic
 │   ├── types/        # Shared TypeScript interfaces & Zod schemas
-│   └── *-config/     # Shared ESLint/TS configs
+│   └── *-config/     # Shared TS configs
 └── docker-compose.yml # Infrastructure (Redis, Worker)
 ```
 

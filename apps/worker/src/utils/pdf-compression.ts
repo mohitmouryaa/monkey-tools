@@ -7,9 +7,13 @@ export type CompressionPreset = "low" | "medium" | "high";
 
 export class AdvancedPdfCompressor {
   private async runCommand(command: string, args: string[]): Promise<void> {
+    console.log(`[Compression] Executing: ${command} ${args.join(" ")}`); // Log command for debugging
     return new Promise((resolve, reject) => {
       const proc = spawn(command, args);
       const stderr: Buffer[] = [];
+
+      // IMPORTANT: Consume stdout to prevent process blocking if buffer fills
+      proc.stdout.on("data", () => {});
 
       proc.stderr.on("data", (data) => stderr.push(data));
 
@@ -122,19 +126,24 @@ export class AdvancedPdfCompressor {
 
     try {
       // Always run Step 1 (Reconstruct) + Step 2 (Structure)
+      console.log(`[Compression] Starting Step 1: Reconstruct`);
       await this.step1Reconstruct(inputPath, step1Path);
+
+      console.log(`[Compression] Starting Step 2: Optimize`);
       await this.step2Optimize(step1Path, step2Path);
 
       let finalTmpPath = step2Path;
 
       // If "high" preset (Extreme), run Step 3
       if (preset === "high") {
+        console.log(`[Compression] Starting Step 3: Extreme`);
         const step3Path = path.join(dir, `step3-${id}.pdf`);
         await this.step3Extreme(step2Path, step3Path);
         finalTmpPath = step3Path;
       }
 
       // Cleanup metadata (Privacy + Bytes)
+      console.log(`[Compression] Removing Metadata`);
       await this.removeMetadata(finalTmpPath);
 
       // Validation: Pick the winner strategies
@@ -166,7 +175,6 @@ export class AdvancedPdfCompressor {
       }
     } finally {
       // Cleanup temp files
-      /* eslint-disable no-empty */
       try {
         await fs.unlink(step1Path);
       } catch {}
@@ -178,7 +186,6 @@ export class AdvancedPdfCompressor {
           await fs.unlink(path.join(dir, `step3-${id}.pdf`));
         } catch {}
       }
-      /* eslint-enable no-empty */
     }
   }
 }
