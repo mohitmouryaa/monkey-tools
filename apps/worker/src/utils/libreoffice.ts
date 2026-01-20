@@ -83,39 +83,58 @@ async function fallbackToPdfToText(inputPath: string, outputPath: string): Promi
     // Read the extracted text from file
     const rawText = await fs.readFile(tempTextPath, "utf-8");
 
-    // Sanitize control characters that XML/DOCX might hate (optional but safe)
-    // Keep tabs, newlines, carriage returns
-    // biome-ignore lint/complexity/useRegexLiterals: <No complex regex literals>
-    const controlCharsRegex = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]", "g");
-    const cleanText = rawText.replace(controlCharsRegex, "");
+    // 1. Normalize newlines to \n
+    const normalizedText = rawText.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 
-    // Split into lines and process in chunks to avoid memory issues with huge docs
+    // 2. Remove invalid XML characters and Private Use Area (PUA) codes
+    // XML 1.0 allows: #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD]
+    // We strip:
+    // - Control chars: \x00-\x08, \x0B (VT), \x0C (FF), \x0E-\x1F
+    // - DEL: \x7F
+    // - PUA: \uE000-\uF8FF (often used for icon fonts in PDFs, results in garbage in Word)
+    // biome-ignore lint/complexity/useRegexLiterals: Complex regex needed
+    const invalidCharsRegex = new RegExp("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F\\uE000-\\uF8FF]", "g");
+    const cleanText = normalizedText.replace(invalidCharsRegex, "");
+
+    // Split into lines
     const lines = cleanText.split("\n");
-    const MAX_LINES_PER_SECTION = 5000; // Process in chunks for memory efficiency
+    const MAX_LINES_PER_SECTION = 5000;
 
     const sections = [];
     for (let i = 0; i < lines.length; i += MAX_LINES_PER_SECTION) {
       const chunk = lines.slice(i, i + MAX_LINES_PER_SECTION);
+
+      const children = chunk.map((line) => {
+        // Optimization: Use empty paragraph for empty lines
+        if (!line.trim()) {
+          return new Paragraph({});
+        }
+        return new Paragraph({
+          children: [
+            new TextRun({
+              text: line,
+              font: "Courier New",
+              size: 20,
+            }),
+          ],
+        });
+      });
+
       sections.push({
         properties: {},
-        children: chunk.map(
-          (line) =>
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: line,
-                  font: "Courier New", // Monospace helps preserve layout from pdftotext -layout
-                  size: 20, // 10pt
-                }),
-              ],
-            }),
-        ),
+        children,
       });
     }
 
     const doc = new Document({ sections });
 
     const buffer = await Packer.toBuffer(doc);
+    console.log(`Fallback generated DOCX buffer size: ${buffer.length} bytes`);
+
+    if (buffer.length === 0) {
+      throw new Error("Generated DOCX buffer is empty");
+    }
+
     await fs.writeFile(outputPath, buffer);
   } catch (e) {
     throw new Error(`Fallback conversion failed: ${e instanceof Error ? e.message : String(e)}`);
