@@ -48,6 +48,7 @@ export class AdvancedPdfCompressor {
       "-dEmbedAllFonts=false", // Aggressive font optimization
       "-dSubsetFonts=true",
       "-dCompressFonts=true",
+      "-dUseCIEColor=true", // Added for better color space handling
       "-dAutoRotatePages=/None",
       `-sOutputFile=${outputPath}`,
       inputPath,
@@ -77,7 +78,19 @@ export class AdvancedPdfCompressor {
       "-dPDFSETTINGS=/screen",
       "-dColorImageFilter=/DCTEncode",
       "-dGrayImageFilter=/DCTEncode",
-      "-dJPEGQ=40", // Very aggressive JPEG compression
+      "-dJPEGQ=20", // Aggressive JPEG compression (Industry Standard for Extreme)
+      "-dUseCIEColor=true", // Optimize color space
+
+      // Force aggressive downsampling again (in case Step 1 was too gentle)
+      "-dDownsampleColorImages=true",
+      "-dColorImageResolution=50", // Very low res for extreme reduction
+      "-dColorImageDownsampleType=/Bicubic",
+      "-dDownsampleGrayImages=true",
+      "-dGrayImageResolution=50",
+      "-dGrayImageDownsampleType=/Bicubic",
+      "-dDownsampleMonoImages=true",
+      "-dMonoImageResolution=144", // FAX Equivalent
+
       "-dNOPAUSE",
       "-dBATCH",
       "-dSAFER",
@@ -124,22 +137,32 @@ export class AdvancedPdfCompressor {
       // Cleanup metadata (Privacy + Bytes)
       await this.removeMetadata(finalTmpPath);
 
-      // Validation: Ensure we actually reduced the size.
-      // If we made it bigger (rare but possible), just fallback to Step 1 or even input if everything failed (unlikely with this pipeline).
-      const finalSize = await this.getFileSize(finalTmpPath);
+      // Validation: Pick the winner strategies
+      // We check all generated artifacts and pick the absolute smallest one
+      const candidates = [
+        { path: finalTmpPath, size: await this.getFileSize(finalTmpPath), name: "Stage 3 (Final)" },
+        { path: step2Path, size: await this.getFileSize(step2Path), name: "Stage 2 (QPDF)" },
+        { path: step1Path, size: await this.getFileSize(step1Path), name: "Stage 1 (GS Reconstruct)" },
+        { path: inputPath, size: initialSize, name: "Original (Fallback)" },
+      ];
 
-      if (finalSize >= initialSize) {
-        console.warn(`Compression made file larger (${initialSize} -> ${finalSize}). Using Step 1 result.`);
-        // Try checking step 1 size
-        const s1Size = await this.getFileSize(step1Path);
-        if (s1Size < initialSize) {
-          await fs.copyFile(step1Path, outputPath);
-        } else {
-          // Worst case: just copy input
-          await fs.copyFile(inputPath, outputPath);
-        }
+      // Sort by size ascending (smallest first)
+      candidates.sort((a, b) => a.size - b.size);
+
+      const winner = candidates[0];
+
+      if (!winner) {
+        throw new Error("Compression failed: No candidates found");
+      }
+
+      console.log(`Compression Result: Winner is ${winner.name} (${winner.size} bytes vs Original ${initialSize} bytes)`);
+
+      if (winner.path !== inputPath) {
+        await fs.copyFile(winner.path, outputPath);
       } else {
-        await fs.copyFile(finalTmpPath, outputPath);
+        // If original is best, just copy it (or in real-world, maybe fail? But copying is safer UX)
+        console.warn("Compression failed to reduce size. Using original.");
+        await fs.copyFile(inputPath, outputPath);
       }
     } finally {
       // Cleanup temp files

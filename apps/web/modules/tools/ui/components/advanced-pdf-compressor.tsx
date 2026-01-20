@@ -189,9 +189,11 @@ export default function AdvancedPdfCompressor() {
 
           {jobData?.metadata?.reductionPercentage && (
             <div className="grid max-w-sm grid-cols-2 gap-4 mx-auto">
-              <div className="p-4 rounded-lg bg-secondary">
-                <p className="text-xs tracking-wider uppercase text-muted-foreground">New Size</p>
-                <p className="text-xl font-bold">{(Number(jobData.metadata.compressedSize) / 1024 / 1024).toFixed(2)} MB</p>
+              <div className="p-4 border border-green-100 rounded-lg bg-green-50 dark:bg-green-900/10 dark:border-green-800">
+                <p className="text-xs tracking-wider text-green-700 uppercase dark:text-green-400">New Size</p>
+                <p className="text-xl font-bold text-green-600 dark:text-green-500">
+                  {(Number(jobData.metadata.compressedSize) / 1024 / 1024).toFixed(2)} MB
+                </p>
               </div>
               <div className="p-4 border border-green-100 rounded-lg bg-green-50 dark:bg-green-900/10 dark:border-green-800">
                 <p className="text-xs tracking-wider text-green-700 uppercase dark:text-green-400">Saved</p>
@@ -209,7 +211,7 @@ export default function AdvancedPdfCompressor() {
                 </Link>
               </Button>
             )}
-            <Button variant="ghost" onClick={handleReset} className="w-full">
+            <Button size={"lg"} variant="ghost" onClick={handleReset} className="w-full">
               Compress Another File
             </Button>
           </div>
