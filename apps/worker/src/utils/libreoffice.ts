@@ -7,7 +7,9 @@ import { Document, Packer, Paragraph, TextRun } from "docx";
 const execAsync = promisify(exec);
 
 async function optimizePdf(inputPath: string): Promise<string> {
-  const optimizedPath = inputPath.replace(".pdf", "_opt.pdf");
+  const dir = path.dirname(inputPath);
+  const baseName = path.basename(inputPath, path.extname(inputPath));
+  const optimizedPath = path.join(dir, `${baseName}_opt.pdf`);
 
   return new Promise((resolve) => {
     // 60s timeout for optimization
@@ -114,6 +116,10 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
   console.log("Optimizing PDF with Ghostscript...");
   const processingPath = await optimizePdf(inputPath);
 
+  // Get the original filename (without _opt suffix) for final output naming
+  const originalBaseName = path.basename(inputPath, ".pdf");
+  const finalOutputPath = path.join(outputDir, `${originalBaseName}.docx`);
+
   // We expect inputPath like /tmp/123-input.pdf
   // soffice --headless --convert-to docx --outdir /tmp /tmp/123-input.pdf
 
@@ -136,9 +142,11 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
     ];
 
     execFile("soffice", args, { timeout }, async (error) => {
-      // Expected output filename
-      const filename = path.basename(processingPath, path.extname(processingPath));
-      const expectedOutputPath = path.join(outputDir, `${filename}.docx`);
+      // LibreOffice with PDF import creates output as: basename.pdf.docx (keeps .pdf in name)
+      const processingBaseName = path.basename(processingPath, ".pdf");
+      const libreOfficeOutputPath = path.join(outputDir, `${processingBaseName}.pdf.docx`);
+      // Also check for the expected normal output (without .pdf in name)
+      const normalOutputPath = path.join(outputDir, `${processingBaseName}.docx`);
 
       const cleanup = () => {
         if (processingPath !== inputPath) {
@@ -146,14 +154,32 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
         }
       };
 
+      // Helper to find and rename the actual output file
+      const findAndRenameOutput = async (): Promise<string> => {
+        // Check both possible output locations
+        for (const possiblePath of [libreOfficeOutputPath, normalOutputPath]) {
+          try {
+            await fs.access(possiblePath);
+            // Found the file - rename it to our desired final path if different
+            if (possiblePath !== finalOutputPath) {
+              await fs.rename(possiblePath, finalOutputPath);
+            }
+            return finalOutputPath;
+          } catch {
+            // File doesn't exist at this path, try next
+          }
+        }
+        throw new Error("LibreOffice did not produce expected output file");
+      };
+
       if (error) {
         const errorCode = (error as NodeJS.ErrnoException).code || "unknown";
         console.warn(`LibreOffice conversion failed (code ${errorCode}). Attempting text-only fallback...`);
 
         try {
-          await fallbackToPdfToText(inputPath, expectedOutputPath);
+          await fallbackToPdfToText(inputPath, finalOutputPath);
           cleanup();
-          return resolve(expectedOutputPath);
+          return resolve(finalOutputPath);
         } catch (fallbackError) {
           cleanup();
           // Check for timeout
@@ -165,8 +191,14 @@ export async function convertToWord(inputPath: string, outputDir: string): Promi
         }
       }
 
-      cleanup();
-      resolve(expectedOutputPath);
+      try {
+        const outputPath = await findAndRenameOutput();
+        cleanup();
+        resolve(outputPath);
+      } catch (renameError) {
+        cleanup();
+        reject(renameError);
+      }
     });
   });
 }
