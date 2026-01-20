@@ -42,8 +42,12 @@ export const jobsRouter = createTRPCRouter({
     if (job.outputFile) {
       // Pass original filename if available in metadata, or fallback to sensible default
       const metadata = job.metadata as Record<string, unknown>;
-      const originalName = typeof metadata?.originalName === "string" ? metadata.originalName : "converted";
-      const filename = `${originalName.replace(/\.[^/.]+$/, "")}.docx`;
+      const originalName = typeof metadata?.originalName === "string" ? metadata.originalName : "result";
+
+      // Determine extension based on output file or tool
+      const extension = job.outputFile.split(".").pop() || "dat";
+      const filename = `${originalName.replace(/\.[^/.]+$/, "")}.${extension}`;
+
       downloadUrl = await getDownloadUrl(job.outputFile, filename);
     }
     return { ...job, _id: job._id.toString(), downloadUrl };
