@@ -27,11 +27,21 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
       };
     }
 
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://monkeytools.com";
+    const canonicalUrl = `${baseUrl}/tools/${toolCategory}/${tool}`;
+
     // Return SEO metadata from the database
     return {
       title: toolData.seoTitle || `${toolData.title} - Monkey Tools`,
       description: toolData.seoDescription || toolData.description,
       keywords: toolData.seoKeywords || "",
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
       openGraph: {
         title: toolData.seoTitle || toolData.title,
         description: toolData.seoDescription || toolData.description,

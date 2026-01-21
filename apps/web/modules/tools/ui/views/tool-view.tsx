@@ -3,6 +3,10 @@ import { caller } from "@/trpc/server";
 import { ToolSteps } from "@/modules/tools/ui/components/tool-steps";
 import { ToolFAQ } from "@/modules/tools/ui/components/tool-faq";
 import { FAQSchema } from "@/modules/tools/ui/components/faq-schema";
+import { RelatedTools } from "@/modules/tools/ui/components/related-tools";
+import { SoftwareSchema } from "@/modules/tools/ui/components/software-schema";
+import { BreadcrumbSchema } from "@/modules/tools/ui/components/breadcrumb-schema";
+import { ToolHeader } from "@/modules/tools/ui/components/tool-header";
 import { ToolLoading } from "@/modules/common/ui/components/tool-loading";
 import { PDFLibProvider } from "@/modules/common/providers/pdf-lib-provider";
 import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
@@ -27,10 +31,23 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   }
 
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://monkeytools.com";
+    const currentUrl = `${baseUrl}/tools/${toolCategory}/${tool}`;
+
     const { default: ToolComponent } = await import(`@/modules/tools/ui/components/${tool}`);
 
     return (
       <div className="container px-4 py-8 mx-auto">
+        {/* Schemas */}
+        <SoftwareSchema tool={toolData} url={currentUrl} />
+        <BreadcrumbSchema
+          items={[
+            { name: "Home", url: baseUrl },
+            { name: category.name, url: `${baseUrl}/tools/${toolCategory}` },
+            { name: toolData.title, url: currentUrl },
+          ]}
+        />
+
         {/* Ad - Top */}
         <div className="mb-6">
           <AdPlaceholder position="top" />
@@ -40,10 +57,11 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
           {/* Main Content */}
           <div className="flex-1">
             {/* Tool Header */}
-            <div className="mb-8">
-              <h1 className="mb-2 text-2xl font-bold md:text-3xl text-foreground">{toolData.h1Heading || toolData.title}</h1>
-              {toolData.introText && <p className="text-muted-foreground">{toolData.introText}</p>}
-            </div>
+            <ToolHeader
+              title={toolData.h1Heading || toolData.title}
+              introText={toolData.introText || undefined}
+              iconName={toolData.icon || undefined}
+            />
 
             {/* Tool Card */}
             <div className="p-6 mb-8 border rounded-lg bg-card border-border md:p-8">
@@ -100,6 +118,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
                 </div>
               </div>
             )}
+
+            {/* Related Tools */}
+            <RelatedTools currentToolId={toolData._id as string} tools={category.tools} categorySlug={toolCategory} />
           </div>
 
           {/* Sidebar - Desktop Only */}
