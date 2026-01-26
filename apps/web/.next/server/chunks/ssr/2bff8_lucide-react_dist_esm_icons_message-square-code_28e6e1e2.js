@@ -1,0 +1,3 @@
+module.exports=[332650,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M10 7.5 8 10l2 2.5",key:"xb17xw"}],["path",{d:"m14 7.5 2 2.5-2 2.5",key:"5rap1v"}],["path",{d:"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",key:"1lielz"}]],d=(0,b.default)("MessageSquareCode",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_message-square-code_28e6e1e2.js.map

@@ -1,0 +1,3 @@
+module.exports=[811805,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7",key:"1m0v6g"}],["path",{d:"M14 15H9v-5",key:"pi4jk9"}],["path",{d:"M16 3h5v5",key:"1806ms"}],["path",{d:"M21 3 9 15",key:"15kdhq"}]],d=(0,b.default)("Scaling",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_scaling_aff79ccd.js.map

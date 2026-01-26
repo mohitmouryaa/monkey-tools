@@ -1,0 +1,3 @@
+module.exports=[755838,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"7",height:"7",x:"3",y:"3",rx:"1",key:"1g98yp"}],["rect",{width:"7",height:"7",x:"14",y:"3",rx:"1",key:"6d4xhi"}],["rect",{width:"7",height:"7",x:"14",y:"14",rx:"1",key:"nxv5o0"}],["rect",{width:"7",height:"7",x:"3",y:"14",rx:"1",key:"1bb6yr"}]],d=(0,b.default)("LayoutGrid",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_layout-grid_753d44f9.js.map

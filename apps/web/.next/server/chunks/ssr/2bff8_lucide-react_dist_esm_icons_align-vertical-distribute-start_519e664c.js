@@ -1,0 +1,3 @@
+module.exports=[369552,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"14",height:"6",x:"5",y:"14",rx:"2",key:"jmoj9s"}],["rect",{width:"10",height:"6",x:"7",y:"4",rx:"2",key:"aza5on"}],["path",{d:"M2 14h20",key:"myj16y"}],["path",{d:"M2 4h20",key:"mda7wb"}]],d=(0,b.default)("AlignVerticalDistributeStart",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_align-vertical-distribute-start_519e664c.js.map

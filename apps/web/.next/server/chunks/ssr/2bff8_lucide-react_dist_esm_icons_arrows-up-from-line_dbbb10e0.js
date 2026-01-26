@@ -1,0 +1,3 @@
+module.exports=[64146,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"m4 6 3-3 3 3",key:"9aidw8"}],["path",{d:"M7 17V3",key:"19qxw1"}],["path",{d:"m14 6 3-3 3 3",key:"6iy689"}],["path",{d:"M17 17V3",key:"o0fmgi"}],["path",{d:"M4 21h16",key:"1h09gz"}]],d=(0,b.default)("ArrowsUpFromLine",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_arrows-up-from-line_dbbb10e0.js.map

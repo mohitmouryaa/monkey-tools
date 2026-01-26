@@ -1,0 +1,29 @@
+{
+  "name": "@workspace/database",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.27",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@typegoose/typegoose": "^13.0.0",
+    "@workspace/types": "workspace:*",
+    "dotenv": "^17.2.3",
+    "mongoose": "^9.1.1",
+    "reflect-metadata": "^0.2.2"
+  }
+}

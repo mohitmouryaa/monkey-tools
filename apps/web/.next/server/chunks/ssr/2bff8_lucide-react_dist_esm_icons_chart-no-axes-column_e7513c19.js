@@ -1,0 +1,3 @@
+module.exports=[787709,a=>{"use strict";var b=a.i(556050);let c=[["line",{x1:"18",x2:"18",y1:"20",y2:"10",key:"1xfpm4"}],["line",{x1:"12",x2:"12",y1:"20",y2:"4",key:"be30l9"}],["line",{x1:"6",x2:"6",y1:"20",y2:"14",key:"1r4le6"}]],d=(0,b.default)("ChartNoAxesColumn",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_chart-no-axes-column_e7513c19.js.map

@@ -1,0 +1,3 @@
+module.exports=[835168,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M7.9 20A9 9 0 1 0 4 16.1L2 22Z",key:"vv11sd"}],["path",{d:"M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3",key:"1u773s"}],["path",{d:"M12 17h.01",key:"p32p05"}]],d=(0,b.default)("MessageCircleQuestion",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_message-circle-question_4ad389cd.js.map

@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,963798,o=>{"use strict";var t=o.i(519800);let e=[["path",{d:"M2 16s9-15 20-4C11 23 2 8 2 8",key:"h4oh4o"}]],i=(0,t.default)("FishSymbol",e);o.s(["__iconNode",()=>e,"default",()=>i])}]);

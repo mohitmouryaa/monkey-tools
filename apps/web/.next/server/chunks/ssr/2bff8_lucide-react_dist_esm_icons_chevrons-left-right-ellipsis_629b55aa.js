@@ -1,0 +1,3 @@
+module.exports=[589537,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"m18 8 4 4-4 4",key:"1ak13k"}],["path",{d:"m6 8-4 4 4 4",key:"15zrgr"}],["path",{d:"M8 12h.01",key:"czm47f"}],["path",{d:"M12 12h.01",key:"1mp3jc"}],["path",{d:"M16 12h.01",key:"1l6xoz"}]],d=(0,b.default)("ChevronsLeftRightEllipsis",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_chevrons-left-right-ellipsis_629b55aa.js.map

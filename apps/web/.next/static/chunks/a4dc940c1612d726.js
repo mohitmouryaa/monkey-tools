@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,362038,t=>{"use strict";var e=t.i(519800);let o=[["path",{d:"m9 18 6-6-6-6",key:"mthhwq"}]],h=(0,e.default)("ChevronRight",o);t.s(["__iconNode",()=>o,"default",()=>h])}]);

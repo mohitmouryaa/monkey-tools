@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,244086,e=>{"use strict";var c=e.i(519800);let o=[["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}],["polyline",{points:"12 6 12 12 14.5 16",key:"1pcbox"}]],l=(0,c.default)("Clock5",o);e.s(["__iconNode",()=>o,"default",()=>l])}]);

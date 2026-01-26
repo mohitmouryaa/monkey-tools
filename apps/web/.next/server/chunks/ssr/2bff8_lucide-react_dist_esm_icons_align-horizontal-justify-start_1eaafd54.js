@@ -1,0 +1,3 @@
+module.exports=[982586,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"6",height:"14",x:"6",y:"5",rx:"2",key:"hsirpf"}],["rect",{width:"6",height:"10",x:"16",y:"7",rx:"2",key:"13zkjt"}],["path",{d:"M2 2v20",key:"1ivd8o"}]],d=(0,b.default)("AlignHorizontalJustifyStart",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_align-horizontal-justify-start_1eaafd54.js.map

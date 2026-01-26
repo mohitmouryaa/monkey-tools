@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,683507,t=>{"use strict";var e=t.i(519800);let i=[["rect",{width:"8",height:"6",x:"5",y:"4",rx:"1",key:"nzclkv"}],["rect",{width:"8",height:"6",x:"11",y:"14",rx:"1",key:"4tytwb"}]],c=(0,e.default)("Ungroup",i);t.s(["__iconNode",()=>i,"default",()=>c])}]);

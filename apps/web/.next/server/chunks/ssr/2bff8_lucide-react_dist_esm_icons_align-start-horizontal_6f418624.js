@@ -1,0 +1,3 @@
+module.exports=[356850,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"6",height:"16",x:"4",y:"6",rx:"2",key:"1n4dg1"}],["rect",{width:"6",height:"9",x:"14",y:"6",rx:"2",key:"17khns"}],["path",{d:"M22 2H2",key:"fhrpnj"}]],d=(0,b.default)("AlignStartHorizontal",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_align-start-horizontal_6f418624.js.map

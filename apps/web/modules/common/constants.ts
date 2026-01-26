@@ -1,0 +1,8 @@
+export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
+export const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_PAGE_SIZE: 10,
+  MAX_PAGE_SIZE: 100,
+  MIN_PAGE_SIZE: 1,
+};

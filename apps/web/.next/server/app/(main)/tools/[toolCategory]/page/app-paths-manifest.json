@@ -1,0 +1,3 @@
+{
+  "/(main)/tools/[toolCategory]/page": "app/(main)/tools/[toolCategory]/page.js"
+}

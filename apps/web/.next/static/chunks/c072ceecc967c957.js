@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,688924,e=>{"use strict";var t=e.i(519800);let o=[["polyline",{points:"9 14 4 9 9 4",key:"881910"}],["path",{d:"M20 20v-7a4 4 0 0 0-4-4H4",key:"1nkjon"}]],i=(0,t.default)("CornerUpLeft",o);e.s(["__iconNode",()=>o,"default",()=>i])}]);

@@ -1,0 +1,3 @@
+module.exports=[410152,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z",key:"1lielz"}],["path",{d:"M12 7v2",key:"stiyo7"}],["path",{d:"M12 13h.01",key:"y0uutt"}]],d=(0,b.default)("MessageSquareWarning",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
+
+//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_message-square-warning_1707d73b.js.map

@@ -1,0 +1,1 @@
+(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,137197,e=>{"use strict";var o=e.i(519800);let t=[["polyline",{points:"22 7 13.5 15.5 8.5 10.5 2 17",key:"126l90"}],["polyline",{points:"16 7 22 7 22 13",key:"kwv8wd"}]],i=(0,o.default)("TrendingUp",t);e.s(["__iconNode",()=>t,"default",()=>i])}]);
