@@ -1,3 +1,0 @@
-module.exports=[317578,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}],["path",{d:"M12 8v8",key:"napkw2"}],["path",{d:"m8.5 14 7-4",key:"12hpby"}],["path",{d:"m8.5 10 7 4",key:"wwy2dy"}]],d=(0,b.default)("SquareAsterisk",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_square-asterisk_a0db1c1e.js.map

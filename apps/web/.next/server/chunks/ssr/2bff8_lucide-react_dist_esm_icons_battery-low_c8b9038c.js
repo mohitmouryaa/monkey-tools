@@ -1,3 +1,0 @@
-module.exports=[465731,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"16",height:"10",x:"2",y:"7",rx:"2",ry:"2",key:"1w10f2"}],["line",{x1:"22",x2:"22",y1:"11",y2:"13",key:"4dh1rd"}],["line",{x1:"6",x2:"6",y1:"11",y2:"13",key:"1wd6dw"}]],d=(0,b.default)("BatteryLow",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_battery-low_c8b9038c.js.map

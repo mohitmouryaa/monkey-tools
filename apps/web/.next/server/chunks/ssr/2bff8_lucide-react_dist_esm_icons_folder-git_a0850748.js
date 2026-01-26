@@ -1,3 +1,0 @@
-module.exports=[721191,a=>{"use strict";var b=a.i(556050);let c=[["circle",{cx:"12",cy:"13",r:"2",key:"1c1ljs"}],["path",{d:"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z",key:"1kt360"}],["path",{d:"M14 13h3",key:"1dgedf"}],["path",{d:"M7 13h3",key:"1pygq7"}]],d=(0,b.default)("FolderGit",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_folder-git_a0850748.js.map

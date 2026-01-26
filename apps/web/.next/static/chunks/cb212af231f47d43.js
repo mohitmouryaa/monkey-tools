@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,27789,e=>{"use strict";var t=e.i(519800);let i=[["path",{d:"M12 20h.01",key:"zekei9"}]],o=(0,t.default)("WifiZero",i);e.s(["__iconNode",()=>i,"default",()=>o])}]);

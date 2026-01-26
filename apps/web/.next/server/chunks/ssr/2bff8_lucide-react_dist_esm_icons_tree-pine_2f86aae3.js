@@ -1,3 +1,0 @@
-module.exports=[549514,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z",key:"cpyugq"}],["path",{d:"M12 22v-3",key:"kmzjlo"}]],d=(0,b.default)("TreePine",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_tree-pine_2f86aae3.js.map

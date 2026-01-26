@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,46437,t=>{"use strict";var e=t.i(519800);let o=[["polygon",{points:"22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3",key:"1yg77f"}]],i=(0,e.default)("Filter",o);t.s(["__iconNode",()=>o,"default",()=>i])}]);

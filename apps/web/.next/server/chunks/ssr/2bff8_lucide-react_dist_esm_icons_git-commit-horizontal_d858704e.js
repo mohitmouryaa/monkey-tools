@@ -1,3 +1,0 @@
-module.exports=[436100,a=>{"use strict";var b=a.i(556050);let c=[["circle",{cx:"12",cy:"12",r:"3",key:"1v7zrd"}],["line",{x1:"3",x2:"9",y1:"12",y2:"12",key:"1dyftd"}],["line",{x1:"15",x2:"21",y1:"12",y2:"12",key:"oup4p8"}]],d=(0,b.default)("GitCommitHorizontal",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_git-commit-horizontal_d858704e.js.map

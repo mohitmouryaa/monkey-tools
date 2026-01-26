@@ -1,3 +1,0 @@
-module.exports=[3542,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M13.228 21.925A10 10 0 1 1 21.994 12.338",key:"1fzlyi"}],["path",{d:"M12 6v6l1.562.781",key:"1ujuk9"}],["path",{d:"m14 18 4-4 4 4",key:"ftkppy"}],["path",{d:"M18 22v-8",key:"su0gjh"}]],d=(0,b.default)("ClockArrowUp",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_clock-arrow-up_63ea7ec5.js.map

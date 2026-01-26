@@ -1,3 +1,0 @@
-module.exports=[172062,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"7",height:"18",x:"3",y:"3",rx:"1",key:"2obqm"}],["rect",{width:"7",height:"7",x:"14",y:"3",rx:"1",key:"6d4xhi"}],["rect",{width:"7",height:"7",x:"14",y:"14",rx:"1",key:"nxv5o0"}]],d=(0,b.default)("LayoutPanelLeft",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_layout-panel-left_8c3aabea.js.map

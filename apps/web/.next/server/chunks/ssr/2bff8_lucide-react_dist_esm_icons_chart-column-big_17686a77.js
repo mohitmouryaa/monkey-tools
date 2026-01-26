@@ -1,3 +1,0 @@
-module.exports=[845991,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M3 3v16a2 2 0 0 0 2 2h16",key:"c24i48"}],["rect",{x:"15",y:"5",width:"4",height:"12",rx:"1",key:"q8uenq"}],["rect",{x:"7",y:"8",width:"4",height:"9",rx:"1",key:"sr5ea"}]],d=(0,b.default)("ChartColumnBig",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_chart-column-big_17686a77.js.map

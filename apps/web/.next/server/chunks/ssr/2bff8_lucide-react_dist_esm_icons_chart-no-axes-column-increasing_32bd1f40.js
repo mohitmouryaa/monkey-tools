@@ -1,3 +1,0 @@
-module.exports=[781527,a=>{"use strict";var b=a.i(556050);let c=[["line",{x1:"12",x2:"12",y1:"20",y2:"10",key:"1vz5eb"}],["line",{x1:"18",x2:"18",y1:"20",y2:"4",key:"cun8e5"}],["line",{x1:"6",x2:"6",y1:"20",y2:"16",key:"hq0ia6"}]],d=(0,b.default)("ChartNoAxesColumnIncreasing",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_chart-no-axes-column-increasing_32bd1f40.js.map

@@ -1,3 +1,0 @@
-module.exports=[149150,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M18 21a6 6 0 0 0-12 0",key:"kaz2du"}],["circle",{cx:"12",cy:"11",r:"4",key:"1gt34v"}],["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}]],d=(0,b.default)("SquareUserRound",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_square-user-round_6bfd73e9.js.map

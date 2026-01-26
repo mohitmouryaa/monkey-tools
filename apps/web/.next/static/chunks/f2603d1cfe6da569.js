@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,986026,e=>{e.v("/_next/static/media/ort-wasm-simd-threaded.jsep.15e2952b.wasm")}]);

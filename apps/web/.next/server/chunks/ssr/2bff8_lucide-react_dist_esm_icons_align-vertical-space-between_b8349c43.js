@@ -1,3 +1,0 @@
-module.exports=[640693,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"14",height:"6",x:"5",y:"15",rx:"2",key:"1w91an"}],["rect",{width:"10",height:"6",x:"7",y:"3",rx:"2",key:"17wqzy"}],["path",{d:"M2 21h20",key:"1nyx9w"}],["path",{d:"M2 3h20",key:"91anmk"}]],d=(0,b.default)("AlignVerticalSpaceBetween",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_align-vertical-space-between_b8349c43.js.map

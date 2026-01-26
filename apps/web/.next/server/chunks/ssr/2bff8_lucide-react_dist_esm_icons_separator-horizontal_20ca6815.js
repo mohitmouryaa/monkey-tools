@@ -1,3 +1,0 @@
-module.exports=[195675,a=>{"use strict";var b=a.i(556050);let c=[["line",{x1:"3",x2:"21",y1:"12",y2:"12",key:"10d38w"}],["polyline",{points:"8 8 12 4 16 8",key:"zo8t4w"}],["polyline",{points:"16 16 12 20 8 16",key:"1oyrid"}]],d=(0,b.default)("SeparatorHorizontal",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_separator-horizontal_20ca6815.js.map

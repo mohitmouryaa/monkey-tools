@@ -1,3 +1,0 @@
-module.exports=[287869,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"7",height:"13",x:"3",y:"8",rx:"1",key:"1fjrkv"}],["path",{d:"m15 2-3 3-3-3",key:"1uh6eb"}],["rect",{width:"7",height:"13",x:"14",y:"8",rx:"1",key:"w3fjg8"}]],d=(0,b.default)("BetweenVerticalStart",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_between-vertical-start_a3a5bf44.js.map

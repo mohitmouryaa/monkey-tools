@@ -1,3 +1,0 @@
-module.exports=[935651,a=>{"use strict";var b=a.i(556050);let c=[["rect",{width:"20",height:"16",x:"2",y:"4",rx:"2",key:"18n3k1"}],["path",{d:"M6 8h.01",key:"x9i8wu"}],["path",{d:"M10 8h.01",key:"1r9ogq"}],["path",{d:"M14 8h.01",key:"1primd"}]],d=(0,b.default)("AppWindowMac",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_app-window-mac_1af90869.js.map

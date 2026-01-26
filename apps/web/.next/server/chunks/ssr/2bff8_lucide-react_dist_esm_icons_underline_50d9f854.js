@@ -1,3 +1,0 @@
-module.exports=[984385,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M6 4v6a6 6 0 0 0 12 0V4",key:"9kb039"}],["line",{x1:"4",x2:"20",y1:"20",y2:"20",key:"nun2al"}]],d=(0,b.default)("Underline",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_underline_50d9f854.js.map

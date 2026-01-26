@@ -1,3 +1,0 @@
-module.exports=[345289,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M10 9v6",key:"17i7lo"}],["path",{d:"M13.5 7H16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2.5",key:"jzl4pj"}],["path",{d:"M22 11v2",key:"1wo06k"}],["path",{d:"M6.5 17H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h2.5",key:"1ar5vp"}],["path",{d:"M7 12h6",key:"iekk3h"}]],d=(0,b.default)("BatteryPlus",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_battery-plus_8e2b7ad7.js.map

@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,922943,e=>{"use strict";var t=e.i(519800);let c=[["path",{d:"M7 10h10",key:"1101jm"}],["path",{d:"M7 14h10",key:"1mhdw3"}],["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}]],l=(0,t.default)("CircleEqual",c);e.s(["__iconNode",()=>c,"default",()=>l])}]);

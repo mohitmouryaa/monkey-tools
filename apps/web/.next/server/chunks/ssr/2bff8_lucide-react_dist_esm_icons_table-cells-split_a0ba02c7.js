@@ -1,3 +1,0 @@
-module.exports=[722638,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M12 15V9",key:"8c7uyn"}],["path",{d:"M3 15h18",key:"5xshup"}],["path",{d:"M3 9h18",key:"1pudct"}],["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}]],d=(0,b.default)("TableCellsSplit",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_table-cells-split_a0ba02c7.js.map

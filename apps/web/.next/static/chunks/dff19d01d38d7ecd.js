@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,935958,t=>{"use strict";var e=t.i(519800);let o=[["path",{d:"M15 5H9",key:"1tp3ed"}],["path",{d:"M15 9v3h4l-7 7-7-7h4V9z",key:"ncdc4b"}]],d=(0,e.default)("ArrowBigDownDash",o);t.s(["__iconNode",()=>o,"default",()=>d])}]);

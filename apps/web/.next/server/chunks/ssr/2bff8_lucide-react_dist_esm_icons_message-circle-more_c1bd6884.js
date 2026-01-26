@@ -1,3 +1,0 @@
-module.exports=[846697,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M7.9 20A9 9 0 1 0 4 16.1L2 22Z",key:"vv11sd"}],["path",{d:"M8 12h.01",key:"czm47f"}],["path",{d:"M12 12h.01",key:"1mp3jc"}],["path",{d:"M16 12h.01",key:"1l6xoz"}]],d=(0,b.default)("MessageCircleMore",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_message-circle-more_c1bd6884.js.map

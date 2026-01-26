@@ -1,3 +1,0 @@
-module.exports=[562801,a=>{"use strict";var b=a.i(556050);let c=[["path",{d:"M6 2v14a2 2 0 0 0 2 2h14",key:"ron5a4"}],["path",{d:"M18 22V8a2 2 0 0 0-2-2H2",key:"7s9ehn"}]],d=(0,b.default)("Crop",c);a.s(["__iconNode",()=>c,"default",()=>d])}];
-
-//# sourceMappingURL=2bff8_lucide-react_dist_esm_icons_crop_2837d5ad.js.map
