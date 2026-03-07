@@ -1,9 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { Wrench, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import type { Tool } from "@workspace/database";
+import { toLucideIconName } from "@/modules/common/ui/lib/lucide-icon-name";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { Wrench } from "lucide-react";
+
+const CATEGORY_COLOR_CLASS: Record<string, string> = {
+  "pdf-tools": "bg-tool-merge-bg hover:bg-tool-merge-bg/90",
+  "image-tools": "bg-tool-bg-remove-bg hover:bg-tool-bg-remove-bg/90",
+  "text-tools": "bg-tool-pdf-word-bg hover:bg-tool-pdf-word-bg/90",
+  "text-ai-tools": "bg-tool-pdf-word-bg hover:bg-tool-pdf-word-bg/90",
+  converters: "bg-tool-word-pdf-bg hover:bg-tool-word-pdf-bg/90",
+};
+
+function getRelatedColorClass(categorySlug: string): string {
+  return CATEGORY_COLOR_CLASS[categorySlug] ?? "bg-tool-merge-bg hover:bg-tool-merge-bg/90";
+}
 
 interface RelatedToolsProps {
   currentToolId: string;
@@ -11,47 +25,44 @@ interface RelatedToolsProps {
   categorySlug: string;
 }
 
-export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedToolsProps) => {
-  // Filter out current tool and take up to 6
+export function RelatedTools({ currentToolId, tools, categorySlug }: RelatedToolsProps) {
   const related = tools.filter((t) => t._id !== currentToolId).slice(0, 6);
-
   if (related.length === 0) return null;
 
-  return (
-    <div className="pt-8 mt-16 border-t border-border">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-foreground">More {categorySlug.replace(/-/g, " ")} Tools</h2>
-        <Link
-          href={`/tools/${categorySlug}`}
-          className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-        >
-          View all <ArrowRight className="w-4 h-4" />
-        </Link>
-      </div>
+  const colorClass = getRelatedColorClass(categorySlug);
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {related.map((tool) => (
-          <Link
-            key={tool._id as string}
-            href={tool.link.startsWith("/") ? `/tools/${categorySlug}${tool.link}` : `/tools/${categorySlug}/${tool.link}`}
-            className="block group"
-          >
-            <div className="flex items-center h-full gap-4 p-4 transition-all duration-200 border rounded-xl border-border bg-card hover:border-primary/50 hover:bg-muted/50">
-              <div className="flex items-center justify-center w-10 h-10 transition-colors rounded-lg shrink-0 bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground">
-                {tool.icon ? (
-                  <DynamicIcon name={tool.icon as IconName} className="w-5 h-5" fallback={() => <Wrench className="w-5 h-5" />} />
+  return (
+    <div className="seo-section">
+      <h2 className="mb-4 text-xl font-bold text-foreground">Ferramentas Relacionadas</h2>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {related.map((tool) => {
+          const href = tool.link.startsWith("/")
+            ? `/tools/${categorySlug}${tool.link}`
+            : `/tools/${categorySlug}/${tool.link.replace(/^\//, "")}`;
+          const iconName = tool.icon ? toLucideIconName(tool.icon) : null;
+          return (
+            <Link
+              key={tool._id as string}
+              href={href}
+              className={`flex items-center justify-between px-4 py-3 rounded-xl ${colorClass} text-foreground font-medium text-sm hover:opacity-90 transition-opacity`}
+            >
+              <span className="flex items-center min-w-0 gap-2">
+                {iconName ? (
+                  <DynamicIcon
+                    name={iconName as IconName}
+                    className="w-4 h-4 shrink-0"
+                    fallback={() => <Wrench className="w-4 h-4 shrink-0" />}
+                  />
                 ) : (
-                  <Wrench className="w-5 h-5" />
+                  <Wrench className="w-4 h-4 shrink-0" />
                 )}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium truncate transition-colors text-foreground group-hover:text-primary">{tool.title}</h3>
-                {tool.description && <p className="text-xs truncate text-muted-foreground">{tool.description}</p>}
-              </div>
-            </div>
-          </Link>
-        ))}
+                <span className="truncate">{tool.title}</span>
+              </span>
+              <ArrowRight className="w-4 h-4 ml-2 shrink-0" />
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
-};
+}

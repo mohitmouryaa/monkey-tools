@@ -67,6 +67,63 @@
   /* Logo colors */
   --logo-primary: 243 100% 68%;
   --logo-secondary: 162 100% 45%;
+
+  /* Tool colors (pastel card tops to match reference design) */
+  /* Compress PDF: light pinkish-peach / blush */
+  --tool-compress: 15 80% 65%;
+  --tool-compress-bg: 15 70% 96%;
+  /* PDF to Word: periwinkle blue / pale lavender */
+  --tool-pdf-word: 230 60% 65%;
+  --tool-pdf-word-bg: 230 50% 96%;
+  /* Word to PDF: sky blue / pale cyan */
+  --tool-word-pdf: 199 70% 60%;
+  --tool-word-pdf-bg: 199 55% 94%;
+  /* Merge PDF: mint green */
+  --tool-merge: 152 45% 55%;
+  --tool-merge-bg: 152 45% 94%;
+  /* Split PDF: pinkish-peach / pale coral */
+  --tool-split: 20 75% 65%;
+  --tool-split-bg: 20 65% 96%;
+  /* Remove Background: lavender / pale purple */
+  --tool-bg-remove: 270 45% 65%;
+  --tool-bg-remove-bg: 270 45% 96%;
+  /* QR Code: peach / pale orange */
+  --tool-qr: 30 70% 68%;
+  --tool-qr-bg: 30 65% 96%;
+
+  /* Shadows and gradients (primary-tinted) */
+  --shadow-sm: 0 1px 3px 0 hsl(243 100% 68% / 0.06), 0 1px 2px -1px hsl(243 100% 68% / 0.06);
+  --shadow-md: 0 4px 16px -2px hsl(243 100% 68% / 0.1), 0 2px 4px -2px hsl(243 100% 68% / 0.06);
+  --shadow-lg: 0 12px 40px -4px hsl(243 100% 68% / 0.15), 0 4px 12px -4px hsl(243 100% 68% / 0.08);
+  --hero-gradient: linear-gradient(135deg, hsl(243 100% 68%), hsl(199 89% 48%));
+}
+
+/* Light theme (remix-style) for public main site */
+.light {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 217 91% 60%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 210 40% 94%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 30% 95%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 217 91% 95%;
+  --accent-foreground: 217 91% 40%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 217 91% 60%;
+  --shadow-sm: 0 1px 3px 0 hsl(217 91% 60% / 0.06), 0 1px 2px -1px hsl(217 91% 60% / 0.06);
+  --shadow-md: 0 4px 16px -2px hsl(217 91% 60% / 0.1), 0 2px 4px -2px hsl(217 91% 60% / 0.06);
+  --shadow-lg: 0 12px 40px -4px hsl(217 91% 60% / 0.15), 0 4px 12px -4px hsl(217 91% 60% / 0.08);
+  --hero-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
 }
 
 .dark {
@@ -158,6 +215,21 @@
   --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
+  /* Tool colors for cards */
+  --color-tool-compress: hsl(var(--tool-compress));
+  --color-tool-compress-bg: hsl(var(--tool-compress-bg));
+  --color-tool-pdf-word: hsl(var(--tool-pdf-word));
+  --color-tool-pdf-word-bg: hsl(var(--tool-pdf-word-bg));
+  --color-tool-word-pdf: hsl(var(--tool-word-pdf));
+  --color-tool-word-pdf-bg: hsl(var(--tool-word-pdf-bg));
+  --color-tool-merge: hsl(var(--tool-merge));
+  --color-tool-merge-bg: hsl(var(--tool-merge-bg));
+  --color-tool-split: hsl(var(--tool-split));
+  --color-tool-split-bg: hsl(var(--tool-split-bg));
+  --color-tool-bg-remove: hsl(var(--tool-bg-remove));
+  --color-tool-bg-remove-bg: hsl(var(--tool-bg-remove-bg));
+  --color-tool-qr: hsl(var(--tool-qr));
+  --color-tool-qr-bg: hsl(var(--tool-qr-bg));
 }
 
 @layer base {
@@ -190,4 +262,49 @@
 /* Card hover glow effect */
 .card-glow:hover {
   box-shadow: 0 0 30px -5px hsl(243 100% 68% / 0.4);
+}
+
+/* Remix-style utility/component classes */
+.hero-gradient {
+  background: var(--hero-gradient);
+}
+
+.hero-section {
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.06) 0%, hsl(var(--background)) 100%);
+}
+.upload-zone {
+  border: 2px dashed hsl(var(--primary) / 0.3);
+  background-color: hsl(var(--primary) / 0.02);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: hsl(var(--primary));
+  background-color: hsl(var(--primary) / 0.06);
+}
+
+.seo-section {
+  background: hsl(var(--card));
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 768px) {
+  .seo-section {
+    padding: 2rem;
+  }
+}
+
+.tool-card-hover {
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.tool-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }

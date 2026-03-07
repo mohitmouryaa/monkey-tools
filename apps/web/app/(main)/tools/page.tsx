@@ -24,9 +24,9 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     // Fallback metadata if page not found
     return {
-      title: "All Tools - Monkey Tools",
-      description: "Explore our complete collection of free online tools",
-      keywords: "tools, online tools, free tools",
+      title: "Todas as Ferramentas – pdfs.com.br",
+      description: "Explore nossa coleção de ferramentas online gratuitas para PDF e mais.",
+      keywords: "ferramentas, ferramentas online, ferramentas grátis",
     };
   }
 }
@@ -48,8 +48,8 @@ export default async function AllToolsPage() {
     <AllToolsClient
       tools={tools}
       categories={categories}
-      h1Heading={allToolsPage.h1Heading || "All Tools"}
-      description={allToolsPage.shortDescription || "Explore our complete collection of free online tools"}
+      h1Heading={allToolsPage.h1Heading || "Todas as Ferramentas"}
+      description={allToolsPage.shortDescription || "Explore nossa coleção de ferramentas online gratuitas para PDF e mais."}
     />
   );
 }
