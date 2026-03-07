@@ -1,60 +1,100 @@
-import { Logo } from "./logo";
 import Link from "next/link";
 import { caller } from "@/trpc/server";
 
+const PDF_CATEGORY_SLUGS = ["pdf-tools", "pdf", "ferramentas-pdf"];
+const FIRST_COLUMN_TOOLS = 4;
+const SECOND_COLUMN_TOOLS = 4;
+
+async function getPdfToolLinks(): Promise<Array<{ _id: string; name: string; href: string }>> {
+  let pdfCategory: Awaited<ReturnType<typeof caller.categories.getCategoryWithTools>> | null = null;
+  for (const slug of PDF_CATEGORY_SLUGS) {
+    try {
+      pdfCategory = await caller.categories.getCategoryWithTools({ slug });
+      break;
+    } catch {
+      continue;
+    }
+  }
+  if (!pdfCategory) {
+    const { items: categories } = await caller.categories.getMany({});
+    const pdfBySlug = categories.find((c) => c.slug.toLowerCase().includes("pdf"));
+    if (pdfBySlug) {
+      try {
+        pdfCategory = await caller.categories.getCategoryWithTools({ slug: pdfBySlug.slug });
+      } catch {
+        return [];
+      }
+    } else {
+      return [];
+    }
+  }
+  const categorySlug = pdfCategory.slug;
+  const maxTools = FIRST_COLUMN_TOOLS + SECOND_COLUMN_TOOLS;
+  return pdfCategory.tools.slice(0, maxTools).map((tool) => ({
+    _id: tool._id as string,
+    name: tool.title,
+    href: `/tools/${categorySlug}/${(tool.link as string).replace(/^\//, "")}`,
+  }));
+}
+
 export const Footer = async () => {
-  // Fetch categories and custom pages from backend
-  const [categories, customPages] = await Promise.all([caller.categories.getMany({}), caller.pages.getFooterPages()]);
+  const [toolLinks, customPages] = await Promise.all([
+    getPdfToolLinks(),
+    caller.pages.getFooterPages(),
+  ]);
 
   return (
-    <footer className="py-12 border-t bg-card border-border">
+    <footer className="border-t bg-card py-10 mt-16">
       <div className="container px-4 mx-auto">
-        <div className="flex flex-col justify-between max-w-6xl gap-12 mx-auto md:flex-row">
-          {/* Logo and Description */}
-          <div className="max-w-xs">
-            <Logo />
-            <p className="mt-4 text-sm text-muted-foreground">
-              Ferramentas online gratuitas, rápidas e seguras. Parte da plataforma DesignOnline.
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+          <div>
+            <h4 className="font-bold mb-4 text-foreground">Ferramentas PDF</h4>
+            <ul className="space-y-2.5 text-muted-foreground">
+              {toolLinks.slice(0, FIRST_COLUMN_TOOLS).map((link) => (
+                <li key={link._id}>
+                  <Link href={link.href} className="hover:text-primary transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4 text-foreground">Mais Ferramentas</h4>
+            <ul className="space-y-2.5 text-muted-foreground">
+              {toolLinks.slice(FIRST_COLUMN_TOOLS, FIRST_COLUMN_TOOLS + SECOND_COLUMN_TOOLS).map((link) => (
+                <li key={link._id}>
+                  <Link href={link.href} className="hover:text-primary transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4 text-foreground">Legal</h4>
+            <ul className="space-y-2.5 text-muted-foreground">
+              {customPages.map((page) => (
+                <li key={page._id}>
+                  <Link
+                    href={`/${page.slug}`}
+                    className="hover:text-primary transition-colors"
+                  >
+                    {page.footerLabel || page.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold mb-4 text-foreground">Sobre</h4>
+            <p className="text-muted-foreground leading-relaxed">
+              Ferramentas online gratuitas, rápidas e seguras. Sem cadastro necessário.
             </p>
           </div>
-
-          <div className="flex gap-12 md:gap-24">
-            {/* Ferramentas Section - Dynamic from Categories */}
-            <div>
-              <h4 className="mb-4 font-semibold text-foreground">Ferramentas</h4>
-              <ul className="space-y-2">
-                {categories.items.slice(0, 4).map((category) => (
-                  <li key={category._id}>
-                    <Link
-                      href={`/tools/${category.slug}`}
-                      className="text-sm transition-colors text-muted-foreground hover:text-primary"
-                    >
-                      {category.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Legal Section - Dynamic from Custom Pages */}
-            <div>
-              <h4 className="mb-4 font-semibold text-foreground">Legal</h4>
-              <ul className="space-y-2">
-                {customPages.map((page) => (
-                  <li key={page._id}>
-                    <Link href={`/${page.slug}`} className="text-sm transition-colors text-muted-foreground hover:text-primary">
-                      {page.footerLabel || page.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
-
-        {/* Copyright Section */}
-        <div className="flex flex-col items-center justify-between max-w-6xl gap-4 pt-6 mx-auto mt-12 border-t border-border md:flex-row">
-          <p className="text-sm text-muted-foreground">© 2026 Monkey.com.br. Todos os direitos reservados.</p>
+        <div className="mt-10 pt-6 border-t text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} pdfs.com.br — Todos os direitos reservados.
         </div>
       </div>
     </footer>

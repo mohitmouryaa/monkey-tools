@@ -55,8 +55,8 @@ export function AllToolsClient({ tools, categories, h1Heading, description }: Al
                   key={tool._id}
                   name={tool.title}
                   description={tool.description}
-                  category={typeof tool.category === "object" ? tool.category?.name || "Tools" : "Tools"}
-                  categorySlug={typeof tool.category === "object" ? tool.category?.slug || "tools" : "tools"}
+                  category={typeof tool.category === "object" ? tool.category?.name || "Ferramentas" : "Ferramentas"}
+                  categorySlug={typeof tool.category === "object" ? tool.category?.slug || "ferramentas" : "ferramentas"}
                   toolSlug={tool.link}
                   icon={tool.icon}
                   iconColor={tool.iconColor}

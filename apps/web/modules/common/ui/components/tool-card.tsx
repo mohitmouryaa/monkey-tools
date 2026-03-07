@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { Button } from "@workspace/ui/components/button";
+import { toLucideIconName } from "../lib/lucide-icon-name";
 
 interface ToolCardProps {
   name: string;
@@ -14,44 +14,104 @@ interface ToolCardProps {
   icon?: string;
   iconColor?: string;
   bgColor?: string;
+  seoSnippet?: string;
+  /** When set, color is picked from a shuffled palette by index (for random-looking order on homepage) */
+  colorIndex?: number;
 }
 
-// Category-specific icon colors
-const categoryIconColors: Record<string, string> = {
-  "pdf-tools": "#ef4444", // red-500
-  "image-tools": "#00E5A8", // neon green (secondary)
-  "text-tools": "#635BFF", // purple-blue (primary)
-  "text-ai-tools": "#635BFF", // purple-blue (primary)
-  converters: "#eab308", // yellow-500
-};
+/** Pastel colors in shuffled order so cards get varied sequence */
+const PASTEL_COLORS_BY_INDEX: Array<{ colorClass: string; bgColorClass: string }> = [
+  { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" },
+  { colorClass: "bg-tool-qr", bgColorClass: "bg-tool-qr-bg" },
+  { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
+  { colorClass: "bg-tool-split", bgColorClass: "bg-tool-split-bg" },
+  { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
+  { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
+  { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
+];
 
-export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon }: ToolCardProps) => {
-  const categoryColor = categoryIconColors[categorySlug] || "#635BFF";
+/** Map tool slug or category to pastel card color (icon + top strip) */
+function getToolColorClasses(
+  categorySlug: string,
+  toolSlug: string
+): { colorClass: string; bgColorClass: string } {
+  const s = toolSlug.replace(/^\//, "").toLowerCase();
+  const byTool: Record<string, { colorClass: string; bgColorClass: string }> = {
+    "compress-pdf": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
+    "advanced-pdf-compressor": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
+    "pdf-to-word": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
+    "pdf-to-word-converter": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
+    "word-to-pdf": { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
+    "merge-pdf": { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" },
+    "split-pdf": { colorClass: "bg-tool-split", bgColorClass: "bg-tool-split-bg" },
+    "remove-background": { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
+    "qr-code": { colorClass: "bg-tool-qr", bgColorClass: "bg-tool-qr-bg" },
+  };
+  const fallback = { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" };
+  const exact = byTool[s];
+  if (exact) return exact;
+  if (s.includes("compress")) return byTool["compress-pdf"] ?? fallback;
+  if (s.includes("pdf-to-word") || s.includes("pdf-word")) return byTool["pdf-to-word"] ?? fallback;
+  if (s.includes("word-to-pdf") || s.includes("word-pdf")) return byTool["word-to-pdf"] ?? fallback;
+  if (s.includes("merge") || s.includes("juntar")) return byTool["merge-pdf"] ?? fallback;
+  if (s.includes("split") || s.includes("dividir")) return byTool["split-pdf"] ?? fallback;
+  if (s.includes("remove") || s.includes("background") || s.includes("fundo")) return byTool["remove-background"] ?? fallback;
+  if (s.includes("qr")) return byTool["qr-code"] ?? fallback;
+  const byCategory: Record<string, { colorClass: string; bgColorClass: string }> = {
+    "pdf-tools": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
+    "image-tools": { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
+    "text-tools": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
+    "text-ai-tools": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
+    converters: { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
+  };
+  return byCategory[categorySlug] ?? { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" };
+}
+
+export const ToolCard = ({
+  name,
+  description,
+  categorySlug,
+  toolSlug,
+  icon,
+  seoSnippet,
+  colorIndex,
+}: ToolCardProps) => {
+  const slug = toolSlug.replace(/^\//, "");
+  const { colorClass, bgColorClass } =
+    typeof colorIndex === "number"
+      ? PASTEL_COLORS_BY_INDEX[colorIndex % PASTEL_COLORS_BY_INDEX.length]
+      : getToolColorClasses(categorySlug, slug);
+  const iconName = icon ? toLucideIconName(icon) : null;
 
   return (
-    <Link href={`/tools/${categorySlug}/${toolSlug}`} className="block group">
-      <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary card-glow h-full flex flex-col">
-        {/* Icon and Category Badge */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+    <Link
+      href={`/tools/${categorySlug}/${slug}`}
+      className="group block rounded-2xl border bg-card tool-card-hover overflow-hidden"
+      style={{ boxShadow: "var(--shadow-sm)" }}
+    >
+      <div className={`px-6 pt-6 pb-4 ${bgColorClass}`}>
+        <div
+          className={`inline-flex items-center justify-center w-14 h-14 rounded-xl mb-3 ${colorClass}`}
+        >
+          {iconName ? (
             <DynamicIcon
-              name={icon as IconName}
-              className="w-6 h-6"
-              style={{ color: categoryColor }}
-              fallback={() => <FileText className="w-6 h-6" style={{ color: categoryColor }} />}
+              name={iconName as IconName}
+              className="h-7 w-7 text-primary-foreground"
+              fallback={() => <FileText className="h-7 w-7 text-primary-foreground" />}
             />
-          </div>
-          <span className="text-xs font-medium tracking-wide uppercase px-3 py-1 rounded-full bg-muted text-muted-foreground">
-            {category}
-          </span>
+          ) : (
+            <FileText className="h-7 w-7 text-primary-foreground" />
+          )}
         </div>
-
-        {/* Content */}
-        <h3 className="mb-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{name}</h3>
-        <p className="mb-5 text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
-
-        {/* Button */}
-        <Button className="w-full rounded-xl btn-gradient-primary text-primary-foreground font-medium">Usar</Button>
+        <h3 className="font-bold text-lg text-foreground mb-1 group-hover:text-primary transition-colors">
+          {name}
+        </h3>
+        <p className="text-sm text-muted-foreground line-clamp-3">{description}</p>
+      </div>
+      <div className="px-6 py-4 border-t bg-card">
+        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+          {seoSnippet || description}
+        </p>
       </div>
     </Link>
   );

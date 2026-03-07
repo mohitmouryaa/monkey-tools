@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
 import { NewHeroSection } from "@/modules/hero/ui/components/new-hero-section";
-import { NewToolsGrid } from "@/modules/hero/ui/components/new-tools-grid";
-import { HowItWorks } from "@/modules/hero/ui/components/how-it-works";
+import { TrustSection } from "@/modules/hero/ui/components/trust-section";
+import { HomeSeoSection } from "@/modules/hero/ui/components/home-seo-section";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -27,60 +27,64 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     // Fallback metadata if page not found
     return {
-      title: "Monkey Tools - Free Online Tools for Everyone",
+      title: "Ferramentas PDF Online Grátis – pdfs.com.br",
       description:
-        "We offer PDF, text, image and other online tools to make your life easier. Fast, secure, no sign-up required. Convert, compress, merge files in seconds.",
-      keywords: "online tools, free tools, pdf tools, image tools, text tools, converter, compressor",
+        "Ferramentas online gratuitas para comprimir, converter, juntar e dividir PDFs. Rápido, seguro e fácil. Sem cadastro.",
+      keywords: "ferramentas PDF, PDF online grátis, comprimir PDF, converter PDF, juntar PDF",
     };
   }
 }
 
+const PDF_CATEGORY_SLUGS = ["pdf-tools", "pdf", "ferramentas-pdf"];
+
 export default async function Home() {
-  // Fetch homepage data
   const homepage = await caller.pages.getHomepage();
 
-  // Fetch categories
-  const categories = await caller.categories.getMany({});
+  let pdfCategory: Awaited<ReturnType<typeof caller.categories.getCategoryWithTools>> | null = null;
+  for (const slug of PDF_CATEGORY_SLUGS) {
+    try {
+      pdfCategory = await caller.categories.getCategoryWithTools({ slug });
+      break;
+    } catch {
+      continue;
+    }
+  }
 
-  // Fetch 5 tools per category
-  const toolsByCategory = await Promise.all(
-    categories.items.slice(0, 4).map(async (category) => {
-      const tools = await caller.tools.getMany({
-        categoryId: category._id,
-        pageSize: 5,
-        page: 1,
-      });
-      return {
+  if (!pdfCategory) {
+    const { items: categories } = await caller.categories.getMany({});
+    const pdfBySlug = categories.find((c) => c.slug.toLowerCase().includes("pdf"));
+    if (pdfBySlug) {
+      try {
+        pdfCategory = await caller.categories.getCategoryWithTools({ slug: pdfBySlug.slug });
+      } catch {
+        // keep null
+      }
+    }
+  }
+
+  const allTools =
+    pdfCategory?.tools
+      .filter((tool) => tool._id)
+      .map((tool) => ({
+        _id: tool._id as string,
+        title: tool.title,
+        description: tool.description,
+        link: tool.link,
+        icon: tool.icon,
+        iconColor: tool.iconColor,
+        bgColor: tool.bgColor,
         category: {
-          _id: category._id,
-          name: category.name,
-          slug: category.slug,
+          _id: pdfCategory!._id,
+          name: pdfCategory!.name,
+          slug: pdfCategory!.slug,
         },
-        tools: tools.items
-          .filter((tool) => tool._id) // Filter out tools without _id
-          .map((tool) => ({
-            _id: tool._id as string, // Type assertion since we filtered
-            title: tool.title,
-            description: tool.description,
-            link: tool.link,
-            icon: tool.icon,
-            iconColor: tool.iconColor,
-            bgColor: tool.bgColor,
-            category: {
-              _id: category._id,
-              name: category.name,
-              slug: category.slug,
-            },
-          })),
-      };
-    }),
-  );
+      })) ?? [];
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-      <NewHeroSection heroSection={homepage.heroSection} />
-      <NewToolsGrid toolsByCategory={toolsByCategory} />
-      <HowItWorks howItWorksSection={homepage.howItWorksSection} />
+      <NewHeroSection heroSection={homepage.heroSection} tools={allTools} />
+      <TrustSection />
+      <HomeSeoSection />
     </ErrorBoundary>
   );
 }
