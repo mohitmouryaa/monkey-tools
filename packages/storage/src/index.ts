@@ -11,6 +11,7 @@ const s3 = new S3Client({
     accessKeyId: process.env.DO_SPACES_ACCESS_KEY || "",
     secretAccessKey: process.env.DO_SPACES_SECRET_KEY || "",
   },
+  forcePathStyle: true,
 });
 
 export const BUCKET_NAME = process.env.DO_SPACES_BUCKET;
