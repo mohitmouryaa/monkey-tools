@@ -14,8 +14,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@workspace/ui/components/card";
 
 const loginSchema = z.object({
-  email: z.email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.email("Digite um endereço de email válido"),
+  password: z.string().min(1, "A senha é obrigatória"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -42,22 +42,22 @@ export const LoginView = () => {
         },
         {
           onSuccess: () => {
-            toast.success("Welcome back!", {
-              description: "You have successfully logged in.",
+            toast.success("Bem-vindo de volta!", {
+              description: "Login realizado com sucesso.",
             });
             router.push("/dashboard");
           },
           onError: (ctx) => {
-            toast.error("Login failed", {
-              description: ctx.error.message || "Invalid email or password",
+            toast.error("Falha no login", {
+              description: ctx.error.message || "Email ou senha inválidos",
             });
             setIsLoading(false);
           },
         },
       );
     } catch {
-      toast.error("An error occurred", {
-        description: "Please try again later.",
+      toast.error("Ocorreu um erro", {
+        description: "Tente novamente mais tarde.",
       });
       setIsLoading(false);
     }
@@ -70,14 +70,14 @@ export const LoginView = () => {
           <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-primary-foreground">
             <Lock className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Monkey Tools Admin</h1>
-          <p className="text-sm text-muted-foreground">Enter your credentials to access the dashboard</p>
+          <h1 className="text-2xl font-bold tracking-tight">pdfs.com.br Admin</h1>
+          <p className="text-sm text-muted-foreground">Digite suas credenciais para acessar o painel</p>
         </div>
 
         <Card className="shadow-lg border-border/50">
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>Use your admin email and password to continue.</CardDescription>
+            <CardTitle>Entrar</CardTitle>
+            <CardDescription>Use seu email e senha de administrador para continuar.</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -101,7 +101,7 @@ export const LoginView = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>Senha</FormLabel>
                       <FormControl>
                         <Input placeholder="••••••••" type="password" disabled={isLoading} {...field} />
                       </FormControl>
@@ -114,17 +114,17 @@ export const LoginView = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Signing in...
+                      Entrando...
                     </>
                   ) : (
-                    "Sign In"
+                    "Entrar"
                   )}
                 </Button>
               </form>
             </Form>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <p className="text-xs text-muted-foreground">Restricted access area. Authorized personnel only.</p>
+            <p className="text-xs text-muted-foreground">Área de acesso restrito. Apenas pessoal autorizado.</p>
           </CardFooter>
         </Card>
       </div>
