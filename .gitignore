@@ -35,3 +35,9 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+# IDE
+.idea/
+
+# Auditoria i18n (screenshots locais)
+.claude/i18n-screenshots/
