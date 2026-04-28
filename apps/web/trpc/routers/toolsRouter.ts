@@ -30,6 +30,7 @@ export const toolsRouter = createTRPCRouter({
         faqs: input.faqs,
         closingText: input.closingText,
         isActive: input.isActive ?? true,
+        featuredPostId: input.featuredPostId && input.featuredPostId !== "" ? input.featuredPostId : null,
       });
 
       const savedTool = await tool.save();
@@ -158,10 +159,18 @@ export const toolsRouter = createTRPCRouter({
       try {
         // Prepare update data, mapping categoryId to category
         const { categoryId, ...updateData } = input.data;
-        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & { category?: string };
+        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & {
+          category?: string;
+          featuredPostId?: string | null;
+        };
 
         if (categoryId !== undefined) {
           finalUpdateData.category = categoryId;
+        }
+
+        if ("featuredPostId" in finalUpdateData) {
+          const v = finalUpdateData.featuredPostId;
+          finalUpdateData.featuredPostId = v && v !== "" ? v : null;
         }
 
         const updatedTool = await ToolModel.findByIdAndUpdate(

@@ -155,7 +155,7 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
 
 ---
 
-### Fase 3 — Admin UI (`/dashboard/posts`)
+### Fase 3 — Admin UI (`/dashboard/posts`) ✅
 
 > ⚠️ Esta fase tem "múltiplos componentes a criar (lista, form, editor, plugin custom Tool Embed) com decisões de UI localizadas" e envolve integração com lib externa (Editor.js) cujo padrão de carregamento (`next/dynamic`, SSR-off) precisa ser definido. Execute `/explode-phase 3` antes.
 
@@ -176,7 +176,7 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
 
 ---
 
-### Fase 4 — Render público (`/blog` e `/blog/[slug]`)
+### Fase 4 — Render público (`/blog` e `/blog/[slug]`) ✅
 
 > ⚠️ Esta fase tem "decisão entre lib pronta `editorjs-html` vs renderer React custom (recomendado para suportar o Tool Embed)" e UI da listagem com filtros/busca/featured envolvendo múltiplos componentes a criar/extrair. Execute `/explode-phase 4` antes.
 
@@ -197,7 +197,7 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
 
 ---
 
-### Fase 5 — Cross-link Tool ↔ Post
+### Fase 5 — Cross-link Tool ↔ Post ✅
 
 > ⚠️ Esta fase tem "edição da página da Tool existente para adicionar seção 'Aprenda mais' que precisa harmonizar com o layout atual da tool" — decisão de UI localizada. Execute `/explode-phase 5` antes.
 

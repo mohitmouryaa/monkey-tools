@@ -147,24 +147,45 @@ export const postsRouter = createTRPCRouter({
       };
     }),
 
-  getFeatured: baseProcedure.input(z.object({ limit: z.number().min(1).max(20).default(6) }).optional()).query(async ({ input }) => {
-    const limit = input?.limit ?? 6;
+  getFeatured: baseProcedure
+    .input(z.object({ limit: z.number().min(1).max(20).default(6) }).optional())
+    .query(async ({ input }) => {
+      const limit = input?.limit ?? 6;
 
-    const match: mongoose.AnyObject = {
-      isFeaturedGlobal: true,
-      status: PostStatus.PUBLISHED,
-      publishedAt: { $lte: new Date() },
-    };
+      const match: mongoose.AnyObject = {
+        isFeaturedGlobal: true,
+        status: PostStatus.PUBLISHED,
+        publishedAt: { $lte: new Date() },
+      };
 
-    const items = await PostModel.find(match).populate("tools").sort({ publishedAt: -1 }).limit(limit).lean();
+      const items = await PostModel.find(match).populate("tools").sort({ publishedAt: -1 }).limit(limit).lean();
 
-    return items.map((post) => serializePost(post as unknown as { _id: { toString: () => string }; tools?: unknown[] }));
-  }),
+      return items.map((post) => serializePost(post as unknown as { _id: { toString: () => string }; tools?: unknown[] }));
+    }),
 
   getById: protectedProcedure.input(z.object({ id: z.string().min(1) })).query(async ({ input }) => {
     const post = await PostModel.findById(input.id).populate("tools").lean();
 
     if (!post) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
+
+    return serializePost(post as unknown as { _id: { toString: () => string }; tools?: unknown[] });
+  }),
+
+  getByIdPublic: baseProcedure.input(z.object({ id: z.string().min(1) })).query(async ({ input }) => {
+    if (!mongoose.Types.ObjectId.isValid(input.id)) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
+
+    const post = await PostModel.findById(input.id).populate("tools").lean();
+
+    if (!post) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
+
+    const isVisible = post.status === PostStatus.PUBLISHED && !!post.publishedAt && post.publishedAt <= new Date();
+    if (!isVisible) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
     }
 

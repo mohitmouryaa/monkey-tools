@@ -46,4 +46,5 @@ export const createToolSchema = z.object({
     .optional(),
   closingText: z.string().optional(),
   isActive: z.boolean(),
+  featuredPostId: z.string().nullable().optional(),
 });
