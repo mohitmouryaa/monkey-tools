@@ -132,14 +132,14 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
 
 ---
 
-### Fase 2 — tRPC `postsRouter` + endpoint de upload de imagem
+### Fase 2 — tRPC `postsRouter` + endpoint de upload de imagem ✅
 
 > ⚠️ Esta fase tem "decisão de reuso de upload S3 (reutilizar `/api/upload` com prefixo cms/ vs criar `/api/upload/cms`) que envolve inventariar o código" e definição de assinaturas de procedures que precisam casar com hooks futuros. Execute `/explode-phase 2` antes.
 
 **Objetivo:** API completa para CRUD de posts (admin) e leitura pública (blog). Upload de imagens do Editor.js funcional.
 **Critério de conclusão:** Manualmente, no painel tRPC ou via curl: criar post, listar com filtros, buscar por slug, atualizar, deletar, publicar/agendar. Endpoint de upload retorna `{ success: 1, file: { url } }` no formato esperado pelo Editor.js Image plugin. **`posts.list` retorna shape `{ items, page, pageSize, totalCount, totalPages, hasNextPage, hasPreviousPage }` — espelhando o padrão de `tools.getMany`** (consumido pelos hooks da Fase 3).
 
-- [ ] Criar `apps/web/trpc/routers/postsRouter.ts` com procedures:
+- [x] Criar `apps/web/trpc/routers/postsRouter.ts` com procedures:
   - `list` (baseProcedure): paginada, filtros opcionais por `status`, `toolId`, `search` (text index), só retorna `published` + `publishedAt <= now` quando sem sessão; admins veem todos.
   - `getBySlug` (baseProcedure): retorna post + tools populadas. Aplica filtro `publishedAt <= now` para não-admins.
   - `getByToolId` (baseProcedure): lista posts associados a uma tool (paginada).
@@ -148,10 +148,10 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
   - `create`, `update`, `delete` (protectedProcedure): mutations padrão. `delete` é hard delete.
   - Em `update` validar unicidade do slug ao mudar.
   - Em `delete` rodar `ToolModel.updateMany({ featuredPostId: id }, { $unset: { featuredPostId: 1 } })` para evitar referência pendurada.
-- [ ] Registrar `postsRouter` em `apps/web/trpc/routers/_app.ts` como `posts`.
-- [ ] Decidir endpoint de upload de imagem para o Editor.js: reutilizar `POST /api/upload` adicionando suporte a prefixo (`cms/`) via parâmetro do body, OU criar `POST /api/upload/cms/route.ts` que reusa `getUploadUrl`. Documentar a escolha aqui antes de implementar.
-- [ ] Adicionar configuração de rate limit em `proxy.ts` para `/api/upload/cms` se for criado endpoint dedicado (reusar tier `upload`).
-- [ ] Garantir que mutations de write (create/update/delete + publish) chamem `revalidateTag("blog")` e `revalidateTag(\`blog:${slug}\`)` — pode ser via `next/cache` import nas próprias procedures (tRPC roda no server) ou helper compartilhado da Fase 6.
+- [x] Registrar `postsRouter` em `apps/web/trpc/routers/_app.ts` como `posts`.
+- [x] Decidir endpoint de upload de imagem para o Editor.js: reutilizar `POST /api/upload` adicionando suporte a prefixo (`cms/`) via parâmetro do body, OU criar `POST /api/upload/cms/route.ts` que reusa `getUploadUrl`. Documentar a escolha aqui antes de implementar. → **Escolha: reutilizar `/api/upload` com `prefix` opcional (allowlist `["uploads", "cms"]`).**
+- [x] Adicionar configuração de rate limit em `proxy.ts` para `/api/upload/cms` se for criado endpoint dedicado (reusar tier `upload`). → **N/A: rota `/api/upload` única já coberta por `proxy.ts:38`.**
+- [x] Garantir que mutations de write (create/update/delete + publish) chamem `revalidateTag("blog")` e `revalidateTag(\`blog:${slug}\`)` — pode ser via `next/cache` import nas próprias procedures (tRPC roda no server) ou helper compartilhado da Fase 6. → **Implementado com `updateTag` (Next 16 Cache Components — assinatura nova de `revalidateTag` exige profile; `updateTag` é o substituto idiomático para mutations).**
 
 ---
 
