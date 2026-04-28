@@ -77,20 +77,16 @@ pnpm install
 ```
 
 ### 3. Environment Setup
-Create a `.env` file in `apps/web` and `apps/worker` (or use a root `.env` if configured). You will need:
+Copie o `.env.example` da raiz do monorepo para `.env`:
 
-```env
-# Database & Queue
-DATABASE_URL="mongodb+srv://..."
-REDIS_URL="redis://localhost:6379"
-
-# Object Storage (Digital Ocean Spaces / S3)
-DO_SPACES_ENDPOINT="https://nyc3.digitaloceanspaces.com"
-DO_SPACES_REGION="nyc3"
-DO_SPACES_BUCKET="your-bucket"
-DO_SPACES_ACCESS_KEY="your-key"
-DO_SPACES_SECRET_KEY="your-secret"
+```bash
+cp .env.example .env
 ```
+
+Os defaults já apontam para o stack do `docker-compose.yml` (MongoDB
+replica set `rs0`, Redis e MinIO em `localhost`). Para produção,
+substitua as credenciais de `DO_SPACES_*` pelas do DigitalOcean Spaces
+(ou outro S3) e ajuste `DATABASE_URL`/`REDIS_URL` para os hosts reais.
 
 ### 4. Start Infrastructure
 Start Redis (and the Worker if you don't want to run it natively) using Docker:
