@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import "reflect-metadata";
 import mongoose from "mongoose";
 import { Category } from "./Category.js";
+import { Post } from "./Post.js";
 import { prop, getModelForClass, modelOptions, Severity } from "@typegoose/typegoose";
 let Tool = class Tool {
     _id;
@@ -35,6 +36,7 @@ let Tool = class Tool {
     faqs;
     closingText;
     isActive;
+    featuredPostId;
     metadata;
     createdAt;
     updatedAt;
@@ -115,6 +117,10 @@ __decorate([
     prop({ default: true }),
     __metadata("design:type", Boolean)
 ], Tool.prototype, "isActive", void 0);
+__decorate([
+    prop({ ref: () => Post, type: () => mongoose.Schema.Types.ObjectId, default: null }),
+    __metadata("design:type", Object)
+], Tool.prototype, "featuredPostId", void 0);
 __decorate([
     prop()
     // biome-ignore lint/suspicious/noExplicitAny: <No proper type defination is available>
