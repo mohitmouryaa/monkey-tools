@@ -64,9 +64,9 @@ export default function CpfGenerator() {
     if (!generatedCpf) return;
     try {
       await navigator.clipboard.writeText(generatedCpf);
-      toast.success("CPF copied to clipboard");
+      toast.success("CPF copiado para a área de transferência");
     } catch {
-      toast.error("Failed to copy CPF");
+      toast.error("Falha ao copiar CPF");
     }
   };
 
@@ -93,21 +93,21 @@ export default function CpfGenerator() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <ShieldCheck className="w-5 h-5 text-primary" />
-              Generator
+              Gerador
             </h2>
             <div className="flex items-center space-x-2">
               <Label htmlFor="format-mode" className="text-sm text-muted-foreground whitespace-nowrap">
-                Format (XXX.XXX.XXX-XX)
+                Formato (XXX.XXX.XXX-XX)
               </Label>
               <Switch id="format-mode" checked={formatted} onCheckedChange={updateFormat} />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">Generate valid CPF numbers for testing purposes.</p>
+          <p className="text-sm text-muted-foreground">Gere números de CPF válidos para fins de teste.</p>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
-            <Input value={generatedCpf} readOnly placeholder="Click generate" className="pr-12 font-mono text-lg" />
+            <Input value={generatedCpf} readOnly placeholder="Clique em gerar" className="pr-12 font-mono text-lg" />
             {generatedCpf && (
               <Button size="icon" variant="ghost" className="absolute w-8 h-8 right-1 top-1" onClick={handleCopy}>
                 <Copy className="w-4 h-4" />
@@ -116,27 +116,27 @@ export default function CpfGenerator() {
           </div>
           <Button onClick={handleGenerate} className="min-w-35">
             <RefreshCw className="w-4 h-4 mr-2" />
-            Generate CPF
+            Gerar CPF
           </Button>
         </div>
 
         <div className="p-3 text-xs border rounded-md text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900">
-          <strong>⚠️ Disclaimer:</strong> These numbers are mathematically valid but randomly generated. Use them for{" "}
-          <strong>testing and educational purposes only</strong>. Do not use them for fraudulent activities or real-world identity
-          verification.
+          <strong>⚠️ Aviso:</strong> Esses números são matematicamente válidos, mas gerados aleatoriamente. Use-os apenas para{" "}
+          <strong>fins de teste e educacionais</strong>. Não os utilize para atividades fraudulentas ou verificação de identidade
+          real.
         </div>
       </Card>
 
       {/* Validator Section */}
       <Card className="p-6 space-y-6">
         <div className="space-y-2">
-          <h2 className="text-xl font-bold">Validator</h2>
-          <p className="text-sm text-muted-foreground">Check if a CPF number is valid according to the official algorithm.</p>
+          <h2 className="text-xl font-bold">Validador</h2>
+          <p className="text-sm text-muted-foreground">Verifique se um número de CPF é válido de acordo com o algoritmo oficial.</p>
         </div>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="cpf-validate">Enter CPF</Label>
+            <Label htmlFor="cpf-validate">Insira o CPF</Label>
             <Input
               id="cpf-validate"
               value={validationCpf}
@@ -158,12 +158,12 @@ export default function CpfGenerator() {
               {isValid ? (
                 <>
                   <CheckCircle2 className="w-5 h-5" />
-                  <span className="font-medium">Valid CPF</span>
+                  <span className="font-medium">CPF Válido</span>
                 </>
               ) : (
                 <>
                   <XCircle className="w-5 h-5" />
-                  <span className="font-medium">Invalid CPF</span>
+                  <span className="font-medium">CPF Inválido</span>
                 </>
               )}
             </div>

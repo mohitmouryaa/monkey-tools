@@ -30,13 +30,13 @@ export default function UnlockPDF() {
     if (!selectedFile) return;
     // Check file size
     if (!selectedFile.size || selectedFile.size > MAX_FILE_SIZE) {
-      toast.error(`File "${selectedFile.name}" is too large. Maximum file size is 50MB.`);
+      toast.error(`Arquivo "${selectedFile.name}" é muito grande. Tamanho máximo: 50MB.`);
       return;
     }
 
     // Check if it's a PDF
     if (selectedFile.type !== "application/pdf") {
-      toast.error("Please select a PDF file.");
+      toast.error("Selecione um arquivo PDF.");
       return;
     }
 
@@ -52,12 +52,12 @@ export default function UnlockPDF() {
   // Unlock PDF with password
   const unlockPDF = useCallback(async () => {
     if (!file) {
-      toast.error("Please select a PDF file first.");
+      toast.error("Selecione um arquivo PDF primeiro.");
       return;
     }
 
     if (!password.trim()) {
-      toast.error("Please enter the password.");
+      toast.error("Digite a senha.");
       return;
     }
 
@@ -126,7 +126,7 @@ export default function UnlockPDF() {
 
       setUnlockedPdf(unlockedPdfBytes);
       setUnlockProgress(100);
-      toast.success("PDF unlocked successfully!");
+      toast.success("PDF desbloqueado com sucesso!");
 
       // biome-ignore lint/suspicious/noExplicitAny: <Required any type here>
     } catch (error: any) {
@@ -137,11 +137,11 @@ export default function UnlockPDF() {
         error.message?.includes("Password") ||
         error.code === "PasswordException"
       ) {
-        toast.error("Incorrect password. Please check the password and try again.");
+        toast.error("Senha incorreta. Verifique a senha e tente novamente.");
       } else if (error.name === "InvalidPDFException" || error.message?.includes("Invalid PDF")) {
-        toast.error("The selected file is not a valid PDF or is corrupted.");
+        toast.error("O arquivo selecionado não é um PDF válido ou está corrompido.");
       } else {
-        toast.error("An error occurred while unlocking the PDF. Please try again.");
+        toast.error("Ocorreu um erro ao desbloquear o PDF. Tente novamente.");
       }
     } finally {
       setIsUnlocking(false);
@@ -181,8 +181,8 @@ export default function UnlockPDF() {
             maxFiles={1}
             onFilesSelected={handleFilesSelected}
             acceptedFileTypes={["application/pdf"]}
-            label="Upload PDF to Unlock"
-            description="Select a password-protected PDF file to remove protection"
+            label="Envie o PDF para Desbloquear"
+            description="Selecione um arquivo PDF protegido por senha para remover a proteção"
           />
         ) : (
           <div className="space-y-6">
@@ -199,16 +199,16 @@ export default function UnlockPDF() {
 
             {/* Password Input */}
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Senha</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter the password to unlock the PDF"
+                placeholder="Digite a senha para desbloquear o PDF"
                 className="w-full"
               />
-              <p className="text-sm text-muted-foreground">Enter the password that was used to protect this PDF file.</p>
+              <p className="text-sm text-muted-foreground">Digite a senha que foi usada para proteger este arquivo PDF.</p>
             </div>
 
             {/* Action Buttons */}
@@ -222,18 +222,18 @@ export default function UnlockPDF() {
                 {isUnlocking ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Unlocking...
+                    Desbloqueando...
                   </>
                 ) : (
                   <>
                     <Unlock className="w-4 h-4 mr-2" />
-                    Unlock PDF
+                    Desbloquear PDF
                   </>
                 )}
               </Button>
 
               <Button variant="outline" onClick={reset} size="lg" className="flex-1">
-                Reset
+                Reiniciar
               </Button>
             </div>
 
@@ -244,15 +244,15 @@ export default function UnlockPDF() {
                   <div className="flex items-center gap-3">
                     <CircleCheck className="size-6" color="green" />
                     <div>
-                      <h4 className="font-semibold text-green-800 dark:text-green-200">PDF Unlocked Successfully!</h4>
+                      <h4 className="font-semibold text-green-800 dark:text-green-200">PDF Desbloqueado com Sucesso!</h4>
                       <p className="text-sm text-green-600 dark:text-green-300">
-                        Your PDF has been unlocked and is ready for download.
+                        Seu PDF foi desbloqueado e está pronto para download.
                       </p>
                     </div>
                   </div>
                   <Button onClick={downloadUnlockedPDF} size="lg" className="text-white bg-green-600 hover:bg-green-700">
                     <Download className="w-4 h-4 mr-2" />
-                    Download
+                    Baixar
                   </Button>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function UnlockPDF() {
       {isUnlocking && (
         <div className="max-w-3xl mx-auto mt-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Unlocking PDF...</span>
+            <span className="text-sm font-medium">Desbloqueando PDF...</span>
             <span className="text-sm text-muted-foreground">{Math.round(unlockProgress)}%</span>
           </div>
           <Progress value={unlockProgress} className="w-full h-2" />

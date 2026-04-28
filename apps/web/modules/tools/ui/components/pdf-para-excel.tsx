@@ -55,7 +55,7 @@ export default function PdfToExcel() {
     <div className="w-full">
       {/* Maintenance Mode Banner */}
       <div className="w-full py-3 font-semibold text-center text-yellow-900 bg-yellow-500">
-        🚧 PDF to Excel Converter is currently under maintenance 🚧
+        🚧 Conversor de PDF para Excel está em manutenção 🚧
       </div>
 
       <section aria-labelledby="upload-section" className="max-w-3xl mx-auto">
@@ -65,9 +65,9 @@ export default function PdfToExcel() {
             acceptedFileTypes={["application/pdf"]}
             maxFiles={1}
             maxFileSize={10}
-            label="Upload PDF to Convert"
-            description="Select a PDF file to convert to Excel"
-            disclaimer="We process your files securely and delete them automatically."
+            label="Envie o PDF para Converter"
+            description="Selecione um arquivo PDF para converter em Excel"
+            disclaimer="Processamos seus arquivos com segurança e os excluímos automaticamente."
             disabled={true}
           />
         ) : (
@@ -83,7 +83,7 @@ export default function PdfToExcel() {
                 {status === "idle" && (
                   <Button variant="ghost" size="icon" onClick={handleRemoveFile} className="ml-auto">
                     <X className="w-5 h-5" />
-                    <span className="sr-only">Remove file</span>
+                    <span className="sr-only">Remover arquivo</span>
                   </Button>
                 )}
               </div>
@@ -93,7 +93,7 @@ export default function PdfToExcel() {
             {(status === "uploading" || status === "converting") && (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span>Converting...</span>
+                  <span>Convertendo...</span>
                   <span>{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
@@ -105,13 +105,13 @@ export default function PdfToExcel() {
               <div className="p-4 border border-green-200 rounded-lg bg-green-50 dark:bg-green-950/20 dark:border-green-800">
                 <div className="flex items-center gap-2 mb-3">
                   <FileSpreadsheet className="w-5 h-5 text-green-600" />
-                  <h4 className="font-semibold text-green-800 dark:text-green-200">Conversion Complete!</h4>
+                  <h4 className="font-semibold text-green-800 dark:text-green-200">Conversão Concluída!</h4>
                 </div>
                 <div className="flex items-center justify-between mt-4">
-                  <p className="text-sm text-muted-foreground">Your Excel file is ready.</p>
+                  <p className="text-sm text-muted-foreground">Seu arquivo Excel está pronto.</p>
                   <Button className="text-white bg-green-600 hover:bg-green-700">
                     <Download className="w-4 h-4 mr-2" />
-                    Download Excel
+                    Baixar Excel
                   </Button>
                 </div>
               </div>
@@ -127,7 +127,7 @@ export default function PdfToExcel() {
                   className="flex-1 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all opacity-50 cursor-not-allowed"
                 >
                   <FileSpreadsheet className="w-4 h-4 mr-2" />
-                  Under Maintenance
+                  Em Manutenção
                 </Button>
               )}
 
@@ -138,7 +138,7 @@ export default function PdfToExcel() {
                 className="flex-1 opacity-50 cursor-not-allowed"
                 disabled={true}
               >
-                {status === "success" ? "Convert Another" : "Reset"}
+                {status === "success" ? "Converter Outro" : "Reiniciar"}
               </Button>
             </div>
           </div>
@@ -150,9 +150,9 @@ export default function PdfToExcel() {
         <div className="flex items-center gap-2">
           <FileSpreadsheet className="w-5 h-5 text-orange-600" />
           <div>
-            <h4 className="font-medium">Service Unavailable</h4>
+            <h4 className="font-medium">Serviço Indisponível</h4>
             <p className="mt-1 text-sm">
-              The PDF to Excel converter is currently under maintenance. Please check back later for updates.
+              O conversor de PDF para Excel está em manutenção. Verifique novamente mais tarde para atualizações.
             </p>
           </div>
         </div>

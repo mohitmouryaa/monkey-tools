@@ -92,13 +92,13 @@ export default function WordCounter() {
 
   // Copy statistics
   const copyStats = useCallback(async () => {
-    const statsText = `Total Words: ${stats.totalWords}
-Unique Words: ${stats.uniqueWords}
-Characters: ${stats.characters}
-Average Word Length: ${stats.averageWordLength}
-Longest Word: ${stats.longestWord}
-Shortest Word: ${stats.shortestWord}
-Most Frequent Words:
+    const statsText = `Total de Palavras: ${stats.totalWords}
+Palavras Únicas: ${stats.uniqueWords}
+Caracteres: ${stats.characters}
+Tamanho Médio da Palavra: ${stats.averageWordLength}
+Maior Palavra: ${stats.longestWord}
+Menor Palavra: ${stats.shortestWord}
+Palavras Mais Frequentes:
 ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n")}`;
 
     try {
@@ -131,16 +131,16 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
         <div className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Label htmlFor="text-input" className="text-sm font-medium">
-              Enter your text
+              Insira seu texto
             </Label>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={copyText} disabled={!text} className="flex-1 h-8 sm:flex-none">
                 <Copy className="w-3 h-3 mr-1" />
-                Copy Text
+                Copiar Texto
               </Button>
               <Button variant="outline" size="sm" onClick={clearText} disabled={!text} className="flex-1 h-8 sm:flex-none">
                 <Trash2 className="w-3 h-3 mr-1" />
-                Clear
+                Limpar
               </Button>
             </div>
           </div>
@@ -149,7 +149,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
             id="text-input"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Start typing or paste your text here to analyze word statistics..."
+            placeholder="Digite ou cole seu texto aqui para analisar estatísticas de palavras..."
             className="w-full h-32 p-4 text-base border rounded-lg resize-none sm:h-48 bg-background border-border focus:ring-2 focus:ring-primary focus:border-transparent"
             spellCheck="false"
           />
@@ -165,7 +165,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
               <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <Hash className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-muted-foreground">Total Words</span>
+                  <span className="text-sm font-medium text-muted-foreground">Total de Palavras</span>
                 </div>
                 <div className="text-2xl font-bold">{stats.totalWords.toLocaleString()}</div>
               </div>
@@ -173,27 +173,27 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
               <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-muted-foreground">Unique Words</span>
+                  <span className="text-sm font-medium text-muted-foreground">Palavras Únicas</span>
                 </div>
                 <div className="text-2xl font-bold">{stats.uniqueWords.toLocaleString()}</div>
                 <div className="text-xs text-muted-foreground">
-                  {stats.totalWords > 0 ? Math.round((stats.uniqueWords / stats.totalWords) * 100) : 0}% unique
+                  {stats.totalWords > 0 ? Math.round((stats.uniqueWords / stats.totalWords) * 100) : 0}% únicas
                 </div>
               </div>
 
               <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <BookOpen className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-muted-foreground">Avg Word Length</span>
+                  <span className="text-sm font-medium text-muted-foreground">Tamanho Médio</span>
                 </div>
                 <div className="text-2xl font-bold">{stats.averageWordLength}</div>
-                <div className="text-xs text-muted-foreground">characters</div>
+                <div className="text-xs text-muted-foreground">caracteres</div>
               </div>
 
               <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-muted-foreground">Reading Time</span>
+                  <span className="text-sm font-medium text-muted-foreground">Tempo de Leitura</span>
                 </div>
                 <div className="text-2xl font-bold">{readingTime.average}m</div>
                 <div className="text-xs text-muted-foreground">
@@ -206,18 +206,18 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
             <div className="grid gap-6 lg:grid-cols-2">
               {/* Word Length Analysis */}
               <div className="p-4 border rounded-lg bg-card border-border">
-                <h3 className="mb-3 text-sm font-medium text-muted-foreground">Word Length Analysis</h3>
+                <h3 className="mb-3 text-sm font-medium text-muted-foreground">Análise de Tamanho de Palavras</h3>
                 <div className="space-y-2">
                   <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-sm">Longest word:</span>
+                    <span className="text-sm">Maior palavra:</span>
                     <span className="text-sm font-medium break-all">{stats.longestWord || "N/A"}</span>
                   </div>
                   <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-sm">Shortest word:</span>
+                    <span className="text-sm">Menor palavra:</span>
                     <span className="text-sm font-medium">{stats.shortestWord || "N/A"}</span>
                   </div>
                   <div className="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center">
-                    <span className="text-sm">Total characters:</span>
+                    <span className="text-sm">Total de caracteres:</span>
                     <span className="text-sm font-medium">{stats.characters.toLocaleString()}</span>
                   </div>
                 </div>
@@ -226,10 +226,10 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
               {/* Most Frequent Words */}
               <div className="p-4 border rounded-lg bg-card border-border">
                 <div className="flex flex-col gap-3 mb-3 sm:flex-row sm:items-center sm:justify-between">
-                  <h3 className="text-sm font-medium text-muted-foreground">Most Frequent Words</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground">Palavras Mais Frequentes</h3>
                   <Button variant="outline" size="sm" onClick={copyStats} className="w-full text-xs h-7 sm:w-auto">
                     <Copy className="w-3 h-3 mr-1" />
-                    Copy Stats
+                    Copiar Estatísticas
                   </Button>
                 </div>
                 <div className="space-y-2">
@@ -246,7 +246,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                       </div>
                     ))
                   ) : (
-                    <div className="text-sm text-muted-foreground">No words to analyze</div>
+                    <div className="text-sm text-muted-foreground">Sem palavras para analisar</div>
                   )}
                 </div>
               </div>
@@ -254,12 +254,12 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
 
             {/* Reading Time Details */}
             <div className="p-4 border rounded-lg bg-card border-border">
-              <h3 className="mb-3 text-sm font-medium text-muted-foreground">Reading Time Estimates</h3>
+              <h3 className="mb-3 text-sm font-medium text-muted-foreground">Estimativas de Tempo de Leitura</h3>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="p-3 text-center rounded-lg bg-green-50 dark:bg-green-950/20">
                   <div className="text-lg font-semibold text-green-600 dark:text-green-400">{readingTime.fast}m</div>
                   <div className="text-xs text-muted-foreground">
-                    Fast Reader
+                    Leitor Rápido
                     <br />
                     (250 WPM)
                   </div>
@@ -267,7 +267,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                 <div className="p-3 text-center rounded-lg bg-blue-50 dark:bg-blue-950/20">
                   <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">{readingTime.average}m</div>
                   <div className="text-xs text-muted-foreground">
-                    Average
+                    Médio
                     <br />
                     (200 WPM)
                   </div>
@@ -275,7 +275,7 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
                 <div className="p-3 text-center rounded-lg bg-orange-50 dark:bg-orange-950/20">
                   <div className="text-lg font-semibold text-orange-600 dark:text-orange-400">{readingTime.slow}m</div>
                   <div className="text-xs text-muted-foreground">
-                    Slow Reader
+                    Leitor Lento
                     <br />
                     (150 WPM)
                   </div>
@@ -289,14 +289,14 @@ ${stats.mostFrequentWords.map((item) => `${item.word}: ${item.count}`).join("\n"
       {/* Tips */}
       <Alert className="max-w-4xl p-4 mx-auto mt-6 border-blue-500 sm:p-6 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
         <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
-        <AlertTitle className="text-base text-blue-800 dark:text-blue-200 sm:text-lg">Word Analysis Tips</AlertTitle>
+        <AlertTitle className="text-base text-blue-800 dark:text-blue-200 sm:text-lg">Dicas de Análise de Palavras</AlertTitle>
         <AlertDescription className="mt-3 text-blue-700 dark:text-blue-300">
           <ul className="space-y-2 text-sm leading-relaxed sm:space-y-1 sm:text-base">
-            <li className="pl-1">Words are identified using word boundaries (letters, numbers, and underscores)</li>
-            <li className="pl-1">Frequency analysis is case-insensitive</li>
-            <li className="pl-1">Reading time estimates are based on standard words per minute rates</li>
-            <li className="pl-1">Unique words percentage shows vocabulary diversity</li>
-            <li className="pl-1">Short words (1-2 characters) are often filtered out as common words</li>
+            <li className="pl-1">As palavras são identificadas usando limites de palavras (letras, números e sublinhados)</li>
+            <li className="pl-1">A análise de frequência não diferencia maiúsculas e minúsculas</li>
+            <li className="pl-1">As estimativas de tempo de leitura são baseadas em taxas padrão de palavras por minuto</li>
+            <li className="pl-1">A porcentagem de palavras únicas mostra a diversidade do vocabulário</li>
+            <li className="pl-1">Palavras curtas (1-2 caracteres) são frequentemente filtradas como palavras comuns</li>
           </ul>
         </AlertDescription>
       </Alert>

@@ -181,9 +181,9 @@ export default function CepAddressGenerator() {
     const text = `${address.street}, ${address.number} - ${address.neighborhood}\n${address.city} - ${address.state}\nCEP: ${address.cep}`;
     try {
       await navigator.clipboard.writeText(text);
-      toast.success("Address copied to clipboard");
+      toast.success("Endereço copiado para a área de transferência");
     } catch {
-      toast.error("Failed to copy address");
+      toast.error("Falha ao copiar endereço");
     }
   };
 
@@ -191,9 +191,9 @@ export default function CepAddressGenerator() {
     if (!address) return;
     try {
       await navigator.clipboard.writeText(JSON.stringify(address, null, 2));
-      toast.success("JSON copied to clipboard");
+      toast.success("JSON copiado para a área de transferência");
     } catch {
-      toast.error("Failed to copy JSON");
+      toast.error("Falha ao copiar JSON");
     }
   };
 
@@ -213,16 +213,16 @@ export default function CepAddressGenerator() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="flex items-center gap-2 text-xl font-bold">
               <ShieldCheck className="w-5 h-5 text-primary" />
-              Generator
+              Gerador
             </h2>
             <div className="flex items-center space-x-2">
               <Label htmlFor="cep-format" className="text-sm text-muted-foreground whitespace-nowrap">
-                Format CEP
+                Formatar CEP
               </Label>
               <Switch id="cep-format" checked={formatted} onCheckedChange={toggleFormat} />
             </div>
           </div>
-          <p className="text-sm text-muted-foreground">Generate realistic Brazilian addresses for testing purposes.</p>
+          <p className="text-sm text-muted-foreground">Gere endereços brasileiros realistas para fins de teste.</p>
         </div>
 
         {address ? (
@@ -235,58 +235,58 @@ export default function CepAddressGenerator() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs tracking-wider uppercase text-muted-foreground">State / UF</Label>
+              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Estado / UF</Label>
               <Input value={address.state} readOnly className="bg-muted/30" />
             </div>
 
             <div className="md:col-span-2 space-y-1.5">
-              <Label className="text-xs tracking-wider uppercase text-muted-foreground">City</Label>
+              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Cidade</Label>
               <Input value={address.city} readOnly className="bg-muted/30" />
             </div>
 
             <div className="md:col-span-2 space-y-1.5">
-              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Street Address</Label>
+              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Endereço</Label>
               <Input value={address.street} readOnly className="bg-muted/30" />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Number</Label>
+              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Número</Label>
               <Input value={address.number.toString()} readOnly className="bg-muted/30" />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Neighborhood</Label>
+              <Label className="text-xs tracking-wider uppercase text-muted-foreground">Bairro</Label>
               <Input value={address.neighborhood} readOnly className="bg-muted/30" />
             </div>
           </div>
         ) : (
           <div className="flex items-center justify-center border-2 border-dashed rounded-lg h-60 bg-muted/10">
-            <p className="text-muted-foreground">Click Generate to create an address</p>
+            <p className="text-muted-foreground">Clique em Gerar para criar um endereço</p>
           </div>
         )}
 
         <div className="flex flex-col gap-3 pt-4 border-t sm:flex-row">
           <Button onClick={generate} size="lg" className="flex-1 shadow-md">
             <RefreshCw className="w-4 h-4" />
-            Generate New Address
+            Gerar Novo Endereço
           </Button>
           <div className="flex gap-3">
             <Button variant="outline" onClick={handleCopyText} className="flex-1 sm:flex-none">
               <Copy className="w-4 h-4" />
-              Copy Text
+              Copiar Texto
             </Button>
             <Button variant="outline" onClick={handleCopyJSON} className="flex-1 sm:flex-none">
               <GripHorizontal className="w-4 h-4" />
-              Copy JSON
+              Copiar JSON
             </Button>
           </div>
         </div>
       </Card>
 
       <div className="p-3 text-xs border rounded-md text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900">
-        <strong>⚠️ Disclaimer:</strong> Generated addresses are <strong>synthetic and for testing purposes only</strong>. While the
-        CEP format is valid and mapped to the correct region/state, the specific street numbers and neighborhood combinations are
-        randomized and may not exist physically. Do not use for real deliveries.
+        <strong>⚠️ Aviso:</strong> Os endereços gerados são <strong>sintéticos e apenas para fins de teste</strong>. Embora o
+        formato do CEP seja válido e mapeado para a região/estado correto, os números de rua e combinações de bairro específicos são
+        aleatórios e podem não existir fisicamente. Não use para entregas reais.
       </div>
     </div>
   );

@@ -63,7 +63,7 @@ export default function SplitPDF() {
 
   const splitPDF = useCallback(async () => {
     if (selectedPages.size === 0) {
-      toast.error("Please select at least one page to split.");
+      toast.error("Selecione pelo menos uma página para dividir.");
       return;
     }
 
@@ -86,7 +86,7 @@ export default function SplitPDF() {
 
         // Validate file size before loading
         if (!fileItem.file.size || fileItem.file.size > MAX_FILE_SIZE) {
-          toast.error(`File "${fileItem.file.name}" is too large. Maximum file size is 50MB.`);
+          toast.error(`Arquivo "${fileItem.file.name}" é muito grande. Tamanho máximo: 50MB.`);
           setIsSplitting(false);
           return;
         }
@@ -111,10 +111,10 @@ export default function SplitPDF() {
 
       const splitPdfBytes = await splitPdfDoc.save();
       setSplitPdf(splitPdfBytes);
-      toast.success("PDF split successfully!");
+      toast.success("PDF dividido com sucesso!");
       setSplitProgress(100);
     } catch {
-      toast.error("An error occurred while splitting the PDF.");
+      toast.error("Ocorreu um erro ao dividir o PDF.");
     } finally {
       setIsSplitting(false);
     }
@@ -152,13 +152,13 @@ export default function SplitPDF() {
             <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-xl bg-card">
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-semibold">
-                  {pages.length} Page{pages.length !== 1 ? "s" : ""}
+                  {pages.length} Página{pages.length !== 1 ? "s" : ""}
                 </h3>
 
                 {isProcessing && (
                   <span className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Processing...
+                    Processando...
                   </span>
                 )}
               </div>
@@ -171,11 +171,11 @@ export default function SplitPDF() {
                     accept="application/pdf"
                     onChange={handleAddMore}
                     className="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer"
-                    title="Add more files"
+                    title="Adicionar mais arquivos"
                   />
                   <Button variant="outline" size="sm" className="gap-2">
                     <Plus className="w-4 h-4" />
-                    Add Files
+                    Adicionar Arquivos
                   </Button>
                 </div>
                 <Button
@@ -184,7 +184,7 @@ export default function SplitPDF() {
                   onClick={resetSplit}
                   className="text-destructive hover:text-destructive hover:bg-destructive/10"
                 >
-                  Clear All
+                  Limpar Tudo
                 </Button>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function SplitPDF() {
       {isSplitting && (
         <div className="max-w-3xl mx-auto mt-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Extracting Pages...</span>
+            <span className="text-sm font-medium">Extraindo Páginas...</span>
             <span className="text-sm text-muted-foreground">{Math.round(splitProgress)}%</span>
           </div>
           <Progress value={splitProgress} className="w-full h-2" />
@@ -221,7 +221,7 @@ export default function SplitPDF() {
           size="lg"
           className="min-w-40 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
         >
-          {isSplitting ? "Extracting..." : "Split PDF"}
+          {isSplitting ? "Extraindo..." : "Dividir PDF"}
         </Button>
 
         {splitPdf && (
@@ -232,7 +232,7 @@ export default function SplitPDF() {
             className="text-blue-700 border-blue-200 min-w-40 bg-blue-50 hover:bg-blue-100 hover:text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300 dark:hover:bg-blue-900/40"
           >
             <Download className="w-4 h-4 mr-2" />
-            Download PDF
+            Baixar PDF
           </Button>
         )}
       </div>

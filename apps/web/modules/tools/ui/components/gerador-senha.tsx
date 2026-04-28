@@ -53,7 +53,7 @@ export default function StrongPasswordGenerator() {
     const { length, uppercase, lowercase, numbers, symbols } = options;
 
     if (!uppercase && !lowercase && !numbers && !symbols) {
-      toast.error("Please select at least one character type");
+      toast.error("Selecione pelo menos um tipo de caractere");
       return;
     }
 
@@ -76,27 +76,27 @@ export default function StrongPasswordGenerator() {
     }
 
     setPassword(result);
-    toast.success("Password generated successfully!");
+    toast.success("Senha gerada com sucesso!");
   }, [options]);
 
   // Copy password to clipboard
   const copyPassword = useCallback(async () => {
     if (!password) {
-      toast.error("No password to copy");
+      toast.error("Nenhuma senha para copiar");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(password);
-      toast.success("Password copied to clipboard!");
+      toast.success("Senha copiada para a área de transferência!");
     } catch {
-      toast.error("Failed to copy password");
+      toast.error("Falha ao copiar senha");
     }
   }, [password]);
 
   // Calculate password strength
   const getPasswordStrength = useCallback((pwd: string): PasswordStrength => {
-    if (!pwd) return { score: 0, label: "No password", color: "bg-gray-200", icon: ShieldX };
+    if (!pwd) return { score: 0, label: "Sem senha", color: "bg-gray-200", icon: ShieldX };
 
     let score = 0;
     const checks = [
@@ -110,10 +110,10 @@ export default function StrongPasswordGenerator() {
 
     score = checks.filter(Boolean).length;
 
-    if (score <= 2) return { score: 25, label: "Weak", color: "bg-red-500", icon: ShieldX };
-    if (score <= 3) return { score: 50, label: "Fair", color: "bg-yellow-500", icon: ShieldAlert };
-    if (score <= 4) return { score: 75, label: "Good", color: "bg-blue-500", icon: Shield };
-    return { score: 100, label: "Strong", color: "bg-green-500", icon: ShieldCheck };
+    if (score <= 2) return { score: 25, label: "Fraca", color: "bg-red-500", icon: ShieldX };
+    if (score <= 3) return { score: 50, label: "Razoável", color: "bg-yellow-500", icon: ShieldAlert };
+    if (score <= 4) return { score: 75, label: "Boa", color: "bg-blue-500", icon: Shield };
+    return { score: 100, label: "Forte", color: "bg-green-500", icon: ShieldCheck };
   }, []);
 
   const strength = getPasswordStrength(password);
@@ -131,9 +131,9 @@ export default function StrongPasswordGenerator() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <Label htmlFor="length-input" className="text-sm font-medium">
-                Password Length
+                Tamanho da Senha
               </Label>
-              <span className="text-sm text-muted-foreground">{options.length} characters</span>
+              <span className="text-sm text-muted-foreground">{options.length} caracteres</span>
             </div>
             <input
               id="length-input"
@@ -152,33 +152,33 @@ export default function StrongPasswordGenerator() {
 
           {/* Character Types */}
           <div className="space-y-4">
-            <Label className="text-sm font-medium">Character Types</Label>
+            <Label className="text-sm font-medium">Tipos de Caractere</Label>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm font-medium">Uppercase (A-Z)</span>
+                  <span className="text-sm font-medium">Maiúsculas (A-Z)</span>
                 </div>
                 <Switch checked={options.uppercase} onCheckedChange={(checked) => updateOption("uppercase", checked)} />
               </div>
 
               <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm font-medium">Lowercase (a-z)</span>
+                  <span className="text-sm font-medium">Minúsculas (a-z)</span>
                 </div>
                 <Switch checked={options.lowercase} onCheckedChange={(checked) => updateOption("lowercase", checked)} />
               </div>
 
               <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm font-medium">Numbers (0-9)</span>
+                  <span className="text-sm font-medium">Números (0-9)</span>
                 </div>
                 <Switch checked={options.numbers} onCheckedChange={(checked) => updateOption("numbers", checked)} />
               </div>
 
               <div className="flex items-center justify-between p-3 border rounded-lg bg-card border-border">
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm font-medium">Symbols (!@#$%)</span>
+                  <span className="text-sm font-medium">Símbolos (!@#$%)</span>
                 </div>
                 <Switch checked={options.symbols} onCheckedChange={(checked) => updateOption("symbols", checked)} />
               </div>
@@ -192,7 +192,7 @@ export default function StrongPasswordGenerator() {
             className="w-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
           >
             <RefreshCw className="w-4 h-4 mr-2" />
-            Generate New Password
+            Gerar Nova Senha
           </Button>
         </div>
       </section>
@@ -200,14 +200,14 @@ export default function StrongPasswordGenerator() {
       {/* Security Tips - Always Visible */}
       <Alert className="max-w-2xl mx-auto mt-6 border-blue-500 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
         <CheckCircle className="w-4 h-4 text-blue-600" />
-        <AlertTitle className="text-blue-800 dark:text-blue-200">Password Security Tips</AlertTitle>
+        <AlertTitle className="text-blue-800 dark:text-blue-200">Dicas de Segurança de Senha</AlertTitle>
         <AlertDescription className="text-blue-700 dark:text-blue-300">
           <ul className="mt-2 space-y-1 text-sm list-disc list-inside">
-            <li>Use passwords that are at least 12 characters long</li>
-            <li>Include a mix of uppercase, lowercase, numbers, and symbols</li>
-            <li>Avoid using personal information or common words</li>
-            <li>Use a unique password for each account</li>
-            <li>Consider using a password manager to store complex passwords</li>
+            <li>Use senhas com pelo menos 12 caracteres</li>
+            <li>Inclua uma combinação de maiúsculas, minúsculas, números e símbolos</li>
+            <li>Evite usar informações pessoais ou palavras comuns</li>
+            <li>Use uma senha única para cada conta</li>
+            <li>Considere usar um gerenciador de senhas para armazenar senhas complexas</li>
           </ul>
         </AlertDescription>
       </Alert>
@@ -219,7 +219,7 @@ export default function StrongPasswordGenerator() {
             {/* Password Display */}
             <div className="p-6 border rounded-xl bg-card border-border">
               <div className="flex items-center justify-between mb-4">
-                <Label className="text-sm font-medium">Generated Password</Label>
+                <Label className="text-sm font-medium">Senha Gerada</Label>
                 <div className="flex gap-2">
                   <Button variant="ghost" size="sm" onClick={() => setShowPassword(!showPassword)} className="w-8 h-8 p-0">
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -242,7 +242,7 @@ export default function StrongPasswordGenerator() {
             {/* Password Strength */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Password Strength</Label>
+                <Label className="text-sm font-medium">Força da Senha</Label>
                 <div className="flex items-center gap-2">
                   <strength.icon className="w-4 h-4" />
                   <span className="text-sm font-medium">{strength.label}</span>
@@ -250,10 +250,10 @@ export default function StrongPasswordGenerator() {
               </div>
               <Progress value={strength.score} className="w-full h-3" />
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Weak</span>
-                <span>Fair</span>
-                <span>Good</span>
-                <span>Strong</span>
+                <span>Fraca</span>
+                <span>Razoável</span>
+                <span>Boa</span>
+                <span>Forte</span>
               </div>
             </div>
           </div>
@@ -264,9 +264,9 @@ export default function StrongPasswordGenerator() {
       {!options.uppercase && !options.lowercase && !options.numbers && !options.symbols && (
         <Alert className="max-w-2xl mx-auto mt-6 text-yellow-800 border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20 dark:border-yellow-800 dark:text-yellow-200">
           <AlertTriangle className="w-4 h-4 text-yellow-600" />
-          <AlertTitle>Configuration Required</AlertTitle>
+          <AlertTitle>Configuração Necessária</AlertTitle>
           <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-            Please select at least one character type to generate a password.
+            Selecione pelo menos um tipo de caractere para gerar uma senha.
           </AlertDescription>
         </Alert>
       )}

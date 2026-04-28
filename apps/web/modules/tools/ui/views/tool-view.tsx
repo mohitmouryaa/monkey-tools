@@ -31,8 +31,8 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   }
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://monkeytools.com";
-    const currentUrl = `${baseUrl}/tools/${toolCategory}/${tool}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
+    const currentUrl = `${baseUrl}/ferramentas/${toolCategory}/${tool}`;
 
     const { default: ToolComponent } = await import(`@/modules/tools/ui/components/${tool}`);
 
@@ -43,7 +43,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         <BreadcrumbSchema
           items={[
             { name: "Home", url: baseUrl },
-            { name: category.name, url: `${baseUrl}/tools/${toolCategory}` },
+            { name: category.name, url: `${baseUrl}/ferramentas/${toolCategory}` },
             { name: toolData.title, url: currentUrl },
           ]}
         />
@@ -75,7 +75,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
             {/* Visual Steps */}
             {toolData.visualSteps && toolData.visualSteps.length > 0 && (
               <div className="mb-8">
-                <h2 className="mb-6 text-2xl font-bold">{toolData.stepsTitle || `How to use ${toolData.title}`}</h2>
+                <h2 className="mb-6 text-2xl font-bold">{toolData.stepsTitle || `Como usar ${toolData.title}`}</h2>
                 <ToolSteps steps={toolData.visualSteps} />
               </div>
             )}
@@ -104,7 +104,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
             {/* FAQs */}
             {toolData.faqs && toolData.faqs.length > 0 && (
               <div className="mb-8">
-                <h2 className="mb-6 text-2xl font-bold">Frequently Asked Questions</h2>
+                <h2 className="mb-6 text-2xl font-bold">Perguntas Frequentes</h2>
                 <ToolFAQ faqs={toolData.faqs} />
                 <FAQSchema faqs={toolData.faqs} />
               </div>

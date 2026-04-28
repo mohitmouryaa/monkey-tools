@@ -29,7 +29,7 @@ export const ToolCard = ({ name, description, category, categorySlug, toolSlug, 
   const categoryColor = categoryIconColors[categorySlug] || "#635BFF";
 
   return (
-    <Link href={`/tools/${categorySlug}/${toolSlug}`} className="block group">
+    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="block group">
       <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary card-glow h-full flex flex-col">
         {/* Icon and Category Badge */}
         <div className="flex items-center justify-between mb-4">

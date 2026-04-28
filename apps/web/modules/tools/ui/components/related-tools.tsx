@@ -20,12 +20,12 @@ export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedTool
   return (
     <div className="pt-8 mt-16 border-t border-border">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-foreground">More {categorySlug.replace(/-/g, " ")} Tools</h2>
+        <h2 className="text-2xl font-bold text-foreground">Mais ferramentas de {categorySlug.replace(/-/g, " ")}</h2>
         <Link
-          href={`/tools/${categorySlug}`}
+          href={`/ferramentas/${categorySlug}`}
           className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
-          View all <ArrowRight className="w-4 h-4" />
+          Ver todas <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 
@@ -33,7 +33,7 @@ export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedTool
         {related.map((tool) => (
           <Link
             key={tool._id as string}
-            href={tool.link.startsWith("/") ? `/tools/${categorySlug}${tool.link}` : `/tools/${categorySlug}/${tool.link}`}
+            href={tool.link.startsWith("/") ? `/ferramentas/${categorySlug}${tool.link}` : `/ferramentas/${categorySlug}/${tool.link}`}
             className="block group"
           >
             <div className="flex items-center h-full gap-4 p-4 transition-all duration-200 border rounded-xl border-border bg-card hover:border-primary/50 hover:bg-muted/50">

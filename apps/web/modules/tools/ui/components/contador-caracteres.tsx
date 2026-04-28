@@ -61,12 +61,12 @@ export default function CharacterCounter() {
 
   // Copy statistics
   const copyStats = useCallback(async () => {
-    const statsText = `Characters: ${stats.characters}
-Characters (no spaces): ${stats.charactersNoSpaces}
-Words: ${stats.words}
-Lines: ${stats.lines}
-Paragraphs: ${stats.paragraphs}
-Sentences: ${stats.sentences}`;
+    const statsText = `Caracteres: ${stats.characters}
+Caracteres (sem espaços): ${stats.charactersNoSpaces}
+Palavras: ${stats.words}
+Linhas: ${stats.lines}
+Parágrafos: ${stats.paragraphs}
+Frases: ${stats.sentences}`;
 
     try {
       await navigator.clipboard.writeText(statsText);
@@ -88,16 +88,16 @@ Sentences: ${stats.sentences}`;
         <div className="space-y-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <Label htmlFor="text-input" className="text-sm font-medium">
-              Enter your text
+              Insira seu texto
             </Label>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={copyText} disabled={!text} className="flex-1 h-8 sm:flex-none">
                 <Copy className="w-3 h-3 mr-1" />
-                Copy Text
+                Copiar Texto
               </Button>
               <Button variant="outline" size="sm" onClick={clearText} disabled={!text} className="flex-1 h-8 sm:flex-none">
                 <Trash2 className="w-3 h-3 mr-1" />
-                Clear
+                Limpar
               </Button>
             </div>
           </div>
@@ -106,7 +106,7 @@ Sentences: ${stats.sentences}`;
             id="text-input"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Start typing or paste your text here..."
+            placeholder="Digite ou cole seu texto aqui..."
             className="w-full h-32 p-4 text-base border rounded-lg resize-none sm:h-48 bg-background border-border focus:ring-2 focus:ring-primary focus:border-transparent"
             spellCheck="false"
           />
@@ -121,42 +121,42 @@ Sentences: ${stats.sentences}`;
             <div className="p-4 border rounded-lg bg-card border-border">
               <div className="flex items-center gap-2 mb-2">
                 <Hash className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Characters</span>
+                <span className="text-sm font-medium text-muted-foreground">Caracteres</span>
               </div>
               <div className="text-2xl font-bold">{stats.characters.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">{stats.charactersNoSpaces.toLocaleString()} without spaces</div>
+              <div className="text-xs text-muted-foreground">{stats.charactersNoSpaces.toLocaleString()} sem espaços</div>
             </div>
 
             <div className="p-4 border rounded-lg bg-card border-border">
               <div className="flex items-center gap-2 mb-2">
                 <Type className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Words</span>
+                <span className="text-sm font-medium text-muted-foreground">Palavras</span>
               </div>
               <div className="text-2xl font-bold">{stats.words.toLocaleString()}</div>
               <div className="text-xs text-muted-foreground">
-                {stats.words > 0 ? (stats.characters / stats.words).toFixed(1) : "0"} avg length
+                {stats.words > 0 ? (stats.characters / stats.words).toFixed(1) : "0"} tamanho médio
               </div>
             </div>
 
             <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2 mb-2">
                 <AlignLeft className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Lines</span>
+                <span className="text-sm font-medium text-muted-foreground">Linhas</span>
               </div>
               <div className="text-2xl font-bold">{stats.lines.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">{stats.paragraphs.toLocaleString()} paragraphs</div>
+              <div className="text-xs text-muted-foreground">{stats.paragraphs.toLocaleString()} parágrafos</div>
             </div>
 
             <div className="p-4 border rounded-lg bg-card border-border sm:col-span-2 lg:col-span-2">
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-muted-foreground">Sentences</span>
+                <span className="text-sm font-medium text-muted-foreground">Frases</span>
               </div>
               <div className="text-2xl font-bold">{stats.sentences.toLocaleString()}</div>
               <div className="flex gap-4 mt-2">
                 <Button variant="outline" size="sm" onClick={copyStats} className="flex-1 text-xs h-7 sm:flex-none">
                   <Copy className="w-3 h-3 mr-1" />
-                  Copy Stats
+                  Copiar Estatísticas
                 </Button>
               </div>
             </div>
@@ -167,15 +167,15 @@ Sentences: ${stats.sentences}`;
             <div className="p-4 border rounded-lg bg-card border-border">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-center sm:text-left">
-                  <div className="text-sm font-medium text-muted-foreground">Estimated Reading Time</div>
+                  <div className="text-sm font-medium text-muted-foreground">Tempo Estimado de Leitura</div>
                   <div className="text-lg font-semibold">
-                    {Math.ceil(stats.words / 200)} minute{Math.ceil(stats.words / 200) !== 1 ? "s" : ""}
+                    {Math.ceil(stats.words / 200)} minuto{Math.ceil(stats.words / 200) !== 1 ? "s" : ""}
                   </div>
                 </div>
                 <div className="text-center sm:text-right">
-                  <div className="text-sm text-muted-foreground">Speaking Time</div>
+                  <div className="text-sm text-muted-foreground">Tempo de Fala</div>
                   <div className="text-lg font-semibold">
-                    {Math.ceil(stats.words / 150)} minute{Math.ceil(stats.words / 150) !== 1 ? "s" : ""}
+                    {Math.ceil(stats.words / 150)} minuto{Math.ceil(stats.words / 150) !== 1 ? "s" : ""}
                   </div>
                 </div>
               </div>
@@ -187,14 +187,14 @@ Sentences: ${stats.sentences}`;
       {/* Tips */}
       <Alert className="max-w-4xl p-4 mx-auto mt-6 border-blue-500 sm:p-6 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
         <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
-        <AlertTitle className="text-base text-blue-800 dark:text-blue-200 sm:text-lg">Text Analysis Tips</AlertTitle>
+        <AlertTitle className="text-base text-blue-800 dark:text-blue-200 sm:text-lg">Dicas de Análise de Texto</AlertTitle>
         <AlertDescription className="mt-3 text-blue-700 dark:text-blue-300">
           <ul className="space-y-2 text-sm leading-relaxed sm:space-y-1 sm:text-base">
-            <li className="pl-1">Character count includes spaces and punctuation</li>
-            <li className="pl-1">Words are counted by spaces (contractions count as one word)</li>
-            <li className="pl-1">Paragraphs are separated by blank lines</li>
-            <li className="pl-1">Sentences are detected by periods, exclamation marks, and question marks</li>
-            <li className="pl-1">Reading time is estimated at 200 words per minute</li>
+            <li className="pl-1">A contagem de caracteres inclui espaços e pontuação</li>
+            <li className="pl-1">As palavras são contadas por espaços (contrações contam como uma palavra)</li>
+            <li className="pl-1">Os parágrafos são separados por linhas em branco</li>
+            <li className="pl-1">As frases são detectadas por pontos, exclamações e interrogações</li>
+            <li className="pl-1">O tempo de leitura é estimado em 200 palavras por minuto</li>
           </ul>
         </AlertDescription>
       </Alert>

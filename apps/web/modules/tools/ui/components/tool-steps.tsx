@@ -58,7 +58,7 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
 
             {/* Step number */}
             <div className="mb-3">
-              <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Step {index + 1}</span>
+              <span className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Passo {index + 1}</span>
             </div>
 
             {/* Title */}

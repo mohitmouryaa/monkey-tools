@@ -25,9 +25,9 @@ export const NewHeroSection = ({ heroSection }: NewHeroSectionProps) => {
     description:
       "As melhores ferramentas gratuitas para você usar com segurança: deletamos seus arquivos assim que você terminar de usar as ferramentas. Você se beneficia porque é seguro.",
     primaryButtonText: "Começar agora",
-    primaryButtonLink: "#tools",
+    primaryButtonLink: "#ferramentas",
     secondaryButtonText: "Ver todas as ferramentas",
-    secondaryButtonLink: "/tools",
+    secondaryButtonLink: "/ferramentas",
   };
 
   return (

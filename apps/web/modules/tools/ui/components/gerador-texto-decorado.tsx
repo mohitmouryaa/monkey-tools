@@ -115,7 +115,7 @@ export default function FancyTextGenerator() {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
         setCopiedId(id);
-        toast.success("Copied to clipboard!");
+        toast.success("Copiado para a área de transferência!");
         setTimeout(() => setCopiedId(null), 2000);
       } else {
         // Fallback for older browsers or non-secure contexts
@@ -126,11 +126,11 @@ export default function FancyTextGenerator() {
         document.execCommand("copy");
         document.body.removeChild(textArea);
         setCopiedId(id);
-        toast.success("Copied to clipboard!");
+        toast.success("Copiado para a área de transferência!");
         setTimeout(() => setCopiedId(null), 2000);
       }
     } catch {
-      toast.error("Failed to copy text");
+      toast.error("Falha ao copiar texto");
     }
   };
 
@@ -146,19 +146,19 @@ export default function FancyTextGenerator() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Type className="h-5 w-5 text-primary" />
-            Input Text
+            Texto de Entrada
           </CardTitle>
-          <CardDescription>Type or paste your text below to see it transformed instantly into various styles.</CardDescription>
+          <CardDescription>Digite ou cole seu texto abaixo para vê-lo transformado instantaneamente em vários estilos.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
-            placeholder="Type something fancy here..."
+            placeholder="Digite algo aqui..."
             className="min-h-30 text-lg resize-y"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
           <div className="flex justify-between items-center bg-muted/30 p-2 rounded-md">
-            <div className="text-sm text-muted-foreground pl-2">{input.length} characters</div>
+            <div className="text-sm text-muted-foreground pl-2">{input.length} caracteres</div>
             <Button
               variant="ghost"
               size="sm"
@@ -167,7 +167,7 @@ export default function FancyTextGenerator() {
               className="text-muted-foreground hover:text-foreground"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
-              Clear
+              Limpar
             </Button>
           </div>
         </CardContent>
@@ -177,11 +177,11 @@ export default function FancyTextGenerator() {
       {input && (
         <div className="space-y-6 slide-in-from-bottom-5 animate-in fade-in duration-500">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <h2 className="text-2xl font-bold tracking-tight">Generated Styles</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Estilos Gerados</h2>
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Filter styles..."
+                placeholder="Filtrar estilos..."
                 className="pl-9"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -211,7 +211,7 @@ export default function FancyTextGenerator() {
                       onClick={() => handleCopy(style.text, style.id)}
                     >
                       {copiedId === style.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      <span className="sr-only">Copy {style.name}</span>
+                      <span className="sr-only">Copiar {style.name}</span>
                     </Button>
                   </div>
                   {/* Mobile Copy Button (Always Visible) */}
@@ -224,11 +224,11 @@ export default function FancyTextGenerator() {
                     >
                       {copiedId === style.id ? (
                         <>
-                          <Check className="h-4 w-4" /> Copied
+                          <Check className="h-4 w-4" /> Copiado
                         </>
                       ) : (
                         <>
-                          <Copy className="h-4 w-4" /> Copy
+                          <Copy className="h-4 w-4" /> Copiar
                         </>
                       )}
                     </Button>
@@ -239,7 +239,7 @@ export default function FancyTextGenerator() {
           </div>
 
           {generatedStyles.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">No styles match your filter.</div>
+            <div className="text-center py-12 text-muted-foreground">Nenhum estilo corresponde ao seu filtro.</div>
           )}
         </div>
       )}
@@ -250,7 +250,7 @@ export default function FancyTextGenerator() {
           <div className="inline-flex items-center justify-center p-4 bg-muted/30 rounded-full mb-4">
             <Type className="h-8 w-8 text-muted-foreground/50" />
           </div>
-          <h3 className="text-lg font-medium text-muted-foreground">Start typing to generate fancy text</h3>
+          <h3 className="text-lg font-medium text-muted-foreground">Comece a digitar para gerar texto estilizado</h3>
         </div>
       )}
     </div>
