@@ -16,7 +16,7 @@ interface CategoryFormProps {
   disabled?: boolean;
 }
 
-export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabled = false }: CategoryFormProps) => {
+export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disabled = false }: CategoryFormProps) => {
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
@@ -34,16 +34,16 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">General Information</h3>
+          <h3 className="text-lg font-medium text-foreground">Informações Gerais</h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category Name</FormLabel>
+                  <FormLabel>Nome da Categoria</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. PDF Tools" {...field} disabled={disabled} />
+                    <Input placeholder="ex: Ferramentas PDF" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,9 +69,9 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descrição</FormLabel>
                 <FormControl>
-                  <Input placeholder="Category description" {...field} disabled={disabled} />
+                  <Input placeholder="Descrição da categoria" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -83,9 +83,9 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
             name="icon"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Icon Name</FormLabel>
+                <FormLabel>Nome do Ícone</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. file-text" {...field} disabled={disabled} />
+                  <Input placeholder="ex: file-text" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,11 +97,11 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
             name="color"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Color</FormLabel>
+                <FormLabel>Cor</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g. #3b82f6" {...field} disabled={disabled} />
                 </FormControl>
-                <FormDescription>Hex color code for the category theme</FormDescription>
+                <FormDescription>Código de cor hexadecimal para o tema da categoria</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -109,7 +109,7 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">Settings</h3>
+          <h3 className="text-lg font-medium text-foreground">Configurações</h3>
 
           <FormField
             control={form.control}
@@ -117,8 +117,8 @@ export const CategoryForm = ({ defaultValues, onSubmit, submitLabel = "Save", di
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Active Status</FormLabel>
-                  <FormDescription>Enable or disable this category</FormDescription>
+                  <FormLabel className="text-base">Status Ativo</FormLabel>
+                  <FormDescription>Ativar ou desativar esta categoria</FormDescription>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />

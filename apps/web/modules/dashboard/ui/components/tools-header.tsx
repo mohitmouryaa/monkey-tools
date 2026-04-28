@@ -10,10 +10,10 @@ export const ToolsHeader = ({ disabled }: { disabled?: boolean }) => {
   };
   return (
     <EntityHeader
-      title="Tools"
-      description="Create and manage your tools"
+      title="Ferramentas"
+      description="Crie e gerencie suas ferramentas"
       onNew={handleCreate}
-      newButtonLabel="New tool"
+      newButtonLabel="Nova ferramenta"
       disabled={disabled}
     />
   );

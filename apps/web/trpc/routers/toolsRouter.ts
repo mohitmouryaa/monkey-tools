@@ -39,7 +39,7 @@ export const toolsRouter = createTRPCRouter({
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to create tool: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao criar ferramenta: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),
@@ -129,7 +129,7 @@ export const toolsRouter = createTRPCRouter({
       if (!tool) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Tool not found",
+          message: "Ferramenta não encontrada",
         });
       }
 
@@ -142,7 +142,7 @@ export const toolsRouter = createTRPCRouter({
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to fetch tool: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao buscar ferramenta: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),
@@ -176,7 +176,7 @@ export const toolsRouter = createTRPCRouter({
         if (!updatedTool) {
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Tool not found",
+            message: "Ferramenta não encontrada",
           });
         }
 
@@ -188,7 +188,7 @@ export const toolsRouter = createTRPCRouter({
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to update tool: ${error instanceof Error ? error.message : "Unknown error"}`,
+          message: `Falha ao atualizar ferramenta: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
         });
       }
     }),
@@ -199,7 +199,7 @@ export const toolsRouter = createTRPCRouter({
       if (!tool) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Tool not found",
+          message: "Ferramenta não encontrada",
         });
       }
 
@@ -213,7 +213,7 @@ export const toolsRouter = createTRPCRouter({
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to delete tool: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao excluir ferramenta: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),

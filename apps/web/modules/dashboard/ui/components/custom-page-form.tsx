@@ -73,8 +73,8 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Basic Information</h3>
-                <p className="text-sm text-muted-foreground">Configure the basic page information</p>
+                <h3 className="text-lg font-semibold">Informações Básicas</h3>
+                <p className="text-sm text-muted-foreground">Configure as informações básicas da página</p>
               </div>
 
               <FormField
@@ -82,11 +82,11 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Page Title</FormLabel>
+                    <FormLabel>Título da Página</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Privacy Policy" {...field} />
+                      <Input placeholder="ex: Política de Privacidade" {...field} />
                     </FormControl>
-                    <FormDescription>Title displayed on the page</FormDescription>
+                    <FormDescription>Título exibido na página</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -97,11 +97,11 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                 name="slug"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL Slug</FormLabel>
+                    <FormLabel>Slug da URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., privacy-policy" {...field} />
+                      <Input placeholder="ex: politica-de-privacidade" {...field} />
                     </FormControl>
-                    <FormDescription>URL path (lowercase letters, numbers, and hyphens only)</FormDescription>
+                    <FormDescription>Caminho da URL (apenas letras minúsculas, números e hífens)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -120,8 +120,8 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Page Content</h3>
-                <p className="text-sm text-muted-foreground">Write your page content using the rich text editor</p>
+                <h3 className="text-lg font-semibold">Conteúdo da Página</h3>
+                <p className="text-sm text-muted-foreground">Escreva o conteúdo da página usando o editor de texto rico</p>
               </div>
 
               <FormField
@@ -129,7 +129,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                 name="content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Content</FormLabel>
+                    <FormLabel>Conteúdo</FormLabel>
                     <FormControl>
                       <RichTextEditor value={field.value} onChange={field.onChange} />
                     </FormControl>
@@ -145,8 +145,8 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Footer Settings</h3>
-                <p className="text-sm text-muted-foreground">Control how this page appears in the footer</p>
+                <h3 className="text-lg font-semibold">Configurações do Rodapé</h3>
+                <p className="text-sm text-muted-foreground">Controle como esta página aparece no rodapé</p>
               </div>
 
               <FormField
@@ -155,8 +155,8 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-base">Show in Footer</FormLabel>
-                      <FormDescription>Toggle whether this page should appear in the site footer</FormDescription>
+                      <FormLabel className="text-base">Exibir no Rodapé</FormLabel>
+                      <FormDescription>Define se esta página deve aparecer no rodapé do site</FormDescription>
                     </div>
                     <FormControl>
                       <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -172,7 +172,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                     name="footerOrder"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Footer Order</FormLabel>
+                        <FormLabel>Ordem no Rodapé</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -181,7 +181,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                             onChange={(e) => field.onChange(Number(e.target.value))}
                           />
                         </FormControl>
-                        <FormDescription>Lower numbers appear first (0 = first)</FormDescription>
+                        <FormDescription>Números menores aparecem primeiro (0 = primeiro)</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -192,11 +192,11 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                     name="footerLabel"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Footer Label (Optional)</FormLabel>
+                        <FormLabel>Rótulo do Rodapé (Opcional)</FormLabel>
                         <FormControl>
-                          <Input placeholder="Leave empty to use page title" {...field} value={field.value || ""} />
+                          <Input placeholder="Deixe vazio para usar o título da página" {...field} value={field.value || ""} />
                         </FormControl>
-                        <FormDescription>Custom text to display in footer (defaults to page title)</FormDescription>
+                        <FormDescription>Texto personalizado para exibir no rodapé (padrão: título da página)</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -215,8 +215,8 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Active Status</FormLabel>
-                    <FormDescription>Pages that are inactive will only be visible to admins</FormDescription>
+                    <FormLabel className="text-base">Status Ativo</FormLabel>
+                    <FormDescription>Páginas inativas serão visíveis apenas para administradores</FormDescription>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -229,7 +229,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
 
         <div className="flex justify-end gap-4">
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : isCreate ? "Create Page" : "Update Page"}
+            {isPending ? "Salvando..." : isCreate ? "Criar Página" : "Atualizar Página"}
           </Button>
         </div>
       </form>

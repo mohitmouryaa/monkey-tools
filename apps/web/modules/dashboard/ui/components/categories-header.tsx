@@ -10,10 +10,10 @@ export const CategoriesHeader = ({ disabled }: { disabled?: boolean }) => {
   };
   return (
     <EntityHeader
-      title="Categories"
-      description="Create and manage your tool categories"
+      title="Categorias"
+      description="Crie e gerencie suas categorias de ferramentas"
       onNew={handleCreate}
-      newButtonLabel="New category"
+      newButtonLabel="Nova categoria"
       disabled={disabled}
     />
   );

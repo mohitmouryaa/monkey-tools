@@ -18,7 +18,7 @@ export const useDeleteCustomPage = () => {
         router.push("/dashboard/pages");
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to delete custom page");
+        toast.error(error.message || "Falha ao excluir página personalizada");
       },
     }),
   );

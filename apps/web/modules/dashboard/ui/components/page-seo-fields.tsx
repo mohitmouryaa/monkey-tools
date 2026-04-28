@@ -14,8 +14,8 @@ export const PageSeoFields = ({ form }: PageSeoFieldsProps) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">SEO Settings</h3>
-        <p className="text-sm text-muted-foreground">Configure SEO metadata for better search engine visibility</p>
+        <h3 className="text-lg font-semibold">Configurações SEO</h3>
+        <p className="text-sm text-muted-foreground">Configure os metadados SEO para melhor visibilidade nos mecanismos de busca</p>
       </div>
 
       <FormField
@@ -23,11 +23,11 @@ export const PageSeoFields = ({ form }: PageSeoFieldsProps) => {
         name="seoTitle"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>SEO Title</FormLabel>
+            <FormLabel>Título SEO</FormLabel>
             <FormControl>
-              <Input placeholder="Enter SEO title" {...field} />
+              <Input placeholder="Digite o título SEO" {...field} />
             </FormControl>
-            <FormDescription>Title that appears in search engine results</FormDescription>
+            <FormDescription>Título que aparece nos resultados de busca</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -38,11 +38,11 @@ export const PageSeoFields = ({ form }: PageSeoFieldsProps) => {
         name="seoDescription"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>SEO Description</FormLabel>
+            <FormLabel>Descrição SEO</FormLabel>
             <FormControl>
-              <Textarea placeholder="Enter SEO description" rows={3} {...field} />
+              <Textarea placeholder="Digite a descrição SEO" rows={3} {...field} />
             </FormControl>
-            <FormDescription>Description that appears in search engine results (150-160 characters recommended)</FormDescription>
+            <FormDescription>Descrição que aparece nos resultados de busca (150-160 caracteres recomendado)</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -53,11 +53,11 @@ export const PageSeoFields = ({ form }: PageSeoFieldsProps) => {
         name="seoKeywords"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>SEO Keywords</FormLabel>
+            <FormLabel>Palavras-chave SEO</FormLabel>
             <FormControl>
-              <Input placeholder="keyword1, keyword2, keyword3" {...field} />
+              <Input placeholder="palavra1, palavra2, palavra3" {...field} />
             </FormControl>
-            <FormDescription>Comma-separated keywords for search engines</FormDescription>
+            <FormDescription>Palavras-chave separadas por vírgula para mecanismos de busca</FormDescription>
             <FormMessage />
           </FormItem>
         )}

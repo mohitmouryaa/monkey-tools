@@ -49,7 +49,7 @@ export function ScriptForm({ initialData, isEditing = false }: ScriptFormProps) 
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Nome</FormLabel>
               <FormControl>
                 <Input placeholder="Google Analytics" {...field} />
               </FormControl>
@@ -63,19 +63,19 @@ export function ScriptForm({ initialData, isEditing = false }: ScriptFormProps) 
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel>Localização</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select location" />
+                    <SelectValue placeholder="Selecione a localização" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="HEAD">Head (Metadata)</SelectItem>
-                  <SelectItem value="BODY">Body (End)</SelectItem>
+                  <SelectItem value="HEAD">Head (Metadados)</SelectItem>
+                  <SelectItem value="BODY">Body (Final)</SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Where should this script be injected?</FormDescription>
+              <FormDescription>Onde este script deve ser injetado?</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -86,11 +86,11 @@ export function ScriptForm({ initialData, isEditing = false }: ScriptFormProps) 
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Script Content (HTML)</FormLabel>
+              <FormLabel>Conteúdo do Script (HTML)</FormLabel>
               <FormControl>
                 <Textarea placeholder="<script>...</script>" className="font-mono min-h-50" {...field} />
               </FormControl>
-              <FormDescription>Paste the full HTML snippet here.</FormDescription>
+              <FormDescription>Cole o trecho HTML completo aqui.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -102,8 +102,8 @@ export function ScriptForm({ initialData, isEditing = false }: ScriptFormProps) 
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Active</FormLabel>
-                <FormDescription>Enable or disable this script without deleting it.</FormDescription>
+                <FormLabel className="text-base">Ativo</FormLabel>
+                <FormDescription>Ativar ou desativar este script sem excluí-lo.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -113,7 +113,7 @@ export function ScriptForm({ initialData, isEditing = false }: ScriptFormProps) 
         />
 
         <Button type="submit" disabled={isPending}>
-          {isEditing ? "Update Script" : "Create Script"}
+          {isEditing ? "Atualizar Script" : "Criar Script"}
         </Button>
       </form>
     </Form>

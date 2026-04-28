@@ -24,7 +24,7 @@ export const categoriesRouter = createTRPCRouter({
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to create category: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao criar categoria: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),
@@ -102,7 +102,7 @@ export const categoriesRouter = createTRPCRouter({
       if (!category) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Category not found",
+          message: "Categoria não encontrada",
         });
       }
 
@@ -114,7 +114,7 @@ export const categoriesRouter = createTRPCRouter({
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to fetch category: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao buscar categoria: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),
@@ -124,7 +124,7 @@ export const categoriesRouter = createTRPCRouter({
     if (!category) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Category not found",
+        message: "Categoria não encontrada",
       });
     }
 
@@ -154,7 +154,7 @@ export const categoriesRouter = createTRPCRouter({
         if (!category) {
           throw new TRPCError({
             code: "NOT_FOUND",
-            message: "Category not found",
+            message: "Categoria não encontrada",
           });
         }
 
@@ -163,20 +163,20 @@ export const categoriesRouter = createTRPCRouter({
         if (!updatedCategory) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to update category",
+            message: "Falha ao atualizar categoria",
           });
         }
 
         return {
           success: true,
           category: { ...updatedCategory, _id: updatedCategory._id.toString() },
-          message: "Category updated successfully",
+          message: "Categoria atualizada com sucesso",
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to update category: ${error instanceof Error ? error.message : "Unknown error"}`,
+          message: `Falha ao atualizar categoria: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
         });
       }
     }),
@@ -194,14 +194,14 @@ export const categoriesRouter = createTRPCRouter({
       } else {
         return {
           id: input.id,
-          name: "Category not found",
+          name: "Categoria não encontrada",
         };
       }
     } catch (error) {
       if (error instanceof TRPCError) throw error;
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: `Failed to delete category: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `Falha ao excluir categoria: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),

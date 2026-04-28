@@ -49,8 +49,8 @@ export const AllToolsPageForm = ({ defaultValues }: AllToolsPageFormProps) => {
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Page Content</h3>
-                <p className="text-sm text-muted-foreground">Configure the all tools page content</p>
+                <h3 className="text-lg font-semibold">Conteúdo da Página</h3>
+                <p className="text-sm text-muted-foreground">Configure o conteúdo da página de todas as ferramentas</p>
               </div>
 
               <FormField
@@ -58,9 +58,9 @@ export const AllToolsPageForm = ({ defaultValues }: AllToolsPageFormProps) => {
                 name="h1Heading"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>H1 Heading</FormLabel>
+                    <FormLabel>Título H1</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., All Tools" {...field} />
+                      <Input placeholder="ex: Todas as Ferramentas" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -72,9 +72,9 @@ export const AllToolsPageForm = ({ defaultValues }: AllToolsPageFormProps) => {
                 name="shortDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Short Description</FormLabel>
+                    <FormLabel>Descrição Curta</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Brief description about all tools" rows={3} {...field} />
+                      <Textarea placeholder="Breve descrição sobre todas as ferramentas" rows={3} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,8 +92,8 @@ export const AllToolsPageForm = ({ defaultValues }: AllToolsPageFormProps) => {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4 shadow-sm">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Active Status</FormLabel>
-                    <FormDescription>This page will be visible to public users when active</FormDescription>
+                    <FormLabel className="text-base">Status Ativo</FormLabel>
+                    <FormDescription>Esta página será visível para usuários públicos quando ativa</FormDescription>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -106,7 +106,7 @@ export const AllToolsPageForm = ({ defaultValues }: AllToolsPageFormProps) => {
 
         <div className="flex justify-end gap-4">
           <Button type="submit" disabled={updateAllToolsPage.isPending}>
-            {updateAllToolsPage.isPending ? "Saving..." : "Save All Tools Page"}
+            {updateAllToolsPage.isPending ? "Salvando..." : "Salvar Página de Ferramentas"}
           </Button>
         </div>
       </form>

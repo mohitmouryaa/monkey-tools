@@ -37,14 +37,14 @@ export const ToolView = ({ id }: ToolViewProps) => {
           <button
             onClick={() => setIsEditing(false)}
             className="flex items-center justify-center transition-all group hover:scale-105"
-            aria-label="Go back"
+            aria-label="Voltar"
             type="button"
           >
             <ArrowLeft className="w-5 h-5 transition-colors text-muted-foreground group-hover:text-foreground" />
           </button>
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">Edit Tool</h2>
-            <p className="text-muted-foreground">Update your tool configuration and settings</p>
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">Editar Ferramenta</h2>
+            <p className="text-muted-foreground">Atualize a configuração e as definições da ferramenta</p>
           </div>
         </div>
 
@@ -65,7 +65,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
               closingText: toolData.closingText || "",
             }}
             onSubmit={handleUpdate}
-            submitLabel="Save Changes"
+            submitLabel="Salvar Alterações"
             disabled={updateTool.isPending}
           />
         </div>
@@ -85,11 +85,11 @@ export const ToolView = ({ id }: ToolViewProps) => {
             className="inline-flex items-center gap-2 text-sm font-medium transition-colors group text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Back to Tools
+            Voltar para Ferramentas
           </Link>
           <Button onClick={() => setIsEditing(true)} size="sm" className="gap-2 transition-all shadow-sm hover:shadow">
             <Edit className="w-4 h-4" />
-            Edit Tool
+            Editar Ferramenta
           </Button>
         </div>
 
@@ -114,12 +114,12 @@ export const ToolView = ({ id }: ToolViewProps) => {
                 {toolData.isActive ? (
                   <>
                     <Eye className="w-4 h-4" />
-                    Published
+                    Publicado
                   </>
                 ) : (
                   <>
                     <EyeOff className="w-4 h-4" />
-                    Draft
+                    Rascunho
                   </>
                 )}
               </div>
@@ -134,7 +134,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
             {/* Technical Details */}
             <section className="space-y-8">
               <div className="space-y-2">
-                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Technical Configuration</h2>
+                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Configuração Técnica</h2>
                 <div className="h-px bg-linear-to-r from-border via-border/50 to-transparent" />
               </div>
 
@@ -142,7 +142,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
                 <div className="space-y-3 group">
                   <dt className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <Code className="w-4 h-4" />
-                    Component Name
+                    Nome do Componente
                   </dt>
                   <dd className="font-mono text-sm font-medium transition-colors text-foreground group-hover:text-primary">
                     {toolData.componentName}
@@ -152,7 +152,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
                 <div className="space-y-3 group">
                   <dt className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <LinkIcon className="w-4 h-4" />
-                    Route
+                    Rota
                   </dt>
                   <dd className="flex items-center gap-2">
                     <span className="text-sm font-medium text-foreground">{toolData.link}</span>
@@ -161,7 +161,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="transition-all opacity-0 text-primary hover:opacity-100 group-hover:opacity-70"
-                      aria-label="Open tool"
+                      aria-label="Abrir ferramenta"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
                     </Link>
@@ -174,29 +174,29 @@ export const ToolView = ({ id }: ToolViewProps) => {
             <section className="space-y-8">
               <div className="space-y-2">
                 <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">
-                  Search Engine Optimization
+                  Otimização para Mecanismos de Busca
                 </h2>
                 <div className="h-px bg-linear-to-r from-border via-border/50 to-transparent" />
               </div>
 
               <dl className="space-y-8">
                 <div className="space-y-3">
-                  <dt className="text-sm font-medium text-muted-foreground">SEO Title</dt>
+                  <dt className="text-sm font-medium text-muted-foreground">Título SEO</dt>
                   <dd className="text-base font-medium leading-relaxed text-foreground">
-                    {toolData.seoTitle || <span className="italic text-muted-foreground/60">Not configured</span>}
+                    {toolData.seoTitle || <span className="italic text-muted-foreground/60">Não configurado</span>}
                   </dd>
                 </div>
 
                 <div className="space-y-3">
-                  <dt className="text-sm font-medium text-muted-foreground">Meta Description</dt>
+                  <dt className="text-sm font-medium text-muted-foreground">Meta Descrição</dt>
                   <dd className="text-sm leading-relaxed text-foreground">
-                    {toolData.seoDescription || <span className="italic text-muted-foreground/60">Not configured</span>}
+                    {toolData.seoDescription || <span className="italic text-muted-foreground/60">Não configurado</span>}
                   </dd>
                 </div>
 
                 {keywords.length > 0 && (
                   <div className="space-y-4">
-                    <dt className="text-sm font-medium text-muted-foreground">Keywords</dt>
+                    <dt className="text-sm font-medium text-muted-foreground">Palavras-chave</dt>
                     <dd className="flex flex-wrap gap-2">
                       {keywords.map((keyword) => (
                         <span
@@ -218,29 +218,29 @@ export const ToolView = ({ id }: ToolViewProps) => {
             {/* Quick Stats */}
             <section className="space-y-6">
               <div className="space-y-2">
-                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Overview</h2>
+                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Visão Geral</h2>
                 <div className="h-px bg-linear-to-r from-border via-border/50 to-transparent" />
               </div>
 
               <dl className="space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-border/30">
-                  <dt className="text-sm font-medium text-muted-foreground">Status</dt>
+                  <dt className="text-sm font-medium text-muted-foreground">Situação</dt>
                   <dd
                     className={`text-sm font-semibold ${
                       toolData.isActive ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"
                     }`}
                   >
-                    {toolData.isActive ? "Published" : "Draft"}
+                    {toolData.isActive ? "Publicado" : "Rascunho"}
                   </dd>
                 </div>
 
                 <div className="flex items-center justify-between pb-4 border-b border-border/30">
-                  <dt className="text-sm font-medium text-muted-foreground">Category</dt>
-                  <dd className="text-sm font-medium text-foreground">{toolData.category?.name || "None"}</dd>
+                  <dt className="text-sm font-medium text-muted-foreground">Categoria</dt>
+                  <dd className="text-sm font-medium text-foreground">{toolData.category?.name || "Nenhuma"}</dd>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <dt className="text-sm font-medium text-muted-foreground">Tool ID</dt>
+                  <dt className="text-sm font-medium text-muted-foreground">ID da Ferramenta</dt>
                   <dd className="font-mono text-xs text-muted-foreground">{toolData._id.slice(-12)}</dd>
                 </div>
               </dl>
@@ -249,7 +249,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
             {/* Quick Actions */}
             <section className="space-y-4">
               <div className="space-y-2">
-                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Quick Actions</h2>
+                <h2 className="text-xs font-semibold tracking-widest uppercase text-muted-foreground">Ações Rápidas</h2>
                 <div className="h-px bg-linear-to-r from-border via-border/50 to-transparent" />
               </div>
 
@@ -257,14 +257,14 @@ export const ToolView = ({ id }: ToolViewProps) => {
                 <Link
                   href={
                     toolData.link.startsWith("/")
-                      ? `/tools/${toolData.category?.slug}${toolData.link}`
-                      : `/tools/${toolData.category?.slug}/${toolData.link}`
+                      ? `/ferramentas/${toolData.category?.slug}${toolData.link}`
+                      : `/ferramentas/${toolData.category?.slug}/${toolData.link}`
                   }
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-between px-0.5 py-3 text-sm font-medium transition-colors text-foreground hover:bg-muted/50"
                 >
-                  View Live Tool
+                  Ver Ferramenta ao Vivo
                   <ExternalLink className="w-4 h-4 text-muted-foreground" />
                 </Link>
               </div>

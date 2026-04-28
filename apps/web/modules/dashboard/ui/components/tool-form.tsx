@@ -28,7 +28,7 @@ interface ToolFormProps {
   disabled?: boolean;
 }
 
-export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabled = false }: ToolFormProps) => {
+export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disabled = false }: ToolFormProps) => {
   const trpc = useTRPC();
   const { data: categories, isLoading: isLoadingCategories } = useQuery(trpc.categories.getMany.queryOptions({}));
 
@@ -90,16 +90,16 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">General Information</h3>
+          <h3 className="text-lg font-medium text-foreground">Informações Gerais</h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tool Name</FormLabel>
+                  <FormLabel>Nome da Ferramenta</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. PDF to JPG" {...field} disabled={disabled} />
+                    <Input placeholder="ex: PDF para JPG" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,9 +110,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="componentName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Component Name</FormLabel>
+                  <FormLabel>Nome do Componente</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. pdf-to-jpg" {...field} disabled={disabled} />
+                    <Input placeholder="ex: pdf-to-jpg" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,9 +125,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>Descrição</FormLabel>
                 <FormControl>
-                  <Input placeholder="Brief description of the tool..." {...field} disabled={disabled} />
+                  <Input placeholder="Breve descrição da ferramenta..." {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,9 +140,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="link"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tool URL Path</FormLabel>
+                  <FormLabel>Caminho URL da Ferramenta</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. /pdf-to-jpg" {...field} disabled={disabled} />
+                    <Input placeholder="ex: /pdf-to-jpg" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -153,11 +153,11 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Categoria</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value} disabled={disabled || isLoadingCategories}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a category" />
+                        <SelectValue placeholder="Selecione uma categoria" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -176,16 +176,16 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">Visual Configuration</h3>
+          <h3 className="text-lg font-medium text-foreground">Configuração Visual</h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="icon"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon Name</FormLabel>
+                  <FormLabel>Nome do Ícone</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. file-text" {...field} disabled={disabled} />
+                    <Input placeholder="ex: file-text" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,7 +196,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="iconColor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Icon Color</FormLabel>
+                  <FormLabel>Cor do Ícone</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. #FF0000" {...field} disabled={disabled} />
                   </FormControl>
@@ -211,7 +211,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="bgColor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Background Color</FormLabel>
+                  <FormLabel>Cor de Fundo</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. #FF0000" {...field} disabled={disabled} />
                   </FormControl>
@@ -225,8 +225,8 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start justify-between p-3 border rounded-lg shadow-sm">
                   <div className="space-y-0.5">
-                    <FormLabel>Active Status</FormLabel>
-                    <FormDescription>Publicly visible.</FormDescription>
+                    <FormLabel>Status Ativo</FormLabel>
+                    <FormDescription>Visível publicamente.</FormDescription>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} disabled={disabled} />
@@ -238,16 +238,16 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">SEO Configuration</h3>
+          <h3 className="text-lg font-medium text-foreground">Configuração SEO</h3>
           <div className="space-y-4">
             <FormField
               control={form.control}
               name="seoTitle"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>SEO Title</FormLabel>
+                  <FormLabel>Título SEO</FormLabel>
                   <FormControl>
-                    <Input placeholder="Meta title for search engines" {...field} disabled={disabled} />
+                    <Input placeholder="Meta título para mecanismos de busca" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -259,9 +259,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="seoDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>SEO Description</FormLabel>
+                  <FormLabel>Descrição SEO</FormLabel>
                   <FormControl>
-                    <Input placeholder="Meta description..." {...field} disabled={disabled} />
+                    <Input placeholder="Meta descrição..." {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -273,9 +273,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
               name="seoKeywords"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Keywords</FormLabel>
+                  <FormLabel>Palavras-chave</FormLabel>
                   <FormControl>
-                    <Input placeholder="pdf, convert, jpg, image (comma separated)" {...field} disabled={disabled} />
+                    <Input placeholder="pdf, converter, jpg, imagem (separados por vírgula)" {...field} disabled={disabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -285,17 +285,17 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-foreground">Page Content</h3>
+          <h3 className="text-lg font-medium text-foreground">Conteúdo da Página</h3>
 
           <FormField
             control={form.control}
             name="h1Heading"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>H1 Heading (Optional)</FormLabel>
-                <FormDescription>Custom H1 for the tool page. Leave empty to use tool title.</FormDescription>
+                <FormLabel>Título H1 (Opcional)</FormLabel>
+                <FormDescription>H1 personalizado para a página da ferramenta. Deixe vazio para usar o título da ferramenta.</FormDescription>
                 <FormControl>
-                  <Input placeholder="e.g., Compress PDF: reduce file size online for free" {...field} disabled={disabled} />
+                  <Input placeholder="ex: Comprimir PDF: reduza o tamanho do arquivo online gratuitamente" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -307,10 +307,10 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="introText"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Introduction Text</FormLabel>
-                <FormDescription>Short intro below H1 heading (80-120 words recommended)</FormDescription>
+                <FormLabel>Texto de Introdução</FormLabel>
+                <FormDescription>Breve introdução abaixo do título H1 (80-120 palavras recomendado)</FormDescription>
                 <FormControl>
-                  <Textarea placeholder="Brief introduction to the tool..." {...field} disabled={disabled} rows={3} />
+                  <Textarea placeholder="Breve introdução sobre a ferramenta..." {...field} disabled={disabled} rows={3} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -322,10 +322,10 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="stepsTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Steps Section Title (Optional)</FormLabel>
-                <FormDescription>Custom title for "How It Works" section. Leave empty for default.</FormDescription>
+                <FormLabel>Título da Seção de Passos (Opcional)</FormLabel>
+                <FormDescription>Título personalizado para a seção "Como Funciona". Deixe vazio para o padrão.</FormDescription>
                 <FormControl>
-                  <Input placeholder="e.g., How to Compress PDF Files" {...field} disabled={disabled} />
+                  <Input placeholder="ex: Como Comprimir Arquivos PDF" {...field} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -337,8 +337,8 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="visualSteps"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>How It Works Steps</FormLabel>
-                <FormDescription>Visual steps with icons (max 5)</FormDescription>
+                <FormLabel>Passos - Como Funciona</FormLabel>
+                <FormDescription>Passos visuais com ícones (máx. 5)</FormDescription>
                 <FormControl>
                   <VisualStepsBuilder value={field.value || []} onChange={field.onChange} />
                 </FormControl>
@@ -352,8 +352,8 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="richContent"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Rich Content</FormLabel>
-                <FormDescription>Add detailed content: benefits, who it's for, features, etc.</FormDescription>
+                <FormLabel>Conteúdo Rico</FormLabel>
+                <FormDescription>Adicione conteúdo detalhado: benefícios, para quem é, funcionalidades, etc.</FormDescription>
                 <FormControl>
                   <RichTextEditor value={field.value || ""} onChange={field.onChange} />
                 </FormControl>
@@ -367,8 +367,8 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="faqs"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>FAQs</FormLabel>
-                <FormDescription>Frequently asked questions for this tool</FormDescription>
+                <FormLabel>Perguntas Frequentes</FormLabel>
+                <FormDescription>Perguntas frequentes sobre esta ferramenta</FormDescription>
                 <FormControl>
                   <FAQManager faqs={field.value || []} onChange={field.onChange} />
                 </FormControl>
@@ -382,10 +382,10 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Save", disabl
             name="closingText"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Closing Text</FormLabel>
-                <FormDescription>Final call-to-action or summary (80-120 words recommended)</FormDescription>
+                <FormLabel>Texto de Encerramento</FormLabel>
+                <FormDescription>Chamada final para ação ou resumo (80-120 palavras recomendado)</FormDescription>
                 <FormControl>
-                  <Textarea placeholder="Closing message for the tool page..." {...field} disabled={disabled} rows={3} />
+                  <Textarea placeholder="Mensagem de encerramento da página da ferramenta..." {...field} disabled={disabled} rows={3} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
