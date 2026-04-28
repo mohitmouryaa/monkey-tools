@@ -8,113 +8,137 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* DesignOnline Dark Theme - Blue-Purple + Neon Green */
+  /* DesignOnline Dark Theme - Coral + Orange-Coral */
   --background: 222 47% 7%;
   --foreground: 0 0% 100%;
-  
+
   --card: 222 40% 12%;
   --card-foreground: 0 0% 100%;
-  
+
   --popover: 222 40% 12%;
   --popover-foreground: 0 0% 100%;
-  
-  /* Primary: Deep blue-purple (#635BFF) */
-  --primary: 243 100% 68%;
+
+  /* Primary: Coral red */
+  --primary: 4 85% 55%;
   --primary-foreground: 0 0% 100%;
-  
-  /* Secondary: Neon green (#00E5A8) */
-  --secondary: 162 100% 45%;
-  --secondary-foreground: 222 47% 7%;
-  
+
+  /* Secondary: Orange-coral */
+  --secondary: 14 90% 55%;
+  --secondary-foreground: 0 0% 100%;
+
   --muted: 222 30% 20%;
   --muted-foreground: 222 20% 70%;
-  
-  --accent: 162 100% 45%;
-  --accent-foreground: 222 47% 7%;
-  
+
+  --accent: 14 90% 55%;
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
+
   --border: 222 30% 20%;
   --input: 222 30% 20%;
-  --ring: 243 100% 68%;
-  
-  --radius: 1rem;
-  
+  --ring: 4 85% 55%;
+
+  --radius: 0.75rem;
+
   /* Category colors */
-  --category-pdf: 0 85% 60%;
-  --category-image: 162 100% 45%;
-  --category-text: 243 100% 68%;
-  --category-converter: 45 100% 55%;
-  
+  --category-pdf: 4 85% 60%;
+  --category-image: 145 65% 55%;
+  --category-text: 210 80% 65%;
+  --category-converter: 35 95% 60%;
+
+  /* Tool-specific colors */
+  --tool-pdf-word: 210 80% 55%;
+  --tool-juntar: 145 65% 50%;
+  --tool-comprimir: 35 95% 55%;
+  --tool-dividir: 265 70% 60%;
+  --tool-assinar: 340 75% 55%;
+
   /* Chart colors (keep existing) */
   --chart-1: 0.646 0.222 41.116;
   --chart-2: 0.6 0.118 184.704;
   --chart-3: 0.398 0.07 227.392;
   --chart-4: 0.828 0.189 84.429;
   --chart-5: 0.769 0.188 70.08;
-  
+
   /* Sidebar (match dark theme) */
   --sidebar: 222 40% 12%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 243 100% 68%;
+  --sidebar-primary: 4 85% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 222 30% 20%;
   --sidebar-accent-foreground: 0 0% 100%;
   --sidebar-border: 222 30% 20%;
-  --sidebar-ring: 243 100% 68%;
-  
+  --sidebar-ring: 4 85% 55%;
+
   /* Logo colors */
-  --logo-primary: 243 100% 68%;
-  --logo-secondary: 162 100% 45%;
+  --logo-primary: 4 85% 55%;
+  --logo-secondary: 14 90% 55%;
 }
 
 .dark {
   /* Same as root for consistent dark theme */
   --background: 222 47% 7%;
   --foreground: 0 0% 100%;
-  
+
   --card: 222 40% 12%;
   --card-foreground: 0 0% 100%;
-  
+
   --popover: 222 40% 12%;
   --popover-foreground: 0 0% 100%;
-  
-  --primary: 243 100% 68%;
+
+  --primary: 4 85% 55%;
   --primary-foreground: 0 0% 100%;
-  
-  --secondary: 162 100% 45%;
-  --secondary-foreground: 222 47% 7%;
-  
+
+  --secondary: 14 90% 55%;
+  --secondary-foreground: 0 0% 100%;
+
   --muted: 222 30% 20%;
   --muted-foreground: 222 20% 70%;
-  
-  --accent: 162 100% 45%;
-  --accent-foreground: 222 47% 7%;
-  
+
+  --accent: 14 90% 55%;
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
+
   --border: 222 30% 20%;
   --input: 222 30% 20%;
-  --ring: 243 100% 68%;
-  
+  --ring: 4 85% 55%;
+
+  /* Category colors */
+  --category-pdf: 4 85% 60%;
+  --category-image: 145 65% 55%;
+  --category-text: 210 80% 65%;
+  --category-converter: 35 95% 60%;
+
+  /* Tool-specific colors */
+  --tool-pdf-word: 210 80% 55%;
+  --tool-juntar: 145 65% 50%;
+  --tool-comprimir: 35 95% 55%;
+  --tool-dividir: 265 70% 60%;
+  --tool-assinar: 340 75% 55%;
+
   /* Chart colors (keep existing) */
   --chart-1: 0.488 0.243 264.376;
   --chart-2: 0.696 0.17 162.48;
   --chart-3: 0.769 0.188 70.08;
   --chart-4: 0.627 0.265 303.9;
   --chart-5: 0.645 0.246 16.439;
-  
+
   /* Sidebar */
   --sidebar: 222 40% 12%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 243 100% 68%;
+  --sidebar-primary: 4 85% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 222 30% 20%;
   --sidebar-accent-foreground: 0 0% 100%;
   --sidebar-border: 222 30% 20%;
-  --sidebar-ring: 243 100% 68%;
+  --sidebar-ring: 4 85% 55%;
+
+  /* Logo colors */
+  --logo-primary: 4 85% 55%;
+  --logo-secondary: 14 90% 55%;
 }
 
 @theme inline {
@@ -141,6 +165,11 @@
   --color-category-image: hsl(var(--category-image));
   --color-category-text: hsl(var(--category-text));
   --color-category-converter: hsl(var(--category-converter));
+  --color-tool-pdf-word: hsl(var(--tool-pdf-word));
+  --color-tool-juntar: hsl(var(--tool-juntar));
+  --color-tool-comprimir: hsl(var(--tool-comprimir));
+  --color-tool-dividir: hsl(var(--tool-dividir));
+  --color-tool-assinar: hsl(var(--tool-assinar));
   --color-chart-1: oklch(var(--chart-1));
   --color-chart-2: oklch(var(--chart-2));
   --color-chart-3: oklch(var(--chart-3));
@@ -168,6 +197,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
 }
 
 @layer base {
@@ -180,14 +213,30 @@
 
 /* Custom button gradients */
 .btn-gradient-primary {
-  background: linear-gradient(135deg, hsl(243 100% 68%) 0%, hsl(260 100% 65%) 100%);
+  background: linear-gradient(135deg, hsl(4 85% 55%) 0%, hsl(14 90% 55%) 100%);
 }
 
 .btn-gradient-secondary {
-  background: linear-gradient(135deg, hsl(162 100% 45%) 0%, hsl(170 100% 40%) 100%);
+  background: linear-gradient(135deg, hsl(14 90% 55%) 0%, hsl(24 90% 55%) 100%);
 }
 
 /* Card hover glow effect */
 .card-glow:hover {
-  box-shadow: 0 0 30px -5px hsl(243 100% 68% / 0.4);
+  box-shadow: 0 0 30px -5px hsl(4 85% 55% / 0.4);
+}
+
+@layer components {
+  .tool-card {
+    @apply rounded-2xl p-6 transition-all duration-200 cursor-pointer border-2 border-transparent;
+  }
+  .tool-card:hover {
+    @apply shadow-lg -translate-y-1;
+  }
+  .upload-zone {
+    @apply border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 cursor-pointer;
+    @apply border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5;
+  }
+  .upload-zone.dragging {
+    @apply border-primary bg-primary/10 scale-[1.02];
+  }
 }

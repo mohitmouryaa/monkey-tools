@@ -184,12 +184,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         <label
           htmlFor="file-upload-input"
           className={cn(
-            "relative block border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl",
-            isDragOver
-              ? "border-primary bg-primary/10 dark:bg-primary/20 scale-105 shadow-primary/20"
-              : "border-primary/30 bg-card hover:border-primary",
-            disabled && "opacity-50 cursor-not-allowed shadow-none",
-            error && "border-destructive bg-destructive/5 dark:bg-destructive/10 shadow-destructive/20",
+            "upload-zone relative block",
+            isDragOver && "dragging",
+            disabled && "opacity-50 cursor-not-allowed",
+            error && "border-destructive bg-destructive/5",
           )}
           onDrop={handleDrop}
           onDragOver={handleDragOver}

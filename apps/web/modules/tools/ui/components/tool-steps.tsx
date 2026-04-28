@@ -44,15 +44,12 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 my-16 relative">
         {steps.map((step, index) => (
           <div key={step.title} className="flex flex-col items-center text-center">
-            {/* Large circular icon with custom colors */}
             <div className="relative mb-6">
               <div
-                className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg"
-                style={{
-                  backgroundColor: step.bgColor || "#3b82f6",
-                }}
+                className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg bg-primary"
+                style={step.bgColor ? { backgroundColor: step.bgColor } : undefined}
               >
-                {renderIcon(step.icon, step.iconColor || "#ffffff")}
+                {renderIcon(step.icon, step.iconColor || "hsl(var(--primary-foreground))")}
               </div>
             </div>
 
