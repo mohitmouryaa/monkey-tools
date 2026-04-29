@@ -40,7 +40,7 @@ export default async function RootLayout({
   const bodyScripts = scripts.filter((s) => s.location === "BODY");
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         {headScripts.map((script) => (
           <Fragment key={script._id.toString()}>{parse(script.content)}</Fragment>

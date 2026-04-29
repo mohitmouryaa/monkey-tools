@@ -39,8 +39,8 @@ export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
   const visibleTools = activeSlug === "all" ? allTools : allTools.filter((t) => t.category.slug === activeSlug);
 
   return (
-    <section className="container max-w-7xl mx-auto px-4 sm:px-6 pb-20" id="ferramentas">
-      <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+    <section className="container max-w-7xl mx-auto px-4 sm:px-6 pb-16 md:pb-20" id="ferramentas">
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-8 md:mb-10">
         <button
           type="button"
           onClick={() => setActiveSlug("all")}

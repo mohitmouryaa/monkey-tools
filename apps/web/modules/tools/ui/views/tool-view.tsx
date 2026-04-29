@@ -165,8 +165,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
           ]}
         />
 
-        <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
-          <div className="space-y-6 md:space-y-8">
+        <div className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
+          {/* Fluxo 1 — A ferramenta em si */}
+          <div className="space-y-12 md:space-y-16">
             {/* Hero */}
             <ToolHeader
               title={toolData.h1Heading || toolData.title}
@@ -187,7 +188,10 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
                 </PDFLibProvider>
               </Suspense>
             </section>
+          </div>
 
+          {/* Fluxo 2 — Educacional / explicativo */}
+          <div className="mt-24 md:mt-32 space-y-12 md:space-y-16">
             {/* Como Funciona (visual steps) — sem card, deixa os círculos coloridos respirarem */}
             <section className="px-2 md:px-4 py-4 md:py-6">
               <h2 className="mb-6 text-center text-xl md:text-2xl font-bold text-foreground">
@@ -234,7 +238,10 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
                 </div>
               </section>
             )}
+          </div>
 
+          {/* Fluxo 3 — Confiança / fechamento (FAQ, closing, related) */}
+          <div className="mt-24 md:mt-32 space-y-12 md:space-y-16">
             {/* FAQs */}
             <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
               <h2 className="mb-6 text-xl md:text-2xl font-bold text-foreground">Perguntas Frequentes</h2>
@@ -251,7 +258,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
             <RelatedTools currentToolId={toolData._id as string} tools={category.tools} categorySlug={toolCategory} />
           </div>
 
-          <div className="mt-8">
+          <div className="mt-12 md:mt-16">
             <AdPlaceholder position="bottom" />
           </div>
         </div>
