@@ -1,9 +1,37 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
-import { CategoryModel, ToolModel } from "@workspace/database";
+import { CategoryModel, PostModel, ToolModel } from "@workspace/database";
+import { PostStatus } from "@workspace/types";
 import { PAGINATION } from "@/modules/common/constants";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createCategorySchema } from "@/modules/dashboard/schema/category";
+
+// biome-ignore lint/suspicious/noExplicitAny: Editor.js content shape varia por bloco
+function extractPostSearchText(content: any, seo?: { description?: string }): string {
+  const parts: string[] = [];
+  if (seo?.description) parts.push(seo.description);
+
+  const blocks = Array.isArray(content?.blocks) ? content.blocks : [];
+  for (const block of blocks) {
+    const data = block?.data ?? {};
+    if (typeof data.text === "string") parts.push(data.text);
+    if (typeof data.caption === "string") parts.push(data.caption);
+    if (Array.isArray(data.items)) {
+      for (const item of data.items) {
+        if (typeof item === "string") parts.push(item);
+        else if (typeof item?.content === "string") parts.push(item.content);
+      }
+    }
+  }
+
+  // Strip HTML tags + collapse whitespace + cap em ~800 chars (suficiente pra match, leve no payload)
+  return parts
+    .join(" ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 800);
+}
 
 export const categoriesRouter = createTRPCRouter({
   create: protectedProcedure.input(createCategorySchema).mutation(async ({ input }) => {
@@ -117,6 +145,100 @@ export const categoriesRouter = createTRPCRouter({
         message: `Falha ao buscar categoria: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
+  }),
+
+  getSearchIndex: baseProcedure.query(async () => {
+    const [categories, posts] = await Promise.all([
+      CategoryModel.aggregate([
+        { $match: { isActive: true } },
+        { $sort: { name: 1 } },
+        {
+          $lookup: {
+            from: "tools",
+            let: { categoryId: "$_id" },
+            pipeline: [
+              { $match: { $expr: { $and: [{ $eq: ["$category", "$$categoryId"] }, { $eq: ["$isActive", true] }] } } },
+              { $sort: { title: 1 } },
+              { $project: { _id: 1, title: 1, link: 1, description: 1, icon: 1, seoKeywords: 1 } },
+            ],
+            as: "tools",
+          },
+        },
+        { $project: { _id: 1, name: 1, slug: 1, icon: 1, color: 1, tools: 1 } },
+      ]),
+      PostModel.find({ status: PostStatus.PUBLISHED, publishedAt: { $lte: new Date() } })
+        .sort({ publishedAt: -1 })
+        .limit(20)
+        .select("_id title slug excerpt content seo")
+        .lean(),
+    ]);
+
+    return {
+      categories: categories.map((category) => ({
+        _id: category._id.toString(),
+        name: category.name,
+        slug: category.slug,
+        icon: category.icon,
+        color: category.color,
+        tools: (category.tools ?? []).map(
+          (tool: { _id: unknown; title: string; link: string; description?: string; icon?: string; seoKeywords?: string }) => ({
+            _id: String(tool._id),
+            title: tool.title,
+            link: tool.link,
+            description: tool.description ?? "",
+            icon: tool.icon ?? "",
+            seoKeywords: tool.seoKeywords ?? "",
+          }),
+        ),
+      })),
+      posts: posts.map((post) => ({
+        _id: post._id.toString(),
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt ?? "",
+        searchText: extractPostSearchText(post.content, post.seo),
+      })),
+    };
+  }),
+
+  getAllForNav: baseProcedure.query(async () => {
+    const categories = await CategoryModel.aggregate([
+      { $match: { isActive: true } },
+      { $sort: { createdAt: 1 } },
+      {
+        $lookup: {
+          from: "tools",
+          let: { categoryId: "$_id" },
+          pipeline: [
+            { $match: { $expr: { $and: [{ $eq: ["$category", "$$categoryId"] }, { $eq: ["$isActive", true] }] } } },
+            { $sort: { title: 1 } },
+            { $limit: 8 },
+            { $project: { _id: 1, title: 1, link: 1, icon: 1, iconColor: 1, bgColor: 1 } },
+          ],
+          as: "tools",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          slug: 1,
+          icon: 1,
+          color: 1,
+          description: 1,
+          tools: 1,
+        },
+      },
+    ]);
+
+    return categories.map((category) => ({
+      ...category,
+      _id: category._id.toString(),
+      tools: (category.tools ?? []).map((tool: { _id: unknown }) => ({
+        ...tool,
+        _id: String(tool._id),
+      })),
+    }));
   }),
 
   getCategoryWithTools: baseProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
