@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "@workspace/ui/components/button";
+import { ArrowLeft } from "lucide-react";
 import { useCreatePost } from "@/modules/dashboard/hooks/use-create-post";
 import { PostForm, type PostFormValues } from "@/modules/dashboard/ui/components/post-form";
+import { DashboardBreadcrumb } from "@/modules/common/ui/components/dashboard-breadcrumb";
 
 export const CreatePostView = () => {
   const router = useRouter();
@@ -21,19 +20,36 @@ export const CreatePostView = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container px-6 py-8 mx-auto max-w-7xl">
-        <div className="mb-8 flex items-start gap-4">
-          <Link href="/dashboard/posts" className="mt-1">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="size-5" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create New Post</h1>
-            <p className="text-muted-foreground mt-1">Write a new blog post</p>
+      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <DashboardBreadcrumb
+          className="mb-6"
+          items={[
+            { label: "Dashboard", href: "/dashboard" },
+            { label: "Posts", href: "/dashboard/posts" },
+            { label: "Novo post" },
+          ]}
+        />
+
+        <header className="flex flex-col gap-4 pb-6 mb-8 border-b sm:flex-row sm:items-end sm:justify-between border-border/50">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/dashboard/posts")}
+              className="flex items-center justify-center transition-all rounded-lg group size-10 hover:bg-muted"
+              aria-label="Voltar"
+              type="button"
+            >
+              <ArrowLeft className="w-5 h-5 transition-colors text-muted-foreground group-hover:text-foreground" />
+            </button>
+            <div className="space-y-1.5">
+              <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-foreground">Novo post</h1>
+              <p className="text-sm text-muted-foreground">
+                Escreva um novo post do blog com conteúdo, SEO e ferramentas relacionadas.
+              </p>
+            </div>
           </div>
-        </div>
-        <PostForm onSubmit={onSubmit} submitLabel="Create Post" disabled={createPost.isPending} />
+        </header>
+
+        <PostForm onSubmit={onSubmit} submitLabel="Criar post" disabled={createPost.isPending} />
       </div>
     </div>
   );

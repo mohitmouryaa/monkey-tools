@@ -11,9 +11,12 @@ export const PostsPagination = () => {
   return (
     <PostsPaginationBar
       disabled={posts.isFetching}
-      totalPages={posts.data.totalPages}
       page={posts.data.page}
+      pageSize={posts.data.pageSize}
+      totalPages={posts.data.totalPages}
+      totalCount={posts.data.totalCount}
       onPageChange={(page) => setParams({ ...params, page })}
+      onPageSizeChange={(pageSize) => setParams({ ...params, page: 1, pageSize })}
     />
   );
 };

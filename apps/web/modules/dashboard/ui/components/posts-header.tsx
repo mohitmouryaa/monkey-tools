@@ -9,9 +9,9 @@ export const PostsHeader = ({ disabled }: { disabled?: boolean }) => {
   return (
     <PostsHeaderBase
       title="Posts"
-      description="Create and manage blog posts"
+      description="Crie e gerencie posts do blog"
       onNew={handleCreate}
-      newButtonLabel="New post"
+      newButtonLabel="Novo post"
       disabled={disabled}
     />
   );

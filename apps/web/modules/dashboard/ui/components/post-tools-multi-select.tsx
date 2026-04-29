@@ -42,7 +42,7 @@ export const PostToolsMultiSelect = ({ value, onChange, disabled }: PostToolsMul
         >
           <div className="flex flex-wrap gap-1">
             {selectedTools.length === 0 ? (
-              <span className="text-muted-foreground">Select tools...</span>
+              <span className="text-muted-foreground">Selecione ferramentas...</span>
             ) : (
               selectedTools.map((t) => (
                 <Badge key={t._id as string} variant="secondary">
@@ -56,9 +56,9 @@ export const PostToolsMultiSelect = ({ value, onChange, disabled }: PostToolsMul
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search tools..." />
+          <CommandInput placeholder="Buscar ferramentas..." />
           <CommandList>
-            <CommandEmpty>No tools found.</CommandEmpty>
+            <CommandEmpty>Nenhuma ferramenta encontrada.</CommandEmpty>
             <CommandGroup>
               {tools.map((tool) => {
                 const id = tool._id as string;

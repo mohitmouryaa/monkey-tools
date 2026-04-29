@@ -5,5 +5,5 @@ import { PostsSearchInput } from "@/modules/dashboard/posts/ui/posts-entity-comp
 
 export const PostsSearch = () => {
   const { searchValue, onSearchChange } = usePostsSearch();
-  return <PostsSearchInput value={searchValue} onChange={onSearchChange} placeholder="Search posts" />;
+  return <PostsSearchInput value={searchValue} onChange={onSearchChange} placeholder="Buscar posts" />;
 };

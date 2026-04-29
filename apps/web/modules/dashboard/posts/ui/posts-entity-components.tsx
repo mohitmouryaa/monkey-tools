@@ -1,7 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { AlertTriangleIcon, Loader2Icon, MoreVerticalIcon, PackageOpenIcon, PlusIcon, SearchIcon, TrashIcon } from "lucide-react";
+import {
+  AlertTriangleIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  Loader2Icon,
+  MoreVerticalIcon,
+  PackageOpenIcon,
+  PlusIcon,
+  SearchIcon,
+  TrashIcon,
+} from "lucide-react";
 
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
@@ -9,6 +21,7 @@ import { Input } from "@workspace/ui/components/input";
 import { Card, CardContent, CardDescription, CardTitle } from "@workspace/ui/components/card";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@workspace/ui/components/empty";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 
 type PostsHeaderProps = {
   title: string;
@@ -47,28 +60,6 @@ export const PostsHeader = (props: PostsHeaderProps) => {
   );
 };
 
-interface PostsContainerProps {
-  header?: React.ReactNode;
-  search?: React.ReactNode;
-  pagination?: React.ReactNode;
-  children: React.ReactNode;
-}
-
-export const PostsContainer = ({ header, search, pagination, children }: PostsContainerProps) => {
-  return (
-    <div className="h-full px-4 py-6 md:px-8 md:py-8">
-      <div className="flex flex-col w-full h-full mx-auto max-w-7xl gap-y-6">
-        {header}
-        <div className="flex flex-col h-full gap-y-4">
-          {search}
-          {children}
-        </div>
-        {pagination}
-      </div>
-    </div>
-  );
-};
-
 interface PostsSearchInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -91,38 +82,158 @@ export const PostsSearchInput = ({ value, onChange, placeholder }: PostsSearchIn
 
 interface PostsPaginationBarProps {
   page: number;
+  pageSize: number;
   totalPages: number;
+  totalCount: number;
   onPageChange: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+  pageSizeOptions?: number[];
   disabled?: boolean;
 }
 
-export const PostsPaginationBar = ({ page, totalPages, onPageChange, disabled }: PostsPaginationBarProps) => {
+const buildPageTokens = (page: number, totalPages: number): Array<number | "ellipsis-start" | "ellipsis-end"> => {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+  const tokens: Array<number | "ellipsis-start" | "ellipsis-end"> = [1];
+  const start = Math.max(2, page - 1);
+  const end = Math.min(totalPages - 1, page + 1);
+  if (start > 2) tokens.push("ellipsis-start");
+  for (let i = start; i <= end; i++) tokens.push(i);
+  if (end < totalPages - 1) tokens.push("ellipsis-end");
+  tokens.push(totalPages);
+  return tokens;
+};
+
+export const PostsPaginationBar = ({
+  page,
+  pageSize,
+  totalPages,
+  totalCount,
+  onPageChange,
+  onPageSizeChange,
+  pageSizeOptions = [10, 20, 50],
+  disabled,
+}: PostsPaginationBarProps) => {
+  if (totalCount === 0) return null;
+
+  const safeTotalPages = Math.max(1, totalPages);
+  const rangeStart = (page - 1) * pageSize + 1;
+  const rangeEnd = Math.min(page * pageSize, totalCount);
+  const tokens = buildPageTokens(page, safeTotalPages);
+  const isFirst = page <= 1;
+  const isLast = page >= safeTotalPages;
+
   return (
-    <div className="flex items-center justify-between w-full gap-x-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        Page {page} of {totalPages || 1}
-      </div>
-      <div className="flex items-center justify-end py-4 space-x-2">
-        <Button
-          disabled={page === 1 || disabled}
-          variant={"outline"}
-          size={"sm"}
-          onClick={() => {
-            onPageChange(Math.max(1, page - 1));
-          }}
-        >
-          Previous
-        </Button>
-        <Button
-          disabled={page === totalPages || totalPages === 0 || disabled}
-          variant={"outline"}
-          size={"sm"}
-          onClick={() => {
-            onPageChange(Math.min(totalPages || 1, page + 1));
-          }}
-        >
-          Next
-        </Button>
+    <div className="flex flex-col items-stretch w-full gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-muted-foreground">
+        Mostrando <span className="font-medium text-foreground">{rangeStart}</span>
+        {rangeEnd > rangeStart && (
+          <>
+            {" "}–{" "}
+            <span className="font-medium text-foreground">{rangeEnd}</span>
+          </>
+        )}{" "}
+        de <span className="font-medium text-foreground">{totalCount}</span>{" "}
+        {totalCount === 1 ? "post" : "posts"}
+      </p>
+
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+        {!!onPageSizeChange && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Itens por página</span>
+            <Select
+              value={String(pageSize)}
+              onValueChange={(value) => onPageSizeChange(Number(value))}
+              disabled={disabled}
+            >
+              <SelectTrigger className="h-8 w-[72px]" size="sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="end">
+                {pageSizeOptions.map((option) => (
+                  <SelectItem key={option} value={String(option)}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        <nav aria-label="Paginação" className="flex items-center gap-1">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-8"
+            disabled={isFirst || disabled}
+            onClick={() => onPageChange(1)}
+            aria-label="Primeira página"
+          >
+            <ChevronsLeftIcon className="size-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-8"
+            disabled={isFirst || disabled}
+            onClick={() => onPageChange(Math.max(1, page - 1))}
+            aria-label="Página anterior"
+          >
+            <ChevronLeftIcon className="size-4" />
+          </Button>
+
+          {tokens.map((token) =>
+            token === "ellipsis-start" || token === "ellipsis-end" ? (
+              <span
+                key={token}
+                aria-hidden
+                className="flex items-center justify-center size-8 text-sm text-muted-foreground"
+              >
+                …
+              </span>
+            ) : (
+              <Button
+                key={token}
+                type="button"
+                variant={token === page ? "default" : "outline"}
+                size="icon"
+                className={cn("size-8 text-sm font-medium", token === page && "pointer-events-none")}
+                disabled={disabled}
+                onClick={() => onPageChange(token)}
+                aria-current={token === page ? "page" : undefined}
+                aria-label={`Página ${token}`}
+              >
+                {token}
+              </Button>
+            ),
+          )}
+
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-8"
+            disabled={isLast || disabled}
+            onClick={() => onPageChange(Math.min(safeTotalPages, page + 1))}
+            aria-label="Próxima página"
+          >
+            <ChevronRightIcon className="size-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className="size-8"
+            disabled={isLast || disabled}
+            onClick={() => onPageChange(safeTotalPages)}
+            aria-label="Última página"
+          >
+            <ChevronsRightIcon className="size-4" />
+          </Button>
+        </nav>
       </div>
     </div>
   );
@@ -167,11 +278,11 @@ export const PostsEmpty = ({ message, onNew }: PostsEmptyProps) => {
           <PackageOpenIcon />
         </EmptyMedia>
       </EmptyHeader>
-      <EmptyTitle>No posts</EmptyTitle>
+      <EmptyTitle>Nenhum post</EmptyTitle>
       {!!message && <EmptyDescription>{message}</EmptyDescription>}
       {!!onNew && (
         <EmptyContent>
-          <Button onClick={onNew}>Add post</Button>
+          <Button onClick={onNew}>Adicionar post</Button>
         </EmptyContent>
       )}
     </Empty>
@@ -255,7 +366,7 @@ export const PostsListItem = (props: PostsListItemProps) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleRemove}>
                       <TrashIcon className="size-4" />
-                      Delete
+                      Excluir
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
