@@ -1,34 +1,46 @@
 import { Suspense } from "react";
+import type { SearchParams } from "nuqs/server";
+import { ErrorBoundary } from "react-error-boundary";
+import { PageType } from "@workspace/types";
 import { HydrateClient } from "@/trpc/server";
 import { requireAuth } from "@/lib/auth-utils";
-import { ErrorBoundary } from "react-error-boundary";
-import { Skeleton } from "@workspace/ui/components/skeleton";
-import { prefetchPages } from "@/modules/common/prefetch";
-import { PagesView } from "@/modules/dashboard/ui/views/pages-view";
+import { prefetchPages, prefetchPagesPaginated } from "@/modules/common/prefetch";
+import { pagesParamsLoader } from "@/modules/dashboard/server/params-loader";
+import { PagesContainer } from "@/modules/dashboard/ui/components/pages-container";
+import { PagesBoard } from "@/modules/dashboard/ui/components/pages-board";
+import { PagesListSkeleton } from "@/modules/dashboard/ui/components/pages-list-skeleton";
 
-const PageSkeleton = () => {
-  return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="space-y-4">
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" />
-      </div>
-    </div>
-  );
+type Props = {
+  searchParams: Promise<SearchParams>;
 };
 
-export default async function PagesPage() {
+export default async function PagesPage({ searchParams }: Props) {
   await requireAuth();
+  const params = await pagesParamsLoader(searchParams);
+
   prefetchPages();
+  prefetchPagesPaginated({
+    page: params.page,
+    pageSize: params.pageSize,
+    search: params.search,
+    pageType: PageType.CUSTOM,
+  });
+
   return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-        <Suspense fallback={<PageSkeleton />}>
-          <main className="flex-1">
-            <PagesView />
-          </main>
-        </Suspense>
-      </ErrorBoundary>
-    </HydrateClient>
+    <PagesContainer>
+      <HydrateClient>
+        <ErrorBoundary
+          fallback={
+            <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
+              Falha ao carregar as páginas.
+            </div>
+          }
+        >
+          <Suspense fallback={<PagesListSkeleton />}>
+            <PagesBoard />
+          </Suspense>
+        </ErrorBoundary>
+      </HydrateClient>
+    </PagesContainer>
   );
 }

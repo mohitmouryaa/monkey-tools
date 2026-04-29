@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PageModel } from "@workspace/database";
 import { PageType } from "@workspace/types";
+import { PAGINATION } from "@/modules/common/constants";
 import { pageOutputDataSchema } from "@/modules/dashboard/schema/page-blocks";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 
@@ -150,6 +151,51 @@ export const pagesRouter = createTRPCRouter({
       _id: page._id.toString(),
     }));
   }),
+
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().default(PAGINATION.DEFAULT_PAGE),
+        pageSize: z.number().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
+        search: z.string().default(""),
+        pageType: z.nativeEnum(PageType).optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { page, pageSize, search, pageType } = input;
+      const trimmedSearch = search.trim();
+
+      const matchStage: Record<string, unknown> = {};
+      if (pageType) matchStage.pageType = pageType;
+      if (trimmedSearch.length > 0) {
+        const searchRegex = new RegExp(trimmedSearch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+        matchStage.$or = [{ title: searchRegex }, { slug: searchRegex }, { seoTitle: searchRegex }];
+      }
+
+      const [items, totalCount] = await Promise.all([
+        PageModel.find(matchStage)
+          .sort({ pageType: 1, footerOrder: 1, createdAt: -1 })
+          .skip((page - 1) * pageSize)
+          .limit(pageSize)
+          .lean(),
+        PageModel.countDocuments(matchStage),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+      return {
+        items: items.map((p) => ({
+          ...p,
+          _id: p._id.toString(),
+        })),
+        page,
+        pageSize,
+        totalCount,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      };
+    }),
 
   getById: protectedProcedure.input(getByIdSchema).query(async ({ input }) => {
     const page = await PageModel.findById(input.id).lean();
