@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import parse from "html-react-parser";
-import { DM_Sans, Fredoka } from "next/font/google";
+import { Inter, Fredoka } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,10 +8,10 @@ import { Providers } from "@/modules/common/ui/components/providers";
 import { connectToDatabase, GlobalScriptModel } from "@workspace/database";
 import "@workspace/ui/globals.css";
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
 });
 
 const fredoka = Fredoka({
@@ -46,7 +46,7 @@ export default async function RootLayout({
           <Fragment key={script._id.toString()}>{parse(script.content)}</Fragment>
         ))}
       </head>
-      <body className={`${dmSans.className} ${fredoka.variable} antialiased `}>
+      <body className={`${inter.className} ${inter.variable} ${fredoka.variable} antialiased `}>
         <Providers>
           {children}
           <Toaster closeButton />
