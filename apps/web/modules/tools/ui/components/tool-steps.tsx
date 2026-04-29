@@ -26,10 +26,10 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
 
   return (
     <div className="relative pt-6">
-      {/* Linha conectora horizontal entre os steps */}
+      {/* Linha conectora passando pelo centro vertical dos círculos (pt-6 = 24px + h-20/2 = 40px → top-16 = 64px) */}
       <div
         aria-hidden
-        className="hidden md:block absolute top-[5.5rem] left-0 right-0 h-px bg-border"
+        className="hidden md:block absolute top-16 left-0 right-0 h-px bg-border"
         style={{
           marginLeft: "calc(50% / 3)",
           marginRight: "calc(50% / 3)",

@@ -166,10 +166,6 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         />
 
         <div className="container mx-auto max-w-4xl px-4 py-8 md:py-12">
-          <div className="mb-8">
-            <AdPlaceholder position="top" />
-          </div>
-
           <div className="space-y-6 md:space-y-8">
             {/* Hero */}
             <ToolHeader
@@ -180,6 +176,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
               bgColor={toolData.bgColor || undefined}
             />
 
+            {/* Ad - Top (logo após hero, antes do tool card) */}
+            <AdPlaceholder position="top" />
+
             {/* Tool card (upload + processamento) */}
             <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
               <Suspense fallback={<ToolLoading />}>
@@ -189,9 +188,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
               </Suspense>
             </section>
 
-            {/* Como Funciona (visual steps) */}
-            <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
-              <h2 className="mb-2 text-xl md:text-2xl font-bold text-foreground">
+            {/* Como Funciona (visual steps) — sem card, deixa os círculos coloridos respirarem */}
+            <section className="px-2 md:px-4 py-4 md:py-6">
+              <h2 className="mb-6 text-center text-xl md:text-2xl font-bold text-foreground">
                 {toolData.stepsTitle || `Como funciona ${toolData.title}`}
               </h2>
               <ToolSteps steps={visualSteps} />
@@ -243,9 +242,9 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
               <FAQSchema faqs={faqs} />
             </section>
 
-            {/* Closing Text */}
-            <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
-              <p className="text-base leading-relaxed text-muted-foreground">{closingText}</p>
+            {/* Closing Text — prosa solta, sem card, para variar ritmo após FAQ */}
+            <section className="px-2 md:px-4 py-2">
+              <p className="text-base leading-relaxed text-muted-foreground max-w-3xl">{closingText}</p>
             </section>
 
             {/* Related Tools */}
