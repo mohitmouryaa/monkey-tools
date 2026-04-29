@@ -8,6 +8,10 @@ export const prefetchTools = (params: Input) => {
   return prefetch(trpc.tools.getMany.queryOptions(params));
 };
 
+export const prefetchToolsStats = () => {
+  return prefetch(trpc.tools.getStats.queryOptions());
+};
+
 export const prefetchTool = (id: string) => {
   return prefetch(trpc.tools.getOne.queryOptions({ id }));
 };
