@@ -1,26 +1,42 @@
+import { Button } from "@workspace/ui/components/button";
+import { Logo } from "./logo";
 import { caller } from "@/trpc/server";
 import Link from "next/link";
-import { FileText } from "lucide-react";
 
 export const Header = async () => {
+  // Fetch categories from backend
   const categories = await caller.categories.getMany({});
 
   return (
-    <header className="border-b border-border/50 sticky top-0 z-50 bg-background/95 backdrop-blur-sm">
-      <div className="container max-w-6xl mx-auto flex items-center justify-between h-16 px-4">
-        <Link href="/" className="flex items-center gap-2 group">
-          <FileText className="h-7 w-7 text-primary" />
-          <span className="text-xl font-bold text-foreground tracking-tight">
-            PDFs<span className="text-primary">.com.br</span>
-          </span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-          {categories.items.slice(0, 5).map((category) => (
-            <Link key={category._id} href={`/ferramentas/${category.slug}`} className="hover:text-foreground transition-colors">
-              {category.name}
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+      <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-8">
+        {/* Logo */}
+        <Logo />
+
+        {/* Category Navigation - Centered */}
+        <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+          {categories.items.map((category) => (
+            <Link key={category._id} href={`/ferramentas/${category.slug}`}>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted">
+                {category.name}
+              </Button>
             </Link>
           ))}
         </nav>
+
+        {/* Action Buttons */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link href="https://designonline.com.br" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-muted">
+              DesignOnline
+            </Button>
+          </Link>
+          <Link href="/ferramentas">
+            <Button size="sm" className="btn-gradient-secondary text-secondary-foreground font-medium">
+              Usar Ferramentas
+            </Button>
+          </Link>
+        </div>
       </div>
     </header>
   );

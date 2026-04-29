@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { Button } from "@workspace/ui/components/button";
 
 interface ToolCardProps {
   name: string;
@@ -23,24 +24,33 @@ const categoryVar: Record<string, string> = {
   converters: "var(--category-converter)",
 };
 
-export const ToolCard = ({ name, description, categorySlug, toolSlug, icon }: ToolCardProps) => {
+export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon }: ToolCardProps) => {
   const categoryColor = `hsl(${categoryVar[categorySlug] ?? "var(--category-pdf)"})`;
 
   return (
-    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="group block">
-      <div className="tool-card bg-card hover:shadow-xl">
-        <div
-          className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-transform duration-200 group-hover:scale-110"
-          style={{ backgroundColor: categoryColor }}
-        >
-          <DynamicIcon
-            name={icon as IconName}
-            className="h-7 w-7 text-primary-foreground"
-            fallback={() => <FileText className="h-7 w-7 text-primary-foreground" />}
-          />
+    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="block group">
+      <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary card-glow h-full flex flex-col">
+        {/* Icon and Category Badge */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+            <DynamicIcon
+              name={icon as IconName}
+              className="w-6 h-6"
+              style={{ color: categoryColor }}
+              fallback={() => <FileText className="w-6 h-6" style={{ color: categoryColor }} />}
+            />
+          </div>
+          <span className="text-xs font-medium tracking-wide uppercase px-3 py-1 rounded-full bg-muted text-muted-foreground">
+            {category}
+          </span>
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-1">{name}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+
+        {/* Content */}
+        <h3 className="mb-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{name}</h3>
+        <p className="mb-5 text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
+
+        {/* Button */}
+        <Button className="w-full rounded-xl btn-gradient-primary text-primary-foreground font-medium">Usar</Button>
       </div>
     </Link>
   );
