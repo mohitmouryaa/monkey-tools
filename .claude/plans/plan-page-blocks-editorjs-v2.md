@@ -163,12 +163,12 @@ Adicionar `export * from "./page-blocks.js";` ao lado dos exports existentes.
 
 ---
 
-### Fase 2 — Schemas Zod no app
+### Fase 2 — Schemas Zod no app ✅
 
 **Objetivo:** validar `data` de cada bloco custom no client (modais RHF) e no servidor (router tRPC).
 **Critério de conclusão:** schemas Zod existem para todos os 5 blocos custom + `raw-html` + união completa, e `pageContentSchema` valida um `OutputData` inteiro (mínimo 1 bloco).
 
-#### 2.1 — Criar `apps/web/modules/dashboard/schema/page-blocks.ts`
+#### 2.1 — Criar `apps/web/modules/dashboard/schema/page-blocks.ts` ✅
 **Arquivo:** `apps/web/modules/dashboard/schema/page-blocks.ts`
 **Depende de:** 1.2
 Espelhar os tipos da Fase 1 com `z.object(...)`. Para blocos nativos do Editor.js (`header`, `paragraph`, etc.), aceitar `data: z.record(z.string(), z.unknown())` (passthrough — Editor.js já valida internamente). Para os 5 customs + `raw-html`, definir shape estrito. Exportar `pageBlockSchema` (union discriminada por `type`) e **dois** schemas de conteúdo:
@@ -176,7 +176,7 @@ Espelhar os tipos da Fase 1 com `z.object(...)`. Para blocos nativos do Editor.j
 - `pageContentSchema` — `z.union([pageOutputDataSchema, z.string().min(1)])` — aceita string legada DURANTE a janela de migração. **Removido na Fase 11.3 quando migração estiver provada.**
 **Feito quando:** schemas exportados, `z.infer<typeof pageOutputDataSchema>` é compatível com `OutputData`, e ambos os schemas usáveis.
 
-#### 2.2 — Estender `apps/web/modules/dashboard/schema/page.tsx`
+#### 2.2 — Estender `apps/web/modules/dashboard/schema/page.tsx` ✅
 **Arquivo:** `apps/web/modules/dashboard/schema/page.tsx`
 **Depende de:** 2.1
 Substituir em `createCustomPageSchema` (linha 60) o campo `content: z.string().min(1, ...)` por `content: pageOutputDataSchema` (formulários novos só aceitam objeto; nada de string em criação). Atualizar `updateCustomPageSchema` herdando — também só aceita objeto. **A pré-condição da Decisão 10 (banner se legado)** garante que update só dispara com objeto.
@@ -184,12 +184,12 @@ Substituir em `createCustomPageSchema` (linha 60) o campo `content: z.string().m
 
 ---
 
-### Fase 3 — Schema Mongoose
+### Fase 3 — Schema Mongoose ✅
 
 **Objetivo:** `Page.content` aceita tanto `OutputData` (novo) quanto `string` (legado, durante migração).
 **Critério de conclusão:** documentos novos salvam `content` como objeto e leitura preserva o shape; documentos antigos com `content` string continuam lendo sem erro.
 
-#### 3.1 — Atualizar `packages/database/src/models/Page.ts`
+#### 3.1 — Atualizar `packages/database/src/models/Page.ts` ✅
 **Arquivo:** `packages/database/src/models/Page.ts`
 **Depende de:** Fase 0 (decisão watcher vs manual)
 Mudar a prop `content` (linhas 73–74) de `@prop() content?: string;` para `@prop({ type: () => Object }) content?: Record<string, any> | string;` seguindo o padrão de `Post.content` linha 44 e `heroSection` linha 39. Manter o nome `content`. **Não importar tipos de `@workspace/types`** aqui — manter `Record<string, any>` para evitar dep cross-package. Adicionar comentário JSDoc:
@@ -201,7 +201,7 @@ Mudar a prop `content` (linhas 73–74) de `@prop() content?: string;` para `@pr
 
 ---
 
-### Fase 4 — Router tRPC
+### Fase 4 — Router tRPC ✅
 
 **Objetivo:** `createCustomPage` e `updateCustomPage` aceitam `content` como `OutputData` (estrito) na criação; `updateCustomPage` também aceita string apenas se vier de uma página legada (rota especial NÃO criada — ver Decisão 10).
 **Critério de conclusão:** mutation com payload `{ content: { blocks: [...] } }` salva e retorna o objeto; mutation com `content: ""` ou `content: "<p>..."` (string em update normal) retorna erro Zod claro.
@@ -214,34 +214,35 @@ Importar `pageOutputDataSchema` de `@/modules/dashboard/schema/page-blocks`. Sub
 
 ---
 
-### Fase 5 — Componentes renderer SSR para blocos custom
+### Fase 5 — Componentes renderer SSR para blocos custom ✅
 
 **Objetivo:** ter um componente React server-side por tipo de bloco rico, prontos para o registry.
 **Critério de conclusão:** `import { HeroBlock } from "@/modules/pages/ui/components/blocks/hero-block"` etc. funciona, cada componente recebe `data: <DataShape>` e renderiza HTML estilizado. **Smoke test:** uma rota dev `/test-blocks` que renderiza um sample de cada bloco com dados mock passa sem erro de console no navegador.
 
-> ⚠️ Esta fase tem múltiplos componentes (5+1) com decisões visuais localizadas (paddings, raios, cores de gradiente, hover states, escolha de ícone default por card vazio, layout de FAQ). Execute `/explode-phase 5` antes.
+> Explodida em `.claude/plans/plan-page-blocks-editorjs-v2/fase-5-index.md` (7 micro-tarefas, 14 decisões P1–P14 = todas default A).
 
-- [ ] 5.1 — `apps/web/modules/pages/ui/components/blocks/hero-block.tsx`. Reusa visual de `apps/web/modules/hero/ui/components/new-hero-section.tsx` (badge + heading + descrição + 2 CTAs). Server component.
-- [ ] 5.2 — `apps/web/modules/pages/ui/components/blocks/steps-block.tsx`. Reusa visual de `apps/web/modules/hero/ui/components/how-it-works.tsx`. Server component, ícones via `DynamicIcon` lucide.
-- [ ] 5.3 — `apps/web/modules/pages/ui/components/blocks/cards-block.tsx`. Grid responsivo de cards (título + descrição + ícone opcional + link opcional).
-- [ ] 5.4 — `apps/web/modules/pages/ui/components/blocks/faq-block.tsx`. Acordeão usando `@workspace/ui/components/accordion` (confirmado existente).
-- [ ] 5.5 — `apps/web/modules/pages/ui/components/blocks/cta-block.tsx`. Block destacado (gradiente primary) com heading + descrição + CTA. Reusa visual do CTA final em `post-view.tsx` linhas 218–243.
-- [ ] 5.6 — `apps/web/modules/pages/ui/components/blocks/raw-html-block.tsx`. Render `dangerouslySetInnerHTML` em wrapper com **classes arbitrárias Tailwind** (espelhando `post-content-renderer.tsx` linhas 23–32). Recebe `data: { html: string }`. **Sem `prose`.**
+- [x] 5.1 — `apps/web/modules/pages/ui/components/blocks/hero-block.tsx`. Reusa visual de `apps/web/modules/hero/ui/components/new-hero-section.tsx` (badge + heading + descrição + 2 CTAs). Server component.
+- [x] 5.2 — `apps/web/modules/pages/ui/components/blocks/steps-block.tsx`. Reusa visual de `apps/web/modules/hero/ui/components/how-it-works.tsx`. Server component, ícones via `DynamicIcon` lucide.
+- [x] 5.3 — `apps/web/modules/pages/ui/components/blocks/cards-block.tsx`. Grid responsivo de cards (título + descrição + ícone opcional + link opcional).
+- [x] 5.4 — `apps/web/modules/pages/ui/components/blocks/faq-block.tsx`. Acordeão usando `@workspace/ui/components/accordion` (confirmado existente).
+- [x] 5.5 — `apps/web/modules/pages/ui/components/blocks/cta-block.tsx`. Block destacado (gradiente primary) com heading + descrição + CTA. Reusa visual do CTA final em `post-view.tsx` linhas 218–243.
+- [x] 5.6 — `apps/web/modules/pages/ui/components/blocks/raw-html-block.tsx`. Render `dangerouslySetInnerHTML` em wrapper com **classes arbitrárias Tailwind** (espelhando `post-content-renderer.tsx` linhas 23–32). Recebe `data: { html: string }`. **Sem `prose`.**
+- [x] 5.7 — `apps/web/app/test-blocks/page.tsx` (smoke test descartável; deletar pós-validação).
 
 ---
 
-### Fase 6 — Renderer registry e integração na rota
+### Fase 6 — Renderer registry e integração na rota ✅
 
 **Objetivo:** rota pública `/[slug]` usa o renderer novo para `OutputData` e mantém fallback HTML para legado. Cobre o caso `content === undefined` antes do branching.
 **Critério de conclusão:** página com `content: OutputData` renderiza blocos; página com `content: "<p>...</p>"` (string) ainda renderiza com classes arbitrárias; página com `content: undefined`/`null` retorna `notFound()`. **Smoke test:** as 6 páginas institucionais renderizam visualmente sem regressão na home/footer/links.
 
-#### 6.1 — Criar `page-content-renderer.tsx`
+#### 6.1 — Criar `page-content-renderer.tsx` ✅
 **Arquivo:** `apps/web/modules/pages/ui/components/page-content-renderer.tsx`
 **Depende de:** Fase 5
 Espelhar `post-content-renderer.tsx`: switch por `block.type` mapeando para os componentes da Fase 5 + os blocos do blog (header, paragraph, list, quote, image, table, checklist, embed). **Reusar diretamente os componentes em `apps/web/modules/blog/ui/components/blocks/`** (paragraph, header, etc.) — eles são server components puros. Adicionar `case "raw-html"` e os 5 customs. Default `null`.
 **Feito quando:** componente compila e renderiza um sample `OutputData` mock.
 
-#### 6.2 — Atualizar `apps/web/app/(main)/[slug]/page.tsx`
+#### 6.2 — Atualizar `apps/web/app/(main)/[slug]/page.tsx` ✅
 **Arquivo:** `apps/web/app/(main)/[slug]/page.tsx`
 **Depende de:** 6.1
 Substituir o `dangerouslySetInnerHTML` (linhas 55–59) por:
@@ -253,48 +254,48 @@ Manter `<h1>{page.title}</h1>` acima do conteúdo.
 
 ---
 
-### Fase 7 — Plugins Editor.js custom
+### Fase 7 — Plugins Editor.js custom ✅
 
 **Objetivo:** ter classes vanilla TS para `hero`, `steps`, `cards`, `faq`, `cta`, `raw-html` plugáveis no `EditorJsWrapper`. Cada uma desenha preview compacto + botão "Editar" no editor. **Padrão de bridge: callback `openEditor` no `config`** — provado na Fase 0.7.
 **Critério de conclusão:** plugins instaláveis no Editor.js sem warning, `save()` retorna `data` consistente, `validate()` rejeita estados vazios obrigatórios.
 
-> ⚠️ Esta fase tem decisões de UI do preview (quanto mostrar), padrão de estado entre plugin e modal, layout da textarea do `raw-html`, e default values de cada bloco. Execute `/explode-phase 7` antes.
+> Decisões aplicadas no explode (todas defaults A, exceto P5=B): preview = label do bloco + 1ª linha do conteúdo (count para listas) + botão "Editar" à direita; estado plugin↔modal via `this.data = next` no callback do `openEditor`, `save()` retorna `this.data` (sem ler DOM); `validate()` permissivo (Zod no router é o gate); `raw-html` também via modal (consistência); sem helper compartilhado (alinha com `tool-embed-block.tsx`); shims `.d.ts` no-op (plugins são `.ts` próprios sem libs externas); defaults vazios (`heading: ""`, `steps: []`, etc.); ícone SVG específico por bloco.
 
-- [ ] 7.1 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/hero.plugin.ts`
-- [ ] 7.2 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/steps.plugin.ts`
-- [ ] 7.3 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/cards.plugin.ts`
-- [ ] 7.4 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/faq.plugin.ts`
-- [ ] 7.5 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/cta.plugin.ts`
-- [ ] 7.6 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/raw-html.plugin.ts` (textarea simples no editor; **não exposto na toolbox por padrão** — ver Fase 8.2).
-- [ ] 7.7 — Atualizar `apps/web/modules/dashboard/ui/components/editor-js/editor-js-plugins.d.ts` com shims se algum plugin custom precisar.
+- [x] 7.1 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/hero.plugin.ts`
+- [x] 7.2 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/steps.plugin.ts`
+- [x] 7.3 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/cards.plugin.ts`
+- [x] 7.4 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/faq.plugin.ts`
+- [x] 7.5 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/cta.plugin.ts`
+- [x] 7.6 — `apps/web/modules/dashboard/ui/components/editorjs-plugins/raw-html.plugin.ts` (modal igual aos outros; toolbox visível — toggle "não-exposto por padrão" fica em Fase 8.2 ao registrar no `EditorJSField`).
+- [x] 7.7 — `editor-js-plugins.d.ts` verificado: nenhum shim novo necessário (plugins são `.ts` próprios, sem dependências externas sem types).
 
 ---
 
-### Fase 8 — Componente `<EditorJSField>` reutilizável
+### Fase 8 — Componente `<EditorJSField>` reutilizável ✅
 
 **Objetivo:** wrapper React que monta o Editor.js com tools nativas + plugins custom + bridge de modais. Substitui `<RichTextEditor>` no form de Page sem regredir UX.
 **Critério de conclusão:** `<EditorJSField value onChange />` aceita `OutputData`, abre modais ao clicar em "Editar" nos blocos custom, persiste mudanças no form via `field.onChange`.
 
 > ⚠️ Esta fase decide o padrão de bridge concreto (callback no `config` + modal montado no field), gerencia estado de "qual bloco está sendo editado", e integra com `usePostFileUpload` para o bloco `image` nativo. Execute `/explode-phase 8` antes.
 
-- [ ] 8.1 — `apps/web/modules/dashboard/ui/components/editor-js-field/index.tsx` — wrapper React, bridge de modal, registry de plugins.
-- [ ] 8.2 — Configurar plugin `raw-html` como **escondido da toolbox** (existe no `tools` do Editor.js mas com `inlineToolbar: false` e sem `toolbox` visível) — só renderiza se já estiver no `data`.
-- [ ] 8.3 — Modais RHF + Zod resolver — um `<Dialog>` por tipo, ou um único `<Dialog>` que muda o conteúdo conforme `editingBlock.type`. Decisão de explosão.
+- [x] 8.1 — `apps/web/modules/dashboard/ui/components/editor-js-field/index.tsx` — wrapper React, bridge de modal, registry de plugins.
+- [x] 8.2 — Plugin `raw-html` registrado na toolbox como os demais customs (decisão P3=A na explosão — divergência intencional da Decisão 7 original do plano; criação manual permitida e documentada inline).
+- [x] 8.3 — Modais RHF + Zod resolver: 6 `<Dialog>` separados (1 por tipo) controlados por dispatcher `BlockEditDialog`. Decisão P1=B na explosão.
 
 ---
 
-### Fase 9 — Atualizar forms de Page
+### Fase 9 — Atualizar forms de Page ✅
 
 **Objetivo:** `create-custom-page-form.tsx`, `edit-custom-page-form.tsx`, `custom-page-form.tsx` usam `<EditorJSField>` em vez de `<RichTextEditor>`. `defaultValues.content` muda de `""` para `{ blocks: [] }`. **Form de edit detecta string legada e bloqueia com banner (Decisão 10).**
 **Critério de conclusão:** criar página custom funciona end-to-end; editar página JÁ MIGRADA funciona end-to-end; abrir página NÃO migrada mostra banner pedindo `pnpm --filter web migrate:pages`.
 
-#### 9.1 — Atualizar `create-custom-page-form.tsx`
+#### 9.1 — Atualizar `create-custom-page-form.tsx` ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/components/create-custom-page-form.tsx`
 **Depende de:** Fase 8, 2.2
 Trocar import de `RichTextEditor` por `EditorJSField` (via `next/dynamic({ ssr: false })`, ver `post-form.tsx` linha 24 como modelo). Mudar `defaultValues.content` de `""` para `{ blocks: [] }`. Substituir o `<RichTextEditor value={field.value} onChange={field.onChange} />` (linha 108) pelo novo componente.
 **Feito quando:** form abre, edita, e cria página com sucesso.
 
-#### 9.2 — Atualizar `edit-custom-page-form.tsx`
+#### 9.2 — Atualizar `edit-custom-page-form.tsx` ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/components/edit-custom-page-form.tsx`
 **Depende de:** Fase 8, 2.2, Decisão 10
 Mesma troca da 9.1, mas com guarda no topo do componente:
@@ -306,11 +307,12 @@ if (typeof defaultValues.content === "string") {
 `LegacyMigrationBanner` é um componente local (criado nesta sub-task) que mostra alerta com instrução clara ("Esta página tem conteúdo em formato legado. Rode `pnpm --filter web migrate:pages` antes de editar.") + botão "Atualizar a página" que faz `router.refresh()`.
 **Feito quando:** form abre página migrada e salva mudanças OK; form abre página não-migrada e mostra banner sem disparar fetch ao Editor.js.
 
-#### 9.3 — Atualizar `custom-page-form.tsx`
+#### 9.3 — Atualizar `custom-page-form.tsx` ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/components/custom-page-form.tsx`
 **Depende de:** Fase 8, 2.2
 Mesma troca da 9.1. Esse form é o "polimorfo" usado por outras telas — confirmar quais (`rg "<CustomPageForm" apps/web`) e se requerem ajuste. Quando em modo `edit`, aplicar guarda da Decisão 10 (igual a 9.2).
 **Feito quando:** typecheck e fluxo end-to-end passam para os dois modos (`create` e `edit`).
+**Resultado:** `<CustomPageForm>` polimorfo sem consumidor atual (`rg "<CustomPageForm" apps/web` retorna 0 hits — apenas `<CreateCustomPageForm>`/`<EditCustomPageForm>` em uso). Mantido como infraestrutura pronta com guarda de legado igual a 9.2. Nenhuma tela precisou ser ajustada.
 
 ---
 
