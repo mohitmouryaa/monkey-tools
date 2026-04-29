@@ -8,13 +8,15 @@ export const PagesHeader = () => {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold">Pages</h1>
-        <p className="text-muted-foreground mt-2">Manage your website pages (Homepage, All Tools, and custom pages)</p>
+        <h1 className="text-3xl font-bold">Páginas</h1>
+        <p className="text-muted-foreground mt-2">
+          Gerencie as páginas do seu site (Início, Todas as Ferramentas e páginas personalizadas)
+        </p>
       </div>
       <Link href="/dashboard/pages/custom/create">
         <Button>
           <Plus className="w-4 h-4 mr-2" />
-          Create Custom Page
+          Criar Página Personalizada
         </Button>
       </Link>
     </div>

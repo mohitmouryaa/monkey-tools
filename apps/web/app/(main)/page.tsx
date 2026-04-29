@@ -27,10 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     // Fallback metadata if page not found
     return {
-      title: "Monkey Tools - Free Online Tools for Everyone",
+      title: "pdfs.com.br - Ferramentas Online Grátis para Todos",
       description:
-        "We offer PDF, text, image and other online tools to make your life easier. Fast, secure, no sign-up required. Convert, compress, merge files in seconds.",
-      keywords: "online tools, free tools, pdf tools, image tools, text tools, converter, compressor",
+        "Oferecemos ferramentas online de PDF, texto, imagem e muito mais para facilitar sua vida. Rápido, seguro e sem cadastro. Converta, comprima e mescle arquivos em segundos.",
+      keywords:
+        "ferramentas online, ferramentas grátis, ferramentas pdf, ferramentas de imagem, ferramentas de texto, conversor, compressor",
     };
   }
 }
@@ -77,7 +78,7 @@ export default async function Home() {
   );
 
   return (
-    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+    <ErrorBoundary fallback={<div>Algo deu errado.</div>}>
       <NewHeroSection heroSection={homepage.heroSection} />
       <NewToolsGrid toolsByCategory={toolsByCategory} />
       <HowItWorks howItWorksSection={homepage.howItWorksSection} />

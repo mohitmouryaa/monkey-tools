@@ -20,12 +20,12 @@ export const CreateCategoryView = () => {
   return (
     <div className="w-full p-4 space-y-8 md:p-8">
       <div className="space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">Create New Category</h2>
-        <p className="text-muted-foreground">Add a new category to organize your tools.</p>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">Criar Nova Categoria</h2>
+        <p className="text-muted-foreground">Adicione uma nova categoria para organizar suas ferramentas.</p>
       </div>
 
       <div className="w-full">
-        <CategoryForm onSubmit={onSubmit} submitLabel="Create Category" disabled={createCategoryMutation.isPending} />
+        <CategoryForm onSubmit={onSubmit} submitLabel="Criar Categoria" disabled={createCategoryMutation.isPending} />
       </div>
     </div>
   );

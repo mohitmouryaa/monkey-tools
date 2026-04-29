@@ -9,8 +9,8 @@ export const ToolLoading = () => {
 
       {/* Loading Text */}
       <div className="space-y-2 text-center">
-        <h3 className="text-lg font-semibold text-foreground">Loading Tool</h3>
-        <p className="text-sm text-muted-foreground">Please wait while we prepare your tool...</p>
+        <h3 className="text-lg font-semibold text-foreground">Carregando ferramenta</h3>
+        <p className="text-sm text-muted-foreground">Aguarde enquanto preparamos sua ferramenta...</p>
       </div>
 
       {/* Skeleton Cards */}

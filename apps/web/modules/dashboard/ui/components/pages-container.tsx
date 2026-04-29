@@ -30,7 +30,7 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
   const customPages = pages.filter((p) => p.pageType === PageType.CUSTOM);
 
   const handleDelete = (pageId: string, pageTitle: string) => {
-    if (confirm(`Are you sure you want to delete "${pageTitle}"?`)) {
+    if (confirm(`Tem certeza que deseja excluir "${pageTitle}"?`)) {
       deleteCustomPage.mutate({ id: pageId });
     }
   };
@@ -46,8 +46,8 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
   };
 
   const getPageDisplayName = (page: Page) => {
-    if (page.pageType === PageType.HOMEPAGE) return "Homepage";
-    if (page.pageType === PageType.ALL_TOOLS) return "All Tools";
+    if (page.pageType === PageType.HOMEPAGE) return "Página Inicial";
+    if (page.pageType === PageType.ALL_TOOLS) return "Todas as Ferramentas";
     return page.title || page.seoTitle;
   };
 
@@ -55,7 +55,7 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
     <div className="space-y-6">
       {/* Fixed Pages */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Fixed Pages</h3>
+        <h3 className="text-lg font-semibold mb-4">Páginas Fixas</h3>
         <div className="grid gap-4 md:grid-cols-2">
           {fixedPages.map((page) => (
             <Card key={page._id}>
@@ -65,14 +65,14 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
                     <CardTitle>{getPageDisplayName(page)}</CardTitle>
                     <CardDescription className="mt-1">/{page.slug}</CardDescription>
                   </div>
-                  <Badge variant={page.isActive ? "default" : "secondary"}>{page.isActive ? "Active" : "Inactive"}</Badge>
+                  <Badge variant={page.isActive ? "default" : "secondary"}>{page.isActive ? "Ativo" : "Inativo"}</Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <Link href={getPageEditLink(page)}>
                   <Button variant="outline" size="sm" className="w-full">
                     <Pencil className="w-4 h-4 mr-2" />
-                    Edit
+                    Editar
                   </Button>
                 </Link>
               </CardContent>
@@ -83,11 +83,11 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
 
       {/* Custom Pages */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Custom Pages</h3>
+        <h3 className="text-lg font-semibold mb-4">Páginas Personalizadas</h3>
         {customPages.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
-              No custom pages yet. Create your first custom page!
+              Nenhuma página personalizada ainda. Crie sua primeira página!
             </CardContent>
           </Card>
         ) : (
@@ -100,11 +100,11 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
                       <CardTitle className="text-base">{getPageDisplayName(page)}</CardTitle>
                       <CardDescription className="mt-1">/{page.slug}</CardDescription>
                     </div>
-                    <Badge variant={page.isActive ? "default" : "secondary"}>{page.isActive ? "Active" : "Inactive"}</Badge>
+                    <Badge variant={page.isActive ? "default" : "secondary"}>{page.isActive ? "Ativo" : "Inativo"}</Badge>
                   </div>
                   {page.showInFooter && (
                     <Badge variant="outline" className="w-fit mt-2">
-                      In Footer (Order: {page.footerOrder})
+                      No Rodapé (Ordem: {page.footerOrder})
                     </Badge>
                   )}
                 </CardHeader>
@@ -113,7 +113,7 @@ export const PagesContainer = ({ pages }: PagesContainerProps) => {
                     <Link href={getPageEditLink(page)} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <Pencil className="w-4 h-4 mr-2" />
-                        Edit
+                        Editar
                       </Button>
                     </Link>
                     <Button

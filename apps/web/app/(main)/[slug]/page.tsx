@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: CustomPageProps): Promise<Met
     };
   } catch {
     return {
-      title: "Page Not Found",
-      description: "The requested page could not be found",
+      title: "Página Não Encontrada",
+      description: "A página solicitada não foi encontrada",
     };
   }
 }

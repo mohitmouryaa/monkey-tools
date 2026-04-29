@@ -9,10 +9,9 @@ export const Footer = async () => {
 
   // Platform links (static)
   const platformLinks = [
-    { name: "FerramentasGratuitas", href: "/" },
-    { name: "AprendaComo", href: "#" },
-    { name: "DesignOnline", href: "https://designonline.com", external: true },
-    { name: "ArquivosOnline", href: "#" },
+    { name: "Ferramentas Gratuitas", href: "/" },
+    { name: "Todas as Ferramentas", href: "/ferramentas" },
+    { name: "DesignOnline", href: "https://designonline.com.br", external: true },
   ];
 
   return (
@@ -54,7 +53,7 @@ export const Footer = async () => {
               {categories.items.slice(0, 4).map((category) => (
                 <li key={category._id}>
                   <Link
-                    href={`/tools/${category.slug}`}
+                    href={`/ferramentas/${category.slug}`}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {category.name}
@@ -81,7 +80,7 @@ export const Footer = async () => {
 
         {/* Copyright Section */}
         <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 max-w-6xl mx-auto">
-          <p className="text-sm text-muted-foreground">© 2026 Monkey.com.br. Todos os direitos reservados.</p>
+          <p className="text-sm text-muted-foreground">© 2026 pdfs.com.br. Todos os direitos reservados.</p>
           <p className="text-sm text-muted-foreground">
             Parte da plataforma{" "}
             <Link

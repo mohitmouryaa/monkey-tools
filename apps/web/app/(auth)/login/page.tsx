@@ -3,8 +3,8 @@ import { LoginView } from "@/modules/auth/ui/views/login-view";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin Login - Monkey Tools",
-  description: "Secure login for Monkey Tools administrators.",
+  title: "Login Admin - pdfs.com.br",
+  description: "Login seguro para administradores do pdfs.com.br.",
 };
 
 export default async function Page() {

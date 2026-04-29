@@ -9,12 +9,12 @@ export const useUpdateTool = () => {
   return useMutation(
     trpc.tools.update.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Tool "${data.title}" updated`);
+        toast.success(`Ferramenta "${data.title}" atualizada`);
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
         queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data._id }));
       },
       onError: (error) => {
-        toast.error(`Failed to update tool: ${error.message}`);
+        toast.error(`Falha ao atualizar ferramenta: ${error.message}`);
       },
     }),
   );

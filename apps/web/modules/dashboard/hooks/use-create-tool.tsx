@@ -9,11 +9,11 @@ export const useCreateTool = () => {
   return useMutation(
     trpc.tools.create.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Tool "${data.title}" created`);
+        toast.success(`Ferramenta "${data.title}" criada`);
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
       },
       onError: (error) => {
-        toast.error(`Failed to create tool: ${error.message}`);
+        toast.error(`Falha ao criar ferramenta: ${error.message}`);
       },
     }),
   );

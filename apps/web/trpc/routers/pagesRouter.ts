@@ -57,7 +57,7 @@ const createCustomPageSchema = z.object({
   slug: z
     .string()
     .min(1)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers, and hyphens only"),
+    .regex(/^[a-z0-9-]+$/, "O slug deve conter apenas letras minúsculas, números e hífens"),
   seoTitle: z.string().min(1),
   seoDescription: z.string().min(1),
   seoKeywords: z.string(),
@@ -84,7 +84,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
@@ -100,7 +100,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Homepage not found",
+        message: "Página inicial não encontrada",
       });
     }
 
@@ -116,7 +116,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "All Tools page not found",
+        message: "Página Todas as Ferramentas não encontrada",
       });
     }
 
@@ -156,7 +156,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
@@ -183,7 +183,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to update homepage",
+        message: "Falha ao atualizar página inicial",
       });
     }
 
@@ -210,7 +210,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to update all tools page",
+        message: "Falha ao atualizar página de ferramentas",
       });
     }
 
@@ -226,7 +226,7 @@ export const pagesRouter = createTRPCRouter({
     if (existingPage) {
       throw new TRPCError({
         code: "CONFLICT",
-        message: "A page with this slug already exists",
+        message: "Uma página com este slug já existe",
       });
     }
 
@@ -257,14 +257,14 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
     if (page.pageType !== PageType.CUSTOM) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot update non-custom pages with this method",
+        message: "Não é possível atualizar páginas não personalizadas com este método",
       });
     }
 
@@ -274,7 +274,7 @@ export const pagesRouter = createTRPCRouter({
       if (existingPage) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "A page with this slug already exists",
+          message: "Uma página com este slug já existe",
         });
       }
     }
@@ -305,14 +305,14 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
     if (page.pageType !== PageType.CUSTOM) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot delete fixed pages (Homepage, All Tools)",
+        message: "Não é possível excluir páginas fixas (Página Inicial, Todas as Ferramentas)",
       });
     }
 
@@ -320,7 +320,7 @@ export const pagesRouter = createTRPCRouter({
 
     return {
       success: true,
-      message: "Custom page deleted successfully",
+      message: "Página personalizada excluída com sucesso",
     };
   }),
 });

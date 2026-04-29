@@ -21,7 +21,7 @@ export function EditScriptView({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <EntityHeader title="Edit Script" description="Update script details" />
+      <EntityHeader title="Editar Script" description="Atualize os detalhes do script" />
       <div className="mx-auto w-full max-w-2xl">
         <ScriptForm initialData={data} isEditing />
       </div>

@@ -2,17 +2,17 @@ import z from "zod";
 
 export const createToolSchema = z.object({
   title: z.string().min(2, {
-    message: "Tool name must be at least 2 characters.",
+    message: "O nome da ferramenta deve ter pelo menos 2 caracteres.",
   }),
   link: z.string().min(1, {
-    message: "Tool URL is required.",
+    message: "A URL da ferramenta é obrigatória.",
   }),
   componentName: z.string().min(2, {
-    message: "Component name must be at least 2 characters.",
+    message: "O nome do componente deve ter pelo menos 2 caracteres.",
   }),
   description: z.string(),
   categoryId: z.string().min(1, {
-    message: "Category is required.",
+    message: "A categoria é obrigatória.",
   }),
   icon: z.string(),
   iconColor: z.string(),
@@ -46,4 +46,5 @@ export const createToolSchema = z.object({
     .optional(),
   closingText: z.string().optional(),
   isActive: z.boolean(),
+  featuredPostId: z.string().nullable().optional(),
 });

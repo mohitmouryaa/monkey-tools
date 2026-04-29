@@ -1,16 +1,80 @@
 services:
+  mongodb:
+    image: mongo:7
+    container_name: pdfs-com-br-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    healthcheck:
+      test: >
+        mongosh --quiet --eval "
+        try { rs.status().ok } catch(e) { rs.initiate({_id:'rs0', members:[{_id:0, host:'localhost:27017'}]}).ok }
+        "
+      interval: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: pdfs-com-br-redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-data:/data
+
+  minio:
+    image: minio/minio
+    container_name: pdfs-com-br-minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+
+  minio-init:
+    image: minio/mc
+    container_name: pdfs-com-br-minio-init
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 3;
+      mc alias set local http://minio:9000 minioadmin minioadmin;
+      mc mb local/pdfs-com-br --ignore-existing;
+      mc anonymous set public local/pdfs-com-br;
+      exit 0;
+      "
+
   worker:
     build:
       context: .
       dockerfile: apps/worker/Dockerfile
-    container_name: monkey-tools-worker
+    container_name: pdfs-com-br-worker
     restart: always
+    depends_on:
+      - mongodb
+      - redis
+      - minio
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
-      - DO_SPACES_ENDPOINT=${DO_SPACES_ENDPOINT}
-      - DO_SPACES_ACCESS_KEY=${DO_SPACES_ACCESS_KEY}
-      - DO_SPACES_SECRET_KEY=${DO_SPACES_SECRET_KEY}
-      - DO_SPACES_BUCKET=${DO_SPACES_BUCKET}
-      - DO_SPACES_REGION=${DO_SPACES_REGION}
+      - DATABASE_URL=mongodb://mongodb:27017/pdfs-com-br?replicaSet=rs0
+      - REDIS_URL=redis://redis:6379
+      - DO_SPACES_ENDPOINT=http://minio:9000
+      - DO_SPACES_ACCESS_KEY=minioadmin
+      - DO_SPACES_SECRET_KEY=minioadmin
+      - DO_SPACES_BUCKET=pdfs-com-br
+      - DO_SPACES_REGION=us-east-1
+
+volumes:
+  mongo-data:
+  redis-data:
+  minio-data:

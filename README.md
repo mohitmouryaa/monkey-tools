@@ -1,10 +1,10 @@
-# Monkey Tools 🛠️
+# pdfs.com.br 🛠️
 
 A comprehensive, industry-standard suite of online file manipulation tools built with **Next.js**, **TurboRepo**, and a microservices-inspired architecture. This monorepo hosts a high-performance web application and a dedicated background worker for heavy processing tasks like PDF conversion.
 
 ## 🚀 Features
 
-Monkey Tools provides a wide array of client-side and server-side utilities:
+pdfs.com.br provides a wide array of client-side and server-side utilities:
 
 ### 📄 PDF Tools
 - **Convert to Word/Excel**: High-fidelity PDF to DOCX/XLSX conversion (Server-side powered by LibreOffice & Ghostscript).
@@ -30,7 +30,7 @@ Monkey Tools provides a wide array of client-side and server-side utilities:
 This project is a **Monorepo** managed by [TurboRepo](https://turbo.build/) and [pnpm](https://pnpm.io/), ensuring fast builds and shared type safety.
 
 ```
-monkey-tools/
+pdfs-com-br/
 ├── apps/
 │   ├── web/          # Next.js 15+ App Router (Frontend)
 │   └── worker/       # Node.js Background Worker (Heavy Processing)
@@ -67,8 +67,8 @@ monkey-tools/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/monkey-tools.git
-cd monkey-tools
+git clone https://github.com/your-username/pdfs-com-br.git
+cd pdfs-com-br
 ```
 
 ### 2. Install dependencies
@@ -77,20 +77,16 @@ pnpm install
 ```
 
 ### 3. Environment Setup
-Create a `.env` file in `apps/web` and `apps/worker` (or use a root `.env` if configured). You will need:
+Copie o `.env.example` da raiz do monorepo para `.env`:
 
-```env
-# Database & Queue
-DATABASE_URL="mongodb+srv://..."
-REDIS_URL="redis://localhost:6379"
-
-# Object Storage (Digital Ocean Spaces / S3)
-DO_SPACES_ENDPOINT="https://nyc3.digitaloceanspaces.com"
-DO_SPACES_REGION="nyc3"
-DO_SPACES_BUCKET="your-bucket"
-DO_SPACES_ACCESS_KEY="your-key"
-DO_SPACES_SECRET_KEY="your-secret"
+```bash
+cp .env.example .env
 ```
+
+Os defaults já apontam para o stack do `docker-compose.yml` (MongoDB
+replica set `rs0`, Redis e MinIO em `localhost`). Para produção,
+substitua as credenciais de `DO_SPACES_*` pelas do DigitalOcean Spaces
+(ou outro S3) e ajuste `DATABASE_URL`/`REDIS_URL` para os hosts reais.
 
 ### 4. Start Infrastructure
 Start Redis (and the Worker if you don't want to run it natively) using Docker:

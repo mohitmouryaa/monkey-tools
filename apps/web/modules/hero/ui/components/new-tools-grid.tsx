@@ -40,11 +40,11 @@ export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
   );
 
   return (
-    <section className="py-12 bg-background" id="tools">
+    <section className="py-12 bg-background" id="ferramentas">
       <div className="container px-4 mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-foreground">Ferramentas mais usadas</h2>
-          <Link href="/tools">
+          <Link href="/ferramentas">
             <Button variant="ghost" className="text-primary hover:text-primary/80 hover:bg-muted">
               Ver todas as ferramentas
             </Button>

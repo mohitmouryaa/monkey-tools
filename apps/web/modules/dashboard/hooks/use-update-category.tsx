@@ -9,12 +9,12 @@ export const useUpdateCategory = () => {
   return useMutation(
     trpc.categories.update.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Category "${data.category.name}" updated`);
+        toast.success(`Categoria "${data.category.name}" atualizada`);
         queryClient.invalidateQueries(trpc.categories.getMany.queryOptions({}));
         queryClient.invalidateQueries(trpc.categories.getOne.queryOptions({ id: data.category._id }));
       },
       onError: (error) => {
-        toast.error(`Failed to update category: ${error.message}`);
+        toast.error(`Falha ao atualizar categoria: ${error.message}`);
       },
     }),
   );

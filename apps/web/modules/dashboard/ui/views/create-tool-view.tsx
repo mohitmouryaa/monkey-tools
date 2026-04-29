@@ -34,9 +34,11 @@ export const CreateToolView = () => {
 
               <div className="space-y-4">
                 <div>
-                  <h1 className="text-4xl font-bold tracking-tight text-foreground">Create New Tool</h1>
+                  <h1 className="text-4xl font-bold tracking-tight text-foreground">Criar Nova Ferramenta</h1>
                   <div className="flex items-center gap-3 mt-2">
-                    <span className="text-sm text-muted-foreground">Add a new tool to the platform with SEO configurations</span>
+                    <span className="text-sm text-muted-foreground">
+                      Adicione uma nova ferramenta à plataforma com configurações de SEO
+                    </span>
                   </div>
                 </div>
               </div>
@@ -44,7 +46,7 @@ export const CreateToolView = () => {
           </div>
         </div>
 
-        <ToolForm onSubmit={onSubmit} submitLabel="Create Tool" disabled={createToolMutation.isPending} />
+        <ToolForm onSubmit={onSubmit} submitLabel="Criar Ferramenta" disabled={createToolMutation.isPending} />
       </div>
     </div>
   );

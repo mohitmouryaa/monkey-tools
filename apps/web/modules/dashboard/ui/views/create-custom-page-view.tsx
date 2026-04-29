@@ -15,8 +15,8 @@ export const CreateCustomPageView = () => {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold">Create Custom Page</h1>
-          <p className="text-muted-foreground mt-2">Create a new custom page for your website</p>
+          <h1 className="text-3xl font-bold">Criar Página Personalizada</h1>
+          <p className="text-muted-foreground mt-2">Crie uma nova página personalizada para seu site</p>
         </div>
       </div>
 

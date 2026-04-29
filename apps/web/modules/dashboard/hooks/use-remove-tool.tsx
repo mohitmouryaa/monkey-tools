@@ -13,7 +13,7 @@ export const useRemoveTool = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
         queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data.id }));
-        toast.success(`Tool "${data.title}" removed`);
+        toast.success(`Ferramenta "${data.title}" removida`);
       },
     }),
   );

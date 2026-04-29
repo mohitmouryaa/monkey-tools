@@ -13,7 +13,7 @@ export const useRemoveCategory = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries(trpc.categories.getMany.queryOptions({}));
         queryClient.invalidateQueries(trpc.categories.getOne.queryOptions({ id: data.id }));
-        toast.success(`Category "${data.name}" removed`);
+        toast.success(`Categoria "${data.name}" removida`);
       },
     }),
   );

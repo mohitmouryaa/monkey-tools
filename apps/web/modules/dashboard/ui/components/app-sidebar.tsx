@@ -5,7 +5,7 @@ import Image from "next/image";
 import { NavUser } from "@/modules/dashboard/ui/components/nav-user";
 import { NavMain } from "@/modules/dashboard/ui/components/nav-main";
 import { NavSecondary } from "@/modules/dashboard/ui/components/nav-secondary";
-import { LayoutDashboard, Search, Settings, Wrench, Tag, FileText, Code } from "lucide-react";
+import { LayoutDashboard, Search, Wrench, Tag, FileText, Code, Newspaper } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,24 +19,29 @@ import {
 const data = {
   navMain: [
     {
-      title: "Dashboard",
+      title: "Painel",
       url: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      title: "Tools",
+      title: "Ferramentas",
       url: "/dashboard/tools",
       icon: Wrench,
     },
     {
-      title: "Categories",
+      title: "Categorias",
       url: "/dashboard/categories",
       icon: Tag,
     },
     {
-      title: "Pages",
+      title: "Páginas",
       url: "/dashboard/pages",
       icon: FileText,
+    },
+    {
+      title: "Posts",
+      url: "/dashboard/posts",
+      icon: Newspaper,
     },
     {
       title: "Scripts",
@@ -46,12 +51,7 @@ const data = {
   ],
   navSecondary: [
     {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: Settings,
-    },
-    {
-      title: "Search",
+      title: "Busca",
       url: "#",
       icon: Search,
     },
@@ -68,10 +68,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link href="/dashboard" className="flex items-center gap-0.5 cursor-pointer">
                 {/* Placeholder Logo Icon */}
                 <div className="rounded-lg flex items-center justify-center relative w-12 h-12">
-                  <Image src="/logo.svg" alt="Monkey Logo" fill sizes="35px" className="object-contain" />
+                  <Image src="/logo.svg" alt="pdfs.com.br Logo" fill sizes="35px" className="object-contain" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl font-bold leading-none tracking-tight">Monkey</span>
+                  <span className="text-xl font-bold leading-none tracking-tight">pdfs.com.br</span>
                 </div>
               </Link>
             </SidebarMenuButton>

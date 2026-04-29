@@ -11,10 +11,10 @@ export const ScriptsHeader = () => {
 
   return (
     <EntityHeader
-      title="Global Scripts"
-      description="Manage external scripts (Analytics, Chatbots, etc.)"
+      title="Scripts Globais"
+      description="Gerencie scripts externos (Analytics, Chatbots, etc.)"
       onNew={handleCreate}
-      newButtonLabel="New Script"
+      newButtonLabel="Novo Script"
     />
   );
 };

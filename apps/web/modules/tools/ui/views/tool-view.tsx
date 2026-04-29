@@ -1,5 +1,7 @@
 import { Suspense } from "react";
+import { unstable_cache } from "next/cache";
 import { caller } from "@/trpc/server";
+import { tagForTool } from "@/modules/tools/lib/cache";
 import { ToolSteps } from "@/modules/tools/ui/components/tool-steps";
 import { ToolFAQ } from "@/modules/tools/ui/components/tool-faq";
 import { FAQSchema } from "@/modules/tools/ui/components/faq-schema";
@@ -11,10 +13,21 @@ import { ToolLoading } from "@/modules/common/ui/components/tool-loading";
 import { PDFLibProvider } from "@/modules/common/providers/pdf-lib-provider";
 import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
 import { AdPlaceholder } from "@/modules/common/ui/components/ad-placeholder";
+import { PostCard } from "@/modules/blog/ui/components/post-card";
 
 interface ToolViewProps {
   toolCategory: string;
   tool: string;
+}
+
+interface FeaturedPostSummary {
+  _id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  coverImage: string;
+  publishedAt?: string | Date | null;
+  tools?: Array<{ _id: string; title: string }>;
 }
 
 export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
@@ -23,16 +36,30 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   }
 
   // Fetch tool data from database
-  const category = await caller.categories.getCategoryWithTools({ slug: toolCategory });
+  const category = await unstable_cache(
+    async () => caller.categories.getCategoryWithTools({ slug: toolCategory }),
+    ["tool-category-with-tools-v1", toolCategory, tool],
+    { revalidate: 3600, tags: [tagForTool(tool)] },
+  )();
   const toolData = category.tools.find((t) => [`/${tool}`, tool].includes(t.link));
 
   if (!toolData) {
     return <InvalidToolSelection />;
   }
 
+  let featuredPost: FeaturedPostSummary | null = null;
+  if (toolData.featuredPostId) {
+    try {
+      const result = await caller.posts.getByIdPublic({ id: String(toolData.featuredPostId) });
+      featuredPost = result as unknown as FeaturedPostSummary;
+    } catch {
+      featuredPost = null;
+    }
+  }
+
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://monkeytools.com";
-    const currentUrl = `${baseUrl}/tools/${toolCategory}/${tool}`;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
+    const currentUrl = `${baseUrl}/ferramentas/${toolCategory}/${tool}`;
 
     const { default: ToolComponent } = await import(`@/modules/tools/ui/components/${tool}`);
 
@@ -43,7 +70,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
         <BreadcrumbSchema
           items={[
             { name: "Home", url: baseUrl },
-            { name: category.name, url: `${baseUrl}/tools/${toolCategory}` },
+            { name: category.name, url: `${baseUrl}/ferramentas/${toolCategory}` },
             { name: toolData.title, url: currentUrl },
           ]}
         />
@@ -75,7 +102,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
             {/* Visual Steps */}
             {toolData.visualSteps && toolData.visualSteps.length > 0 && (
               <div className="mb-8">
-                <h2 className="mb-6 text-2xl font-bold">{toolData.stepsTitle || `How to use ${toolData.title}`}</h2>
+                <h2 className="mb-6 text-2xl font-bold">{toolData.stepsTitle || `Como usar ${toolData.title}`}</h2>
                 <ToolSteps steps={toolData.visualSteps} />
               </div>
             )}
@@ -101,10 +128,20 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
               </div>
             )}
 
+            {/* Aprenda mais */}
+            {featuredPost && (
+              <div className="mb-8">
+                <h2 className="mb-6 text-2xl font-bold">Aprenda mais</h2>
+                <div className="grid grid-cols-1 gap-6 md:max-w-md">
+                  <PostCard post={featuredPost} />
+                </div>
+              </div>
+            )}
+
             {/* FAQs */}
             {toolData.faqs && toolData.faqs.length > 0 && (
               <div className="mb-8">
-                <h2 className="mb-6 text-2xl font-bold">Frequently Asked Questions</h2>
+                <h2 className="mb-6 text-2xl font-bold">Perguntas Frequentes</h2>
                 <ToolFAQ faqs={toolData.faqs} />
                 <FAQSchema faqs={toolData.faqs} />
               </div>

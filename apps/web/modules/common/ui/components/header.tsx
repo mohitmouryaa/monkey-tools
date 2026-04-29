@@ -16,7 +16,7 @@ export const Header = async () => {
         {/* Category Navigation - Centered */}
         <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
           {categories.items.map((category) => (
-            <Link key={category._id} href={`/tools/${category.slug}`}>
+            <Link key={category._id} href={`/ferramentas/${category.slug}`}>
               <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground hover:bg-muted">
                 {category.name}
               </Button>
@@ -31,7 +31,7 @@ export const Header = async () => {
               DesignOnline
             </Button>
           </Link>
-          <Link href="/tools">
+          <Link href="/ferramentas">
             <Button size="sm" className="btn-gradient-secondary text-secondary-foreground font-medium">
               Usar Ferramentas
             </Button>
