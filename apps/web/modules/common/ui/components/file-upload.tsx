@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { cn } from "@workspace/ui/lib/utils";
 import { useCallback, useState } from "react";
-import { Button } from "@workspace/ui/components/button";
-import { Upload, FileText, ImageIcon, AlertCircle, CheckCircle, Trash2 } from "lucide-react";
+import { Upload, FileText, AlertCircle, Shield, X } from "lucide-react";
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -20,7 +18,6 @@ interface FileUploadProps {
 }
 
 interface FileWithPreview extends File {
-  preview?: string;
   id: string;
 }
 
@@ -28,12 +25,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   onFilesSelected,
   acceptedFileTypes = ["image/*", "application/pdf"],
   maxFiles = 5,
-  maxFileSize = 10, // 10MB default
+  maxFileSize = 10,
   className,
   disabled = false,
-  label = "Enviar Arquivos",
-  description = "Arraste e solte os arquivos aqui ou clique para navegar",
-  disclaimer = "Os arquivos não são preservados e serão excluídos imediatamente após o processamento",
+  label = "Arraste seu arquivo aqui",
+  description = "ou clique para selecionar",
+  disclaimer = "Seus arquivos são criptografados e apagados automaticamente após 1 hora.",
   mode = "accumulate",
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
@@ -42,12 +39,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const validateFile = useCallback(
     (file: File): string | null => {
-      // Check file size
       if (file.size > maxFileSize * 1024 * 1024) {
         return `O tamanho do arquivo deve ser menor que ${maxFileSize}MB`;
       }
-
-      // Check file type
       const isAccepted = acceptedFileTypes.some((type) => {
         if (type.includes("*")) {
           const baseType = type.split("/")[0] ?? "";
@@ -55,11 +49,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         }
         return file.type === type;
       });
-
       if (!isAccepted) {
         return `Tipo de arquivo não suportado. Tipos aceitos: ${acceptedFileTypes.join(", ")}`;
       }
-
       return null;
     },
     [acceptedFileTypes, maxFileSize],
@@ -68,7 +60,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const processFiles = useCallback(
     (fileList: FileList) => {
       setError("");
-
       const newFiles: FileWithPreview[] = [];
       const errors: string[] = [];
 
@@ -78,17 +69,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           errors.push(`${file.name}: ${validationError}`);
           return;
         }
-
-        // Check if we would exceed max files
         if (mode === "accumulate" && files.length + newFiles.length >= maxFiles) {
           errors.push(`Máximo de ${maxFiles} arquivos permitidos`);
           return;
         }
-
         const fileWithPreview: FileWithPreview = Object.assign(file, {
           id: `${file.name}-${Date.now()}-${Math.random()}`,
         });
-
         newFiles.push(fileWithPreview);
       });
 
@@ -102,7 +89,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           setFiles(updatedFiles);
           onFilesSelected(updatedFiles);
         } else {
-          // In append mode, we just emit the new files and don't store them
           onFilesSelected(newFiles);
         }
       }
@@ -114,9 +100,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragOver(false);
-
       if (disabled) return;
-
       const droppedFiles = e.dataTransfer.files;
       if (droppedFiles.length > 0) {
         processFiles(droppedFiles);
@@ -128,9 +112,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const handleDragOver = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
-      if (!disabled) {
-        setIsDragOver(true);
-      }
+      if (!disabled) setIsDragOver(true);
     },
     [disabled],
   );
@@ -160,15 +142,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     [onFilesSelected],
   );
 
-  const getFileIcon = (file: FileWithPreview) => {
-    if (file.type.startsWith("image/")) {
-      return <ImageIcon className="w-8 h-8 text-blue-500" />;
-    } else if (file.type === "application/pdf") {
-      return <FileText className="w-8 h-8 text-red-500" />;
-    }
-    return <FileText className="w-8 h-8 text-gray-500" />;
-  };
-
   const formatFileSize = (bytes: number) => {
     if (!bytes || Number.isNaN(bytes) || bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -178,135 +151,70 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className={cn("w-full space-y-4 my-1", className)}>
-      {/* Upload Area */}
-      <div className="space-y-2">
-        <label
-          htmlFor="file-upload-input"
-          className={cn(
-            "upload-zone relative block",
-            isDragOver && "dragging",
-            disabled && "opacity-50 cursor-not-allowed",
-            error && "border-destructive bg-destructive/5",
-          )}
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-        >
-          <input
-            id="file-upload-input"
-            type="file"
-            multiple
-            accept={acceptedFileTypes.join(",")}
-            onChange={handleFileInput}
-            disabled={disabled}
-            className="sr-only"
-            aria-describedby="file-upload-description"
-          />
+    <div className={cn("w-full", className)}>
+      <label
+        htmlFor="file-upload-input"
+        className={cn(
+          "upload-zone block",
+          isDragOver && "dragging",
+          disabled && "opacity-50 cursor-not-allowed",
+          error && "border-destructive bg-destructive/5",
+        )}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+      >
+        <input
+          id="file-upload-input"
+          type="file"
+          multiple
+          accept={acceptedFileTypes.join(",")}
+          onChange={handleFileInput}
+          disabled={disabled}
+          className="hidden"
+          aria-describedby="file-upload-description"
+        />
+        <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+        <p className="text-lg font-medium text-foreground mb-1">{label}</p>
+        <p id="file-upload-description" className="text-sm text-muted-foreground">
+          {description}
+        </p>
+      </label>
 
-          <div className="flex flex-col items-center space-y-4">
-            <div
-              className={cn(
-                "relative p-6 rounded-2xl transition-all duration-300 shadow-lg",
-                isDragOver
-                  ? "bg-primary text-primary-foreground scale-110 shadow-primary/30"
-                  : "bg-primary/10 text-primary shadow-primary/10 hover:shadow-primary/20 hover:scale-105",
-              )}
-            >
-              <Upload className="w-10 h-10" />
-              {/* Subtle animated ring */}
-              <div className="absolute inset-0 border-2 rounded-2xl border-primary/20 animate-pulse"></div>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">{label}</h3>
-              <p id="file-upload-description" className="max-w-md text-base font-medium text-muted-foreground">
-                {description}
-              </p>
-              <p className="text-sm font-medium text-muted-foreground/80">
-                Máx. {maxFiles} arquivos, até {maxFileSize}MB cada
-              </p>
-            </div>
-
-            <Button
-              type="button"
-              variant="default"
-              size="lg"
-              disabled={disabled}
-              className="px-8 py-3 mt-4 font-semibold transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 rounded-xl"
-              asChild
-            >
-              <span>Escolher Arquivos</span>
-            </Button>
-          </div>
-        </label>
-      </div>
-
-      {/* Disclaimer */}
-      {disclaimer && (
-        <div className="mt-2 text-center">
-          <p className="text-sm italic text-muted-foreground/70">{disclaimer}</p>
-        </div>
-      )}
-
-      {/* Error Message */}
       {error && (
-        <div className="flex items-center gap-2 p-3 text-sm border rounded-lg text-destructive bg-destructive/10 border-destructive/20">
+        <div className="flex items-center gap-2 p-3 mt-4 text-sm border rounded-lg text-destructive bg-destructive/10 border-destructive/20">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* File List */}
       {files.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-foreground">
-            Arquivos Selecionados ({files.length}/{maxFiles})
-          </h4>
-
-          <div className="space-y-2">
-            {files.map((file) => (
-              <div
-                key={file.id}
-                className="flex items-center gap-3 p-3 transition-colors border rounded-lg bg-muted/50 border-border group hover:bg-muted/70"
-              >
-                {/* File Icon/Preview */}
-                <div className="shrink-0">
-                  {file.preview ? (
-                    <Image
-                      src={file.preview}
-                      alt={file.name}
-                      width={40}
-                      height={40}
-                      className="object-cover border rounded-md border-border"
-                    />
-                  ) : (
-                    getFileIcon(file)
-                  )}
-                </div>
-
-                {/* File Info */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate text-foreground">{file.name}</p>
+        <div className="mt-6 space-y-3">
+          {files.map((file) => (
+            <div key={file.id} className="flex items-center justify-between bg-secondary rounded-xl px-4 py-3">
+              <div className="flex items-center gap-3">
+                <FileText className="h-5 w-5 text-primary" />
+                <div>
+                  <p className="text-sm font-medium text-foreground truncate max-w-[200px] md:max-w-[400px]">{file.name}</p>
                   <p className="text-xs text-muted-foreground">{formatFileSize(file.size)}</p>
                 </div>
-
-                {/* Success Indicator */}
-                <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-
-                {/* Remove Button */}
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeFile(file.id)}
-                  className="shrink-0 hover:text-destructive-foreground"
-                >
-                  <Trash2 className="w-4 h-4" color="red" />
-                </Button>
               </div>
-            ))}
-          </div>
+              <button
+                type="button"
+                onClick={() => removeFile(file.id)}
+                className="p-1 rounded-lg hover:bg-accent transition-colors"
+              >
+                <X className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {disclaimer && (
+        <div className="flex items-center justify-center gap-2 mt-8 text-xs text-muted-foreground">
+          <Shield className="h-4 w-4" />
+          <span>{disclaimer}</span>
         </div>
       )}
     </div>
