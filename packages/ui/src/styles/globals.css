@@ -18,8 +18,8 @@
   --popover: 0 0% 100%;
   --popover-foreground: 220 20% 10%;
 
-  /* Primary: coral red — único accent colorido do ref */
-  --primary: 4 85% 55%;
+  /* Primary: azul vibrante (matches .claude/screens) */
+  --primary: 217 91% 60%;
   --primary-foreground: 0 0% 100%;
 
   /* Secondary / muted / accent: cinza claro neutro (idêntico ao ref) */
@@ -37,12 +37,12 @@
 
   --border: 220 13% 91%;
   --input: 220 13% 91%;
-  --ring: 4 85% 55%;
+  --ring: 217 91% 60%;
 
   --radius: 0.75rem;
 
-  /* Categorias do nosso CMS (não existem no ref) */
-  --category-pdf: 4 85% 55%;
+  /* Categorias do nosso CMS */
+  --category-pdf: 217 91% 60%;
   --category-image: 145 65% 42%;
   --category-text: 210 80% 55%;
   --category-converter: 35 95% 55%;
@@ -71,9 +71,9 @@
   --sidebar-border: 220 13% 91%;
   --sidebar-ring: 217.2 91.2% 59.8%;
 
-  /* Logo colors (do nosso projeto) */
-  --logo-primary: 4 85% 55%;
-  --logo-secondary: 14 90% 55%;
+  /* Logo colors (azul matching primary) */
+  --logo-primary: 217 91% 60%;
+  --logo-secondary: 217 91% 70%;
 }
 
 .dark {
