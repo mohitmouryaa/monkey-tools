@@ -13,13 +13,17 @@ export const ToolFAQ = ({ faqs }: ToolFAQProps) => {
   if (!faqs || faqs.length === 0) return null;
 
   return (
-    <Accordion type="single" collapsible className="w-full space-y-3">
+    <Accordion type="single" collapsible className="w-full">
       {faqs.map((faq, index) => (
-        <AccordionItem key={faq.question} value={`item-${index}`} className="border border-border/50 rounded-xl overflow-hidden">
-          <AccordionTrigger className="w-full px-4 py-4 text-left text-lg font-semibold hover:bg-secondary/50 transition-colors hover:no-underline">
+        <AccordionItem
+          key={faq.question}
+          value={`item-${index}`}
+          className="border-b border-border/60 last:border-b-0"
+        >
+          <AccordionTrigger className="py-5 text-left text-base md:text-[17px] font-semibold text-foreground hover:no-underline">
             {faq.question}
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4 text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
+          <AccordionContent className="pb-5 text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>

@@ -7,22 +7,41 @@ interface ToolHeaderProps {
   title: string;
   introText?: string;
   iconName?: string;
+  iconColor?: string;
+  bgColor?: string;
 }
 
-export const ToolHeader = ({ title, introText, iconName }: ToolHeaderProps) => {
+export const ToolHeader = ({ title, introText, iconName, iconColor, bgColor }: ToolHeaderProps) => {
+  // No banco, iconColor é a cor forte (sólida) e bgColor é a versão pastel para cards.
+  // No hero queremos fundo na cor forte com ícone branco — invertendo o uso.
+  const accent = iconColor || bgColor || "hsl(var(--primary))";
+  const iconStroke = "#ffffff";
+
   return (
-    <div className="mb-8 text-center">
-      <div className="flex flex-col items-center gap-4 mb-4">
-        <div className="p-3 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-          {iconName ? (
-            <DynamicIcon name={iconName as IconName} className="w-8 h-8" fallback={() => <Wrench className="w-8 h-8" />} />
-          ) : (
-            <Wrench className="w-8 h-8" />
-          )}
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground">{title}</h1>
+    <header className="flex flex-col items-center text-center pt-2 pb-4 md:pt-6 md:pb-6">
+      <div
+        className="flex items-center justify-center w-16 h-16 mb-6 rounded-2xl shadow-md"
+        style={{ backgroundColor: accent }}
+      >
+        {iconName ? (
+          <DynamicIcon
+            name={iconName as IconName}
+            className="w-8 h-8"
+            style={{ color: iconStroke }}
+            fallback={() => <Wrench className="w-8 h-8" style={{ color: iconStroke }} />}
+          />
+        ) : (
+          <Wrench className="w-8 h-8" style={{ color: iconStroke }} />
+        )}
       </div>
-      {introText && <p className="text-lg text-muted-foreground">{introText}</p>}
-    </div>
+
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight max-w-3xl leading-tight">
+        {title}
+      </h1>
+
+      {introText && (
+        <p className="mt-5 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">{introText}</p>
+      )}
+    </header>
   );
 };
