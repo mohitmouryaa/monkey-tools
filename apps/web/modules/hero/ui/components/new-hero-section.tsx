@@ -1,7 +1,4 @@
-import Link from "next/link";
-import { Search, Gamepad2 } from "lucide-react";
-import { Input } from "@workspace/ui/components/input";
-import { Button } from "@workspace/ui/components/button";
+import { Zap } from "lucide-react";
 
 interface HeroSectionContent {
   badge: string;
@@ -17,58 +14,34 @@ interface NewHeroSectionProps {
   heroSection?: HeroSectionContent;
 }
 
+const DEFAULTS = {
+  badge: "100% gratuito · Sem cadastro · Sem instalação",
+  headingStart: "Ferramentas PDF",
+  headingHighlight: "Online Grátis",
+  description: "Simples, rápido e seguro. Transforme seus documentos em segundos.",
+};
+
 export const NewHeroSection = ({ heroSection }: NewHeroSectionProps) => {
-  // Fallback to default content if not provided
-  const content = heroSection || {
-    badge: "Seu QG para ferramentas grátis",
-    heading: "Escolha suas ferramentas!",
-    description:
-      "As melhores ferramentas gratuitas para você usar com segurança: deletamos seus arquivos assim que você terminar de usar as ferramentas. Você se beneficia porque é seguro.",
-    primaryButtonText: "Começar agora",
-    primaryButtonLink: "#ferramentas",
-    secondaryButtonText: "Ver todas as ferramentas",
-    secondaryButtonLink: "/ferramentas",
-  };
+  const badge = heroSection?.badge ?? DEFAULTS.badge;
+  const description = heroSection?.description ?? DEFAULTS.description;
 
   return (
-    <section className="relative py-20 overflow-hidden md:py-32 bg-background">
-      {/* Background gradient effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 rounded-full left-1/4 w-96 h-96 bg-primary/10 blur-3xl" />
-        <div className="absolute bottom-0 rounded-full right-1/4 w-80 h-80 bg-secondary/10 blur-3xl" />
-      </div>
-
-      <div className="container relative z-10 px-4 mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 border rounded-full bg-card border-border">
-          <Gamepad2 className="w-4 h-4 text-primary" />
-          <span className="text-sm text-muted-foreground">{content.badge}</span>
+    <section className="relative bg-gradient-to-b from-primary/5 via-background to-background py-20 md:py-28">
+      <div className="container max-w-5xl mx-auto px-4 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-primary/10 text-primary text-sm font-medium">
+          <Zap className="w-4 h-4 fill-primary" />
+          <span>{badge}</span>
         </div>
-        <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl lg:text-6xl text-foreground">{content.heading}</h1>
-        <p className="max-w-3xl mx-auto mb-10 text-lg md:text-xl text-muted-foreground">{content.description}</p>
-        <div className="flex flex-col justify-center gap-4 mb-8 sm:flex-row">
-          <Link href={content.primaryButtonLink}>
-            <Button
-              size="lg"
-              className="h-auto px-8 py-6 text-base font-semibold rounded-xl btn-gradient-secondary text-secondary-foreground"
-            >
-              <Gamepad2 className="w-5 h-5" />
-              {content.primaryButtonText}
-            </Button>
-          </Link>
-          <Link href={content.secondaryButtonLink}>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-auto px-8 py-6 text-base font-medium rounded-xl border-border hover:bg-card text-foreground"
-            >
-              {content.secondaryButtonText}
-            </Button>
-          </Link>
-        </div>
-        <div className="relative max-w-xl mx-auto md:hidden">
-          <Search className="absolute w-5 h-5 -translate-y-1/2 left-4 top-1/2 text-muted-foreground" />
-          <Input placeholder="Buscar ferramenta..." className="h-12 pl-12 text-base bg-card border-border" />
-        </div>
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground mb-6 leading-[1.05]">
+          {heroSection?.heading ? (
+            heroSection.heading
+          ) : (
+            <>
+              {DEFAULTS.headingStart} <span className="text-primary">{DEFAULTS.headingHighlight}</span>
+            </>
+          )}
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">{description}</p>
       </div>
     </section>
   );
