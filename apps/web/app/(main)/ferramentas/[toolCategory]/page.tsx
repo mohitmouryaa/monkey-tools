@@ -1,11 +1,6 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
-import { HydrateClient } from "@/trpc/server";
-import { ErrorBoundary } from "react-error-boundary";
-import { ToolsView } from "@/modules/tools/ui/views/tools-view";
-import { prefetchCategoryWithTools } from "@/modules/common/prefetch";
-import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
+import { CategoryView } from "@/modules/tools/ui/views/category-view";
 
 interface ToolsPageProps {
   params: Promise<{ toolCategory: string }>;
@@ -16,22 +11,36 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
 
   try {
     const category = await caller.categories.getCategoryWithTools({ slug: toolCategory });
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
+    const canonicalUrl = `${baseUrl}/ferramentas/${toolCategory}`;
+    const lower = category.name.toLowerCase();
+
+    const title = `${category.name} — Ferramentas Online Grátis | pdfs.com.br`;
+    const description =
+      category.description ||
+      `Conjunto de ferramentas online gratuitas de ${lower}. Use direto no navegador, sem cadastro e sem instalação.`;
 
     return {
-      title: `${category.name} - Ferramentas Online Grátis | pdfs.com.br`,
-      description:
-        category.description ||
-        `Explore nossa coleção de ${category.name.toLowerCase()} para facilitar seu dia a dia. Rápido, seguro e gratuito.`,
-      keywords: `${category.name}, ferramentas online, ferramentas grátis, ${category.slug}`,
+      title,
+      description,
+      keywords: `${category.name}, ferramentas ${lower}, ${lower} online, ${lower} grátis, ${category.slug}`,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      robots: {
+        index: true,
+        follow: true,
+      },
       openGraph: {
-        title: `${category.name} - pdfs.com.br`,
-        description: category.description || `${category.name} grátis online`,
+        title,
+        description,
         type: "website",
+        url: canonicalUrl,
       },
       twitter: {
         card: "summary_large_image",
-        title: `${category.name} - pdfs.com.br`,
-        description: category.description || `${category.name} grátis online`,
+        title,
+        description,
       },
     };
   } catch {
@@ -44,14 +53,5 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
 
 export default async function ToolsPage({ params }: ToolsPageProps) {
   const { toolCategory } = await params;
-  prefetchCategoryWithTools(toolCategory);
-  return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div>Algo deu errado.</div>}>
-        <Suspense fallback={<SuspenseLoader />}>
-          <ToolsView toolCategory={toolCategory} />
-        </Suspense>
-      </ErrorBoundary>
-    </HydrateClient>
-  );
+  return <CategoryView toolCategory={toolCategory} />;
 }
