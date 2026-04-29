@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { Button } from "@workspace/ui/components/button";
 
 interface ToolCardProps {
   name: string;
@@ -24,33 +23,33 @@ const categoryVar: Record<string, string> = {
   converters: "var(--category-converter)",
 };
 
-export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon }: ToolCardProps) => {
-  const categoryColor = `hsl(${categoryVar[categorySlug] ?? "var(--category-pdf)"})`;
+export const ToolCard = ({ name, description, categorySlug, toolSlug, icon, iconColor, bgColor }: ToolCardProps) => {
+  const fallback = `hsl(${categoryVar[categorySlug] ?? "var(--category-pdf)"})`;
+  const accent = iconColor || bgColor || fallback;
 
   return (
-    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="block group">
-      <div className="bg-card border border-border rounded-2xl p-6 transition-all duration-300 hover:border-primary card-glow h-full flex flex-col">
-        {/* Icon and Category Badge */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="group block">
+      <div
+        className="rounded-2xl overflow-hidden transition-all duration-200 group-hover:shadow-lg group-hover:-translate-y-0.5"
+        style={{ backgroundColor: `color-mix(in srgb, ${accent} 12%, white)` }}
+      >
+        <div className="p-6 flex flex-col items-center text-center">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center mb-4 transition-transform duration-200 group-hover:scale-110"
+            style={{ backgroundColor: accent }}
+          >
             <DynamicIcon
               name={icon as IconName}
-              className="w-6 h-6"
-              style={{ color: categoryColor }}
-              fallback={() => <FileText className="w-6 h-6" style={{ color: categoryColor }} />}
+              className="w-6 h-6 text-white"
+              fallback={() => <FileText className="w-6 h-6 text-white" />}
             />
           </div>
-          <span className="text-xs font-medium tracking-wide uppercase px-3 py-1 rounded-full bg-muted text-muted-foreground">
-            {category}
-          </span>
+          <h3 className="text-base font-semibold text-foreground mb-1.5 leading-tight">{name}</h3>
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{description}</p>
         </div>
-
-        {/* Content */}
-        <h3 className="mb-2 text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{name}</h3>
-        <p className="mb-5 text-sm text-muted-foreground line-clamp-2 flex-1">{description}</p>
-
-        {/* Button */}
-        <Button className="w-full rounded-xl btn-gradient-primary text-primary-foreground font-medium">Usar</Button>
+        <div className="bg-background/60 px-6 py-3 text-center">
+          <p className="text-xs text-primary font-medium line-clamp-2 leading-relaxed">{description}</p>
+        </div>
       </div>
     </Link>
   );
