@@ -8,15 +8,15 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* DesignOnline Dark Theme - Coral + Orange-Coral */
-  --background: 222 47% 7%;
-  --foreground: 0 0% 100%;
+  /* Light Theme - Coral + Orange-Coral */
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
 
-  --card: 222 40% 12%;
-  --card-foreground: 0 0% 100%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
 
-  --popover: 222 40% 12%;
-  --popover-foreground: 0 0% 100%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
 
   /* Primary: Coral red */
   --primary: 4 85% 55%;
@@ -26,8 +26,8 @@
   --secondary: 14 90% 55%;
   --secondary-foreground: 0 0% 100%;
 
-  --muted: 222 30% 20%;
-  --muted-foreground: 222 20% 70%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
   --accent: 14 90% 55%;
   --accent-foreground: 0 0% 100%;
@@ -35,24 +35,24 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 222 30% 20%;
-  --input: 222 30% 20%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
   --ring: 4 85% 55%;
 
   --radius: 0.75rem;
 
   /* Category colors */
-  --category-pdf: 4 85% 60%;
-  --category-image: 145 65% 55%;
-  --category-text: 210 80% 65%;
-  --category-converter: 35 95% 60%;
+  --category-pdf: 4 85% 55%;
+  --category-image: 145 60% 45%;
+  --category-text: 210 80% 55%;
+  --category-converter: 35 90% 50%;
 
   /* Tool-specific colors */
-  --tool-pdf-word: 210 80% 55%;
-  --tool-juntar: 145 65% 50%;
-  --tool-comprimir: 35 95% 55%;
-  --tool-dividir: 265 70% 60%;
-  --tool-assinar: 340 75% 55%;
+  --tool-pdf-word: 210 80% 50%;
+  --tool-juntar: 145 60% 42%;
+  --tool-comprimir: 35 90% 48%;
+  --tool-dividir: 265 65% 55%;
+  --tool-assinar: 340 70% 50%;
 
   /* Chart colors (keep existing) */
   --chart-1: 0.646 0.222 41.116;
@@ -61,14 +61,14 @@
   --chart-4: 0.828 0.189 84.429;
   --chart-5: 0.769 0.188 70.08;
 
-  /* Sidebar (match dark theme) */
-  --sidebar: 222 40% 12%;
-  --sidebar-foreground: 0 0% 100%;
+  /* Sidebar (light theme) */
+  --sidebar: 210 40% 98%;
+  --sidebar-foreground: 222 47% 11%;
   --sidebar-primary: 4 85% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 222 30% 20%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 222 30% 20%;
+  --sidebar-accent: 210 40% 96%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-border: 214 32% 91%;
   --sidebar-ring: 4 85% 55%;
 
   /* Logo colors */
