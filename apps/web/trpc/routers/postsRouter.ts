@@ -6,6 +6,8 @@ import { PostStatus } from "@workspace/types";
 import { PAGINATION } from "@/modules/common/constants";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createPostSchema, updatePostSchema } from "@/modules/dashboard/schema/post";
+import { revalidateBlog } from "@/modules/blog/lib/revalidate";
+import { tagForTool } from "@/modules/tools/lib/cache";
 
 type PopulatedTool = { _id: { toString: () => string } } & Record<string, unknown>;
 
@@ -203,10 +205,7 @@ export const postsRouter = createTRPCRouter({
 
     const post = await PostModel.create({ ...rest, tools });
 
-    updateTag("blog");
-    if (post.slug) {
-      updateTag(`blog:${post.slug}`);
-    }
+    revalidateBlog(post.slug);
 
     const postObj = post.toObject();
     return { ...postObj, _id: postObj._id.toString() };
@@ -241,10 +240,9 @@ export const postsRouter = createTRPCRouter({
 
     await post.save();
 
-    updateTag("blog");
-    updateTag(`blog:${oldSlug}`);
+    revalidateBlog(oldSlug);
     if (input.slug !== oldSlug) {
-      updateTag(`blog:${input.slug}`);
+      revalidateBlog(input.slug);
     }
 
     const postObj = post.toObject();
@@ -260,11 +258,17 @@ export const postsRouter = createTRPCRouter({
 
     const slug = post.slug;
 
+    const affectedTools = await ToolModel.find({ featuredPostId: input.id }).select("link").lean();
+
     await PostModel.findByIdAndDelete(input.id);
     await ToolModel.updateMany({ featuredPostId: input.id }, { $unset: { featuredPostId: 1 } });
 
-    updateTag("blog");
-    updateTag(`blog:${slug}`);
+    revalidateBlog(slug);
+    for (const tool of affectedTools) {
+      if (tool.link) {
+        updateTag(tagForTool(tool.link));
+      }
+    }
 
     return { id: post._id.toString(), slug };
   }),

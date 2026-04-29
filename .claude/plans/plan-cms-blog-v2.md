@@ -213,7 +213,7 @@ Exportar `updatePostSchema = createPostSchema.extend({ id: z.string().min(1) })`
 
 ---
 
-### Fase 6 — Revalidação on-demand
+### Fase 6 — Revalidação on-demand ✅
 
 **Objetivo:** Garantir que invalidação de cache funciona corretamente em todos os pontos de write (create/update/delete) e que setar `featuredPostId` numa tool revalida a página da tool.
 **Critério de conclusão:** Editar um post no admin reflete em `/blog/[slug]` no próximo request (sem rebuild). Mudar `featuredPostId` de uma tool reflete na página pública da tool no próximo request.
