@@ -57,14 +57,14 @@ export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
   const sortedSteps = [...content.steps].sort((a, b) => a.order - b.order).slice(0, 3);
 
   return (
-    <section className="bg-muted/70 border-t border-border py-24 md:py-32">
+    <section className="bg-muted/70 border-t border-border pt-24 md:pt-32 pb-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center">
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">{content.title}</h2>
           <p className="text-base md:text-lg text-muted-foreground">{content.subtitle}</p>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10 w-full mb-24 justify-items-center">
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10 w-full mb-16 justify-items-center">
           <div className="hidden md:block absolute top-12 left-[16.66%] right-[16.66%] h-px bg-border" aria-hidden />
           {sortedSteps.map((step, index) => (
             <div key={step.title} className="relative flex flex-col items-center text-center max-w-xs">
