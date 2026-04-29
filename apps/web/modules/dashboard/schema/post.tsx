@@ -23,20 +23,35 @@ const postBaseShape = {
   seo: postSeoSchema.optional(),
 };
 
-const requireCoverImageWhenPublishing = (data: { status: PostStatus; coverImage?: string }, ctx: z.RefinementCtx) => {
-  if (
-    (data.status === PostStatus.SCHEDULED || data.status === PostStatus.PUBLISHED) &&
-    (!data.coverImage || data.coverImage.trim() === "")
-  ) {
+const requirePublishingFields = (data: { status: PostStatus; coverImage?: string; publishedAt?: Date }, ctx: z.RefinementCtx) => {
+  const isPublishingFlow = data.status === PostStatus.SCHEDULED || data.status === PostStatus.PUBLISHED;
+
+  if (isPublishingFlow && (!data.coverImage || data.coverImage.trim() === "")) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Cover image is required when scheduling or publishing",
+      message: "Imagem de capa é obrigatória ao agendar ou publicar",
       path: ["coverImage"],
     });
   }
+
+  if (data.status === PostStatus.SCHEDULED) {
+    if (!data.publishedAt) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Data de publicação é obrigatória quando o post está agendado",
+        path: ["publishedAt"],
+      });
+    } else if (data.publishedAt.getTime() <= Date.now()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Data de agendamento precisa ser no futuro",
+        path: ["publishedAt"],
+      });
+    }
+  }
 };
 
-export const createPostSchema = z.object(postBaseShape).superRefine(requireCoverImageWhenPublishing);
+export const createPostSchema = z.object(postBaseShape).superRefine(requirePublishingFields);
 
 export type CreatePostFormValues = z.input<typeof createPostSchema>;
 
@@ -45,6 +60,6 @@ export const updatePostSchema = z
     ...postBaseShape,
     id: z.string().min(1, "Post ID is required"),
   })
-  .superRefine(requireCoverImageWhenPublishing);
+  .superRefine(requirePublishingFields);
 
 export type UpdatePostFormValues = z.input<typeof updatePostSchema>;

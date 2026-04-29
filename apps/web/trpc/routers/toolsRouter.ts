@@ -54,10 +54,14 @@ export const toolsRouter = createTRPCRouter({
         pageSize: z.number().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
         search: z.string().default(""),
         categoryId: z.string().optional(),
+        sort: z
+          .enum(["createdAt-desc", "createdAt-asc", "title-asc", "title-desc", "updatedAt-desc"])
+          .default("createdAt-desc"),
+        status: z.enum(["all", "active", "inactive"]).default("all"),
       }),
     )
     .query(async ({ input, ctx }) => {
-      const { page, pageSize, search, categoryId } = input;
+      const { page, pageSize, search, categoryId, sort, status } = input;
       const searchRegex = new RegExp(search, "i");
 
       // Build match conditions for aggregation and count
@@ -67,6 +71,10 @@ export const toolsRouter = createTRPCRouter({
 
       if (!ctx.session) {
         baseMatch.isActive = true;
+      } else if (status === "active") {
+        baseMatch.isActive = true;
+      } else if (status === "inactive") {
+        baseMatch.isActive = false;
       }
 
       const aggregationMatch: mongoose.AnyObject = { ...baseMatch };
@@ -77,6 +85,9 @@ export const toolsRouter = createTRPCRouter({
         aggregationMatch.category = categoryObjectId;
         countMatch.category = categoryObjectId;
       }
+
+      const [sortField, sortDirection] = sort.split("-") as [string, "asc" | "desc"];
+      const sortStage: mongoose.AnyObject = { [sortField]: sortDirection === "asc" ? 1 : -1 };
 
       const [items, totalCount] = await Promise.all([
         ToolModel.aggregate([
@@ -97,7 +108,7 @@ export const toolsRouter = createTRPCRouter({
               preserveNullAndEmptyArrays: true,
             },
           },
-          { $sort: { createdAt: -1 } },
+          { $sort: sortStage },
           { $skip: (page - 1) * pageSize },
           { $limit: pageSize },
         ]),
@@ -244,6 +255,75 @@ export const toolsRouter = createTRPCRouter({
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: `Falha ao excluir ferramenta: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+      });
+    }
+  }),
+
+  deleteMany: protectedProcedure
+    .input(z.object({ ids: z.array(z.string()).min(1) }))
+    .mutation(async ({ input }) => {
+      try {
+        const validIds = input.ids.filter((id) => mongoose.Types.ObjectId.isValid(id));
+        if (validIds.length === 0) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Nenhum id válido informado" });
+        }
+        const result = await ToolModel.deleteMany({ _id: { $in: validIds } });
+        return { deletedCount: result.deletedCount ?? 0 };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Falha ao excluir ferramentas: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+        });
+      }
+    }),
+
+  getStats: protectedProcedure.query(async () => {
+    try {
+      const since = new Date();
+      since.setDate(since.getDate() - 7);
+
+      const [total, active, recent, byCategory] = await Promise.all([
+        ToolModel.countDocuments({}),
+        ToolModel.countDocuments({ isActive: true }),
+        ToolModel.countDocuments({ createdAt: { $gte: since } }),
+        ToolModel.aggregate([
+          {
+            $lookup: {
+              from: "categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "categoryDoc",
+            },
+          },
+          { $unwind: { path: "$categoryDoc", preserveNullAndEmptyArrays: true } },
+          {
+            $group: {
+              _id: "$category",
+              count: { $sum: 1 },
+              name: { $first: "$categoryDoc.name" },
+            },
+          },
+          { $sort: { count: -1 } },
+          { $limit: 10 },
+        ]),
+      ]);
+
+      return {
+        total,
+        active,
+        inactive: total - active,
+        recent,
+        byCategory: byCategory.map((c) => ({
+          categoryId: c._id ? String(c._id) : null,
+          name: c.name ?? "Sem categoria",
+          count: c.count,
+        })),
+      };
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Falha ao buscar estatísticas: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       });
     }
   }),

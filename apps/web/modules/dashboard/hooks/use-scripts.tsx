@@ -1,6 +1,5 @@
 import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
-import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateGlobalScript = () => {
@@ -29,6 +28,7 @@ export const useUpdateGlobalScript = () => {
       onSuccess: (data) => {
         toast.success(`Script "${data.name}" atualizado`);
         queryClient.invalidateQueries(trpc.globalScripts.getMany.queryOptions({}));
+        queryClient.invalidateQueries(trpc.globalScripts.getById.queryOptions({ id: data._id }));
       },
       onError: (error) => {
         toast.error(`Falha ao atualizar script: ${error.message}`);
@@ -39,15 +39,13 @@ export const useUpdateGlobalScript = () => {
 
 export const useDeleteGlobalScript = () => {
   const trpc = useTRPC();
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation(
     trpc.globalScripts.delete.mutationOptions({
       onSuccess: () => {
-        toast.success("Script excluído com sucesso");
+        toast.success("Script excluído");
         queryClient.invalidateQueries(trpc.globalScripts.getMany.queryOptions({}));
-        router.push("/dashboard/scripts");
       },
       onError: (error) => {
         toast.error(error.message || "Falha ao excluir script");

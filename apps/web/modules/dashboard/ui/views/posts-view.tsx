@@ -28,13 +28,13 @@ export const PostsView = () => {
 
 const PostsEmptySection = () => {
   const router = useRouter();
-  return <PostsEmpty message="No posts yet. Create your first post." onNew={() => router.push("/dashboard/posts/new")} />;
+  return <PostsEmpty message="Ainda não há posts. Crie o primeiro para começar." onNew={() => router.push("/dashboard/posts/new")} />;
 };
 
 const PostItem = ({ data }: { data: PostListItem }) => {
   const remove = useRemovePost();
   const handleRemove = () => {
-    if (confirm(`Delete post "${data.title}"?`)) {
+    if (confirm(`Excluir post "${data.title}"?`)) {
       remove.mutate({ id: data._id });
     }
   };
