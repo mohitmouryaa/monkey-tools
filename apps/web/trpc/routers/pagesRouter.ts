@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PageModel } from "@workspace/database";
 import { PageType } from "@workspace/types";
+import { pageOutputDataSchema } from "@/modules/dashboard/schema/page-blocks";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 
 // Input schemas
@@ -61,7 +62,7 @@ const createCustomPageSchema = z.object({
   seoTitle: z.string().min(1),
   seoDescription: z.string().min(1),
   seoKeywords: z.string(),
-  content: z.string().min(1),
+  content: pageOutputDataSchema,
   showInFooter: z.boolean().default(true),
   footerOrder: z.number().default(0),
   footerLabel: z.string().optional(),

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,14 +12,34 @@ import { Input } from "@workspace/ui/components/input";
 import { Switch } from "@workspace/ui/components/switch";
 import { useUpdateCustomPage } from "../../hooks/use-update-custom-page";
 import { type UpdateCustomPageFormValues, updateCustomPageSchema } from "../../schema/page";
+import { LegacyMigrationBanner } from "./legacy-migration-banner";
 import { PageSeoFields } from "./page-seo-fields";
-import { RichTextEditor } from "./rich-text-editor";
+
+const EditorJSField = dynamic(() => import("@/modules/dashboard/ui/components/editor-js-field"), {
+  ssr: false,
+  loading: () => <div className="min-h-[400px] border rounded-lg p-4 bg-background animate-pulse" />,
+});
+
+// `defaultValues.content` pode chegar como string em páginas legadas (Decisão 10);
+// nesse caso o form bloqueia até a migração rodar.
+type EditCustomPageDefaults = Omit<UpdateCustomPageFormValues, "content"> & {
+  content: UpdateCustomPageFormValues["content"] | string;
+};
 
 interface EditCustomPageFormProps {
-  defaultValues: UpdateCustomPageFormValues;
+  defaultValues: EditCustomPageDefaults;
 }
 
 export const EditCustomPageForm = ({ defaultValues }: EditCustomPageFormProps) => {
+  // Wrapper externo: garante que os hooks abaixo (Rules of Hooks) só rodem
+  // quando o conteúdo já está em formato OutputData.
+  if (typeof defaultValues.content === "string") {
+    return <LegacyMigrationBanner pageId={defaultValues.id} />;
+  }
+  return <EditCustomPageFormInner defaultValues={defaultValues as UpdateCustomPageFormValues} />;
+};
+
+const EditCustomPageFormInner = ({ defaultValues }: { defaultValues: UpdateCustomPageFormValues }) => {
   const updateCustomPage = useUpdateCustomPage();
 
   const form = useForm<UpdateCustomPageFormValues>({
@@ -101,7 +122,7 @@ export const EditCustomPageForm = ({ defaultValues }: EditCustomPageFormProps) =
                   <FormItem>
                     <FormLabel>Conteúdo</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value} onChange={field.onChange} />
+                      <EditorJSField value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

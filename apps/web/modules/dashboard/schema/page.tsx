@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { pageOutputDataSchema } from "./page-blocks";
 
 // Homepage schema
 export const heroSectionSchema = z.object({
@@ -57,7 +58,7 @@ export const createCustomPageSchema = z.object({
   seoTitle: z.string().min(1, "O título SEO é obrigatório"),
   seoDescription: z.string().min(1, "A descrição SEO é obrigatória"),
   seoKeywords: z.string(),
-  content: z.string().min(1, "O conteúdo é obrigatório"),
+  content: pageOutputDataSchema,
   showInFooter: z.boolean().default(true),
   footerOrder: z.number().default(0),
   footerLabel: z.string().optional(),

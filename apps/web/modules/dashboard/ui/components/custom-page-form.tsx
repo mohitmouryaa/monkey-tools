@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -17,17 +18,40 @@ import {
   type UpdateCustomPageFormValues,
   updateCustomPageSchema,
 } from "@/modules/dashboard/schema/page";
+import { LegacyMigrationBanner } from "./legacy-migration-banner";
 import { PageSeoFields } from "./page-seo-fields";
-import { RichTextEditor } from "./rich-text-editor";
+
+const EditorJSField = dynamic(() => import("@/modules/dashboard/ui/components/editor-js-field"), {
+  ssr: false,
+  loading: () => <div className="min-h-[400px] border rounded-lg p-4 bg-background animate-pulse" />,
+});
+
+// `defaultValues.content` pode chegar como string em páginas legadas (Decisão 10).
+type CustomPageDefaults = Omit<Partial<UpdateCustomPageFormValues>, "content"> & {
+  content?: UpdateCustomPageFormValues["content"] | string;
+};
 
 interface CustomPageFormProps {
   mode: "create" | "edit";
-  defaultValues?: Partial<UpdateCustomPageFormValues>;
+  defaultValues?: CustomPageDefaults;
 }
 
 type PageFormValues = CreateCustomPageFormValues | UpdateCustomPageFormValues;
 
 export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => {
+  // Wrapper externo: bloqueia formulário quando conteúdo está em formato legado (modo edit).
+  if (mode === "edit" && typeof defaultValues?.content === "string") {
+    return <LegacyMigrationBanner pageId={defaultValues.id} />;
+  }
+  return <CustomPageFormInner mode={mode} defaultValues={defaultValues as Partial<UpdateCustomPageFormValues> | undefined} />;
+};
+
+interface CustomPageFormInnerProps {
+  mode: "create" | "edit";
+  defaultValues?: Partial<UpdateCustomPageFormValues>;
+}
+
+const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) => {
   const createCustomPage = useCreateCustomPage();
   const updateCustomPage = useUpdateCustomPage();
 
@@ -43,7 +67,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
       seoTitle: "",
       seoDescription: "",
       seoKeywords: "",
-      content: "",
+      content: { blocks: [] },
       showInFooter: true,
       footerOrder: 0,
       footerLabel: "",
@@ -131,7 +155,7 @@ export const CustomPageForm = ({ mode, defaultValues }: CustomPageFormProps) => 
                   <FormItem>
                     <FormLabel>Conteúdo</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value} onChange={field.onChange} />
+                      <EditorJSField value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

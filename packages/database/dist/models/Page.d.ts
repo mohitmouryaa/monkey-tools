@@ -30,7 +30,7 @@ export declare class Page {
     h1Heading?: string;
     shortDescription?: string;
     title?: string;
-    content?: string;
+    content?: Record<string, any> | string;
     showInFooter?: boolean;
     footerOrder?: number;
     footerLabel?: string;

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -12,7 +13,11 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useCreateCustomPage } from "@/modules/dashboard/hooks/use-create-custom-page";
 import { type CreateCustomPageFormValues, createCustomPageSchema } from "../../schema/page";
 import { PageSeoFields } from "./page-seo-fields";
-import { RichTextEditor } from "./rich-text-editor";
+
+const EditorJSField = dynamic(() => import("@/modules/dashboard/ui/components/editor-js-field"), {
+  ssr: false,
+  loading: () => <div className="min-h-[400px] border rounded-lg p-4 bg-background animate-pulse" />,
+});
 
 export const CreateCustomPageForm = () => {
   const createCustomPage = useCreateCustomPage();
@@ -25,7 +30,7 @@ export const CreateCustomPageForm = () => {
       seoTitle: "",
       seoDescription: "",
       seoKeywords: "",
-      content: "",
+      content: { blocks: [] },
       showInFooter: true,
       footerOrder: 0,
       footerLabel: "",
@@ -105,7 +110,7 @@ export const CreateCustomPageForm = () => {
                   <FormItem>
                     <FormLabel>Conteúdo</FormLabel>
                     <FormControl>
-                      <RichTextEditor value={field.value} onChange={field.onChange} />
+                      <EditorJSField value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
