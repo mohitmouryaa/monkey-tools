@@ -28,6 +28,9 @@ let Page = class Page {
     shortDescription;
     // Custom pages specific (pageType === CUSTOM)
     title;
+    // `content` é um Mongoose Mixed. Use SEMPRE atribuição direta
+    // (page.content = newValue) — nunca mutate in-place sem markModified('content').
+    // biome-ignore lint/suspicious/noExplicitAny: <Editor.js OutputData shape is dynamic; string for legacy HTML>
     content;
     showInFooter;
     footerOrder;
@@ -80,8 +83,10 @@ __decorate([
     __metadata("design:type", String)
 ], Page.prototype, "title", void 0);
 __decorate([
-    prop(),
-    __metadata("design:type", String)
+    prop({ type: () => Object })
+    // biome-ignore lint/suspicious/noExplicitAny: <Editor.js OutputData shape is dynamic; string for legacy HTML>
+    ,
+    __metadata("design:type", Object)
 ], Page.prototype, "content", void 0);
 __decorate([
     prop({ default: true }),
