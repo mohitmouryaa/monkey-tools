@@ -78,3 +78,9 @@ All env vars are defined in root `.env` and shared via `turbo.json` globalEnv. K
 ## Code Style
 
 Biome enforces: 2-space indent, double quotes, 130 char line width. CSS files are excluded from Biome. Import organization is off (manual ordering).
+
+## Criando uma ferramenta nova
+
+Sempre que adicionar uma Tool, edite **na mesma PR**:
+
+- `apps/web/modules/common/ui/components/search-intents.ts` — frases em PT-BR que mapeiam intenções do usuário pro slug da tool. Sem isso, a tool não aparece em buscas como "PDF grande" → "Compactar PDF". Detalhes em `docs/search-intents.md`.
