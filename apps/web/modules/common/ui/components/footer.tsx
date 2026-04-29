@@ -1,55 +1,28 @@
-import { Logo } from "./logo";
 import { caller } from "@/trpc/server";
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { Heart } from "lucide-react";
+import { Logo } from "./logo";
 
 export const Footer = async () => {
-  // Fetch categories and custom pages from backend
   const [categories, customPages] = await Promise.all([caller.categories.getMany({}), caller.pages.getFooterPages()]);
 
-  // Platform links (static)
-  const platformLinks = [
-    { name: "Ferramentas Gratuitas", href: "/" },
-    { name: "Todas as Ferramentas", href: "/ferramentas" },
-    { name: "DesignOnline", href: "https://designonline.com.br", external: true },
-  ];
+  const popular = categories.items.flatMap((c) => c.tools ?? []).slice(0, 4);
 
   return (
-    <footer className="py-12 bg-card border-t border-border">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 max-w-6xl mx-auto">
-          {/* Logo and Description */}
-          <div>
+    <footer className="bg-background border-t border-border">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+          <div className="md:col-span-1">
             <Logo />
-            <p className="mt-4 text-sm text-muted-foreground">
-              Ferramentas online gratuitas, rápidas e seguras. Parte da plataforma DesignOnline.
+            <p className="mt-5 text-sm text-muted-foreground leading-relaxed">
+              A plataforma brasileira de ferramentas online para trabalhar com arquivos PDF de forma simples, rápida e segura. Sem
+              cadastro, sem instalação.
             </p>
           </div>
 
-          {/* Plataformas Section */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Plataformas</h4>
-            <ul className="space-y-2">
-              {platformLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
-                    target={link.external ? "_blank" : undefined}
-                    rel={link.external ? "noopener noreferrer" : undefined}
-                  >
-                    {link.name}
-                    {link.external && <ExternalLink className="w-3 h-3" />}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Ferramentas Section - Dynamic from Categories */}
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Ferramentas</h4>
-            <ul className="space-y-2">
+            <h4 className="text-sm font-semibold text-foreground mb-4">Ferramentas</h4>
+            <ul className="space-y-3">
               {categories.items.slice(0, 4).map((category) => (
                 <li key={category._id}>
                   <Link
@@ -63,10 +36,52 @@ export const Footer = async () => {
             </ul>
           </div>
 
-          {/* Legal Section - Dynamic from Custom Pages */}
           <div>
-            <h4 className="font-semibold text-foreground mb-4">Legal</h4>
-            <ul className="space-y-2">
+            <h4 className="text-sm font-semibold text-foreground mb-4">Populares</h4>
+            <ul className="space-y-3">
+              {popular.length > 0 ? (
+                popular.map((tool: { _id?: string; title?: string; link?: string; categorySlug?: string } | undefined, idx) =>
+                  tool?.title && tool?.link ? (
+                    <li key={tool._id ?? `${tool.link}-${idx}`}>
+                      <Link
+                        href={`/ferramentas/${tool.categorySlug ?? categories.items[0]?.slug ?? ""}/${tool.link}`}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {tool.title}
+                      </Link>
+                    </li>
+                  ) : null,
+                )
+              ) : (
+                <>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Juntar PDF
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Comprimir PDF
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      PDF para Word
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Assinar PDF
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Institucional</h4>
+            <ul className="space-y-3">
               {customPages.map((page) => (
                 <li key={page._id}>
                   <Link href={`/${page.slug}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -78,19 +93,10 @@ export const Footer = async () => {
           </div>
         </div>
 
-        {/* Copyright Section */}
-        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 max-w-6xl mx-auto">
-          <p className="text-sm text-muted-foreground">© 2026 pdfs.com.br. Todos os direitos reservados.</p>
-          <p className="text-sm text-muted-foreground">
-            Parte da plataforma{" "}
-            <Link
-              href="https://designonline.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              DesignOnline.com.br
-            </Link>
+        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-sm text-muted-foreground">© 2026 PDFS.com.br — O padrão brasileiro para PDFs</p>
+          <p className="text-sm text-muted-foreground inline-flex items-center gap-1.5">
+            Feito com <Heart className="w-4 h-4 fill-red-500 text-red-500" /> no Brasil
           </p>
         </div>
       </div>

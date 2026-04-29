@@ -34,9 +34,7 @@ interface NewToolsGridProps {
 export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
   const [activeSlug, setActiveSlug] = useState<string>("all");
 
-  const allTools = toolsByCategory.flatMap(({ category, tools }) =>
-    tools.map((tool) => ({ ...tool, category })),
-  );
+  const allTools = toolsByCategory.flatMap(({ category, tools }) => tools.map((tool) => ({ ...tool, category })));
 
   const visibleTools = activeSlug === "all" ? allTools : allTools.filter((t) => t.category.slug === activeSlug);
 
@@ -47,9 +45,7 @@ export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
           type="button"
           onClick={() => setActiveSlug("all")}
           className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-            activeSlug === "all"
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-muted-foreground hover:bg-muted/70"
+            activeSlug === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"
           }`}
         >
           Todas
