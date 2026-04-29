@@ -8,70 +8,70 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Light Theme - Coral + Orange-Coral */
+  /* PDFs.com.br Light Theme — espelho do felipelayoun/pdf-simples */
   --background: 0 0% 100%;
-  --foreground: 222 47% 11%;
+  --foreground: 220 20% 10%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
+  --card-foreground: 220 20% 10%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
+  --popover-foreground: 220 20% 10%;
 
-  /* Primary: Coral red */
+  /* Primary: coral red — único accent colorido do ref */
   --primary: 4 85% 55%;
   --primary-foreground: 0 0% 100%;
 
-  /* Secondary: Orange-coral */
-  --secondary: 14 90% 55%;
-  --secondary-foreground: 0 0% 100%;
+  /* Secondary / muted / accent: cinza claro neutro (idêntico ao ref) */
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 20% 10%;
 
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 10% 46%;
 
-  --accent: 14 90% 55%;
-  --accent-foreground: 0 0% 100%;
+  --accent: 220 14% 96%;
+  --accent-foreground: 220 20% 10%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
   --ring: 4 85% 55%;
 
   --radius: 0.75rem;
 
-  /* Category colors */
+  /* Categorias do nosso CMS (não existem no ref) */
   --category-pdf: 4 85% 55%;
-  --category-image: 145 60% 45%;
+  --category-image: 145 65% 42%;
   --category-text: 210 80% 55%;
-  --category-converter: 35 90% 50%;
+  --category-converter: 35 95% 55%;
 
-  /* Tool-specific colors */
-  --tool-pdf-word: 210 80% 50%;
-  --tool-juntar: 145 60% 42%;
-  --tool-comprimir: 35 90% 48%;
-  --tool-dividir: 265 65% 55%;
-  --tool-assinar: 340 70% 50%;
+  /* Tool-specific colors (idênticos ao ref) */
+  --tool-pdf-word: 210 80% 55%;
+  --tool-juntar: 145 65% 42%;
+  --tool-comprimir: 35 95% 55%;
+  --tool-dividir: 265 70% 58%;
+  --tool-assinar: 340 75% 55%;
 
-  /* Chart colors (keep existing) */
+  /* Chart colors (mantidos) */
   --chart-1: 0.646 0.222 41.116;
   --chart-2: 0.6 0.118 184.704;
   --chart-3: 0.398 0.07 227.392;
   --chart-4: 0.828 0.189 84.429;
   --chart-5: 0.769 0.188 70.08;
 
-  /* Sidebar (light theme) */
-  --sidebar: 210 40% 98%;
-  --sidebar-foreground: 222 47% 11%;
-  --sidebar-primary: 4 85% 55%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 210 40% 96%;
-  --sidebar-accent-foreground: 222 47% 11%;
-  --sidebar-border: 214 32% 91%;
-  --sidebar-ring: 4 85% 55%;
+  /* Sidebar (idêntico ao ref — neutro) */
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 
-  /* Logo colors */
+  /* Logo colors (do nosso projeto) */
   --logo-primary: 4 85% 55%;
   --logo-secondary: 14 90% 55%;
 }
