@@ -95,7 +95,10 @@ export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
         <div className="space-y-32 md:space-y-40">
           {/* Breadcrumb visual + Hero — eyebrow + h1 dominante */}
           <header className="text-center max-w-3xl mx-auto">
-            <nav aria-label="breadcrumb" className="mb-6 flex items-center justify-center gap-1.5 text-sm text-muted-foreground">
+            <nav
+              aria-label="breadcrumb"
+              className="mb-6 flex items-center justify-center gap-1.5 text-sm text-muted-foreground scroll-mt-24"
+            >
               <Link href="/" className="hover:text-foreground transition-colors">
                 Home
               </Link>
