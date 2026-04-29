@@ -3,6 +3,7 @@ import { toolsRouter } from "@/trpc/routers/toolsRouter";
 import { jobsRouter } from "@/trpc/routers/jobsRouter";
 import { categoriesRouter } from "@/trpc/routers/categoriesRouter";
 import { pagesRouter } from "@/trpc/routers/pagesRouter";
+import { postsRouter } from "@/trpc/routers/postsRouter";
 import { globalScriptsRouter } from "@/trpc/routers/globalScriptsRouter";
 
 export const appRouter = createTRPCRouter({
@@ -10,6 +11,7 @@ export const appRouter = createTRPCRouter({
   tools: toolsRouter,
   categories: categoriesRouter,
   pages: pagesRouter,
+  posts: postsRouter,
   globalScripts: globalScriptsRouter,
 });
 

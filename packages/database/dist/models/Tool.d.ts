@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { Category } from "./Category.js";
+import { Post } from "./Post.js";
 import { type Ref } from "@typegoose/typegoose";
 export declare class Tool {
     _id?: string;
@@ -31,6 +32,7 @@ export declare class Tool {
     }>;
     closingText?: string;
     isActive: boolean;
+    featuredPostId?: Ref<Post> | null;
     metadata?: Record<string, any>;
     createdAt?: Date;
     updatedAt?: Date;

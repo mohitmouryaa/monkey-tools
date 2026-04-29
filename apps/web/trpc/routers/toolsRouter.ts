@@ -1,8 +1,10 @@
 import z from "zod";
 import { TRPCError } from "@trpc/server";
+import { updateTag } from "next/cache";
 import { PAGINATION } from "@/modules/common/constants";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
+import { tagForTool } from "@/modules/tools/lib/cache";
 import { type Category, mongoose, type Tool, ToolModel } from "@workspace/database";
 
 export type ToolWithCategory = Tool & { category: Category };
@@ -30,6 +32,7 @@ export const toolsRouter = createTRPCRouter({
         faqs: input.faqs,
         closingText: input.closingText,
         isActive: input.isActive ?? true,
+        featuredPostId: input.featuredPostId && input.featuredPostId !== "" ? input.featuredPostId : null,
       });
 
       const savedTool = await tool.save();
@@ -156,12 +159,26 @@ export const toolsRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       try {
+        const previousTool = await ToolModel.findById(input.id).select("link featuredPostId").lean();
+        if (!previousTool) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Tool not found" });
+        }
+
         // Prepare update data, mapping categoryId to category
         const { categoryId, ...updateData } = input.data;
-        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & { category?: string };
+        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & {
+          category?: string;
+          featuredPostId?: string | null;
+        };
 
         if (categoryId !== undefined) {
           finalUpdateData.category = categoryId;
+        }
+
+        const featuredPostIdProvided = "featuredPostId" in finalUpdateData;
+        if (featuredPostIdProvided) {
+          const v = finalUpdateData.featuredPostId;
+          finalUpdateData.featuredPostId = v && v !== "" ? v : null;
         }
 
         const updatedTool = await ToolModel.findByIdAndUpdate(
@@ -178,6 +195,19 @@ export const toolsRouter = createTRPCRouter({
             code: "NOT_FOUND",
             message: "Ferramenta não encontrada",
           });
+        }
+
+        if (featuredPostIdProvided) {
+          const previousId = previousTool.featuredPostId ? String(previousTool.featuredPostId) : null;
+          const nextId = finalUpdateData.featuredPostId ?? null;
+          if (previousId !== nextId) {
+            if (updatedTool.link) {
+              updateTag(tagForTool(updatedTool.link));
+            }
+            if (previousTool.link && previousTool.link !== updatedTool.link) {
+              updateTag(tagForTool(previousTool.link));
+            }
+          }
         }
 
         return {

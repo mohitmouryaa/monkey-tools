@@ -63,6 +63,7 @@ export const ToolView = ({ id }: ToolViewProps) => {
               richContent: toolData.richContent || "",
               faqs: toolData.faqs || [],
               closingText: toolData.closingText || "",
+              featuredPostId: toolData.featuredPostId ? String(toolData.featuredPostId) : null,
             }}
             onSubmit={handleUpdate}
             submitLabel="Salvar Alterações"

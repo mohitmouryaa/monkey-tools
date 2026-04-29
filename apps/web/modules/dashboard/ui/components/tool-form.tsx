@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { VisualStepsBuilder } from "./visual-steps-builder";
 import { RichTextEditor } from "./rich-text-editor";
 import { FAQManager } from "./faq-manager";
+import { PostCombobox } from "./post-combobox";
 
 export type ToolFormValues = z.infer<typeof createToolSchema>;
 
@@ -54,6 +55,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
       faqs: [],
       closingText: "",
       isActive: true,
+      featuredPostId: null,
       ...defaultValues,
     },
   });
@@ -81,6 +83,7 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
         faqs: [],
         closingText: "",
         isActive: true,
+        featuredPostId: null,
         ...defaultValues,
       });
     }
@@ -173,6 +176,30 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
               )}
             />
           </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-foreground">Post em destaque</h3>
+          <FormField
+            control={form.control}
+            name="featuredPostId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Post em destaque</FormLabel>
+                <FormDescription>
+                  Este post aparecerá na seção "Aprenda mais" da página pública da tool.
+                </FormDescription>
+                <FormControl>
+                  <PostCombobox
+                    value={field.value ?? null}
+                    onChange={field.onChange}
+                    disabled={disabled}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="space-y-4">
