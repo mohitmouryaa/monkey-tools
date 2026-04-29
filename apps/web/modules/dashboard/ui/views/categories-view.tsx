@@ -1,58 +1,48 @@
 "use client";
 
-import { Folder } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { Category } from "@workspace/database";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import { useRemoveCategory } from "@/modules/dashboard/hooks/use-remove-category";
 import { useSuspenseCategories } from "@/modules/dashboard/hooks/use-suspense-categories";
-import { EmptyView, EntityItem, EntityList } from "@/modules/common/ui/components/entity-components";
+import { CategoryCard, type CategoryCardData } from "@/modules/dashboard/ui/components/category-card";
+import { EmptyView } from "@/modules/common/ui/components/entity-components";
 
 export const CategoriesView = () => {
   const categories = useSuspenseCategories();
-  return (
-    <EntityList
-      items={categories.data.items}
-      getKey={(category) => category._id}
-      renderItem={(category) => <CategoryItem data={category} />}
-      emptyView={<CategoriesEmpty />}
-      className=""
-    />
-  );
-};
+  const items = categories.data.items as unknown as CategoryCardData[];
 
-export const CategoriesEmpty = () => {
-  const router = useRouter();
-
-  const handleCreate = () => {
-    router.push("/dashboard/categories/create");
-  };
-
-  return <EmptyView message="No categories found. Get started by creating a category" onNew={handleCreate} />;
-};
-
-export const CategoryItem = ({ data }: { data: Category }) => {
-  const removeCategory = useRemoveCategory();
-
-  const handleRemove = () => {
-    removeCategory.mutate({ id: data._id as string });
-  };
-  return (
-    <EntityItem
-      href={`/dashboard/categories/${data._id}`}
-      title={data.name}
-      subtitle={data.slug}
-      image={
-        <div className="flex items-center justify-center size-8">
-          {data.icon ? (
-            <DynamicIcon name={data.icon as IconName} className="size-5" fallback={() => <Folder className="size-5" />} />
-          ) : (
-            <Folder className="size-5" />
-          )}
+  if (items.length === 0) {
+    return (
+      <div className="flex items-center justify-center flex-1">
+        <div className="max-w-md mx-auto">
+          <CategoriesEmpty />
         </div>
-      }
-      onRemove={handleRemove}
-      isRemoving={removeCategory.isPending}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {items.map((category) => (
+        <CategoryItem key={category._id} data={category} />
+      ))}
+    </div>
+  );
+};
+
+const CategoriesEmpty = () => {
+  const router = useRouter();
+  return (
+    <EmptyView
+      message="Ainda não há categorias. Crie a primeira para começar a organizar suas ferramentas."
+      onNew={() => router.push("/dashboard/categories/create")}
     />
   );
+};
+
+const CategoryItem = ({ data }: { data: CategoryCardData }) => {
+  const removeCategory = useRemoveCategory();
+  const handleRemove = () => {
+    removeCategory.mutate({ id: data._id });
+  };
+  return <CategoryCard data={data} onRemove={handleRemove} isRemoving={removeCategory.isPending} />;
 };
