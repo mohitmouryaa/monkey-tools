@@ -144,7 +144,7 @@ Typecheck (`pnpm --filter web typecheck`) passa. Lint nos 3 arquivos do spike pa
 
 ---
 
-### Fase 1 — Tipos compartilhados em `packages/types`
+### Fase 1 — Tipos compartilhados em `packages/types` ✅
 
 **Objetivo:** ter os shapes TS dos `data` dos blocos custom + união de tipos de blocos importáveis tanto pelo schema Mongoose (no `dist/`) quanto pelo router/forms.
 **Critério de conclusão:** `import { type PageBlock, type HeroBlockData, ... } from "@workspace/types"` funciona em `apps/web` e o build do package passa.
