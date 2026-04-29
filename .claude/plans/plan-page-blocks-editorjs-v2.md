@@ -316,12 +316,12 @@ Mesma troca da 9.1. Esse form é o "polimorfo" usado por outras telas — confir
 
 ---
 
-### Fase 10 — Script de migração
+### Fase 10 — Script de migração ✅
 
 **Objetivo:** converter páginas existentes com `content: string` HTML para `OutputData` envolvendo num bloco `raw-html`. Idempotente.
 **Critério de conclusão:** rodar duas vezes não duplica blocos; páginas com `content` já em objeto são puladas. **Smoke test:** rodar contra base local com pelo menos 1 página HTML, ver migração; rodar segunda vez, ver `skipped`.
 
-#### 10.1 — Criar `apps/web/scripts/migrate-pages-content.ts`
+#### 10.1 — Criar `apps/web/scripts/migrate-pages-content.ts` ✅
 **Arquivo:** `apps/web/scripts/migrate-pages-content.ts`
 **Depende de:** Fase 3
 Script tsx (segue padrão de `apps/web/scripts/create-admin.ts`) que:
@@ -332,7 +332,7 @@ Script tsx (segue padrão de `apps/web/scripts/create-admin.ts`) que:
 5. Log final com counts: `migrated`, `skipped (already migrated)`, `skipped (empty)`.
 **Feito quando:** rodar contra base local: idempotência confirmada e log de count visível.
 
-#### 10.2 — Adicionar script ao `apps/web/package.json`
+#### 10.2 — Adicionar script ao `apps/web/package.json` ✅
 **Arquivo:** `apps/web/package.json`
 **Depende de:** 10.1
 Adicionar `"migrate:pages": "tsx scripts/migrate-pages-content.ts"` ao bloco `scripts` (linha 6–14).

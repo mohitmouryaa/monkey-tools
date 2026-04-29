@@ -10,6 +10,7 @@
     "lint": "biome lint .",
     "lint:fix": "biome check --write .",
     "create:admin": "tsx scripts/create-admin.ts",
+    "migrate:pages": "tsx --env-file=.env scripts/migrate-pages-content.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
