@@ -351,8 +351,8 @@ export default function RemoveImageBackground() {
         <AlertTriangle className="w-4 h-4 text-yellow-600" />
         <AlertTitle>Aviso de Processamento</AlertTitle>
         <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-          A remoção de fundo funciona melhor com imagens que têm objetos em primeiro plano claros contra fundos simples. O processamento pode
-          levar alguns segundos por imagem dependendo do tamanho e complexidade.
+          A remoção de fundo funciona melhor com imagens que têm objetos em primeiro plano claros contra fundos simples. O
+          processamento pode levar alguns segundos por imagem dependendo do tamanho e complexidade.
         </AlertDescription>
       </Alert>
     </div>

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import mongoose from "mongoose";
 import { Category } from "./Category.js";
-import { Post } from "./Post.js";
+import type { Post } from "./Post.js";
 import { prop, getModelForClass, modelOptions, Severity, type Ref } from "@typegoose/typegoose";
 
 @modelOptions({
@@ -86,7 +86,7 @@ export class Tool {
   @prop({ default: true })
   public isActive!: boolean;
 
-  @prop({ ref: () => Post, type: () => mongoose.Schema.Types.ObjectId, default: null })
+  @prop({ ref: "Post", type: () => mongoose.Schema.Types.ObjectId, default: null })
   public featuredPostId?: Ref<Post> | null;
 
   @prop()

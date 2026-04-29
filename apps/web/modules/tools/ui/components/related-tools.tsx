@@ -33,7 +33,9 @@ export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedTool
         {related.map((tool) => (
           <Link
             key={tool._id as string}
-            href={tool.link.startsWith("/") ? `/ferramentas/${categorySlug}${tool.link}` : `/ferramentas/${categorySlug}/${tool.link}`}
+            href={
+              tool.link.startsWith("/") ? `/ferramentas/${categorySlug}${tool.link}` : `/ferramentas/${categorySlug}/${tool.link}`
+            }
             className="block group"
           >
             <div className="flex items-center h-full gap-4 p-4 transition-all duration-200 border rounded-xl border-border bg-card hover:border-primary/50 hover:bg-muted/50">

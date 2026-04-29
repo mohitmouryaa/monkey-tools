@@ -9,7 +9,9 @@ export const PagesHeader = () => {
     <div className="flex items-center justify-between">
       <div>
         <h1 className="text-3xl font-bold">Páginas</h1>
-        <p className="text-muted-foreground mt-2">Gerencie as páginas do seu site (Início, Todas as Ferramentas e páginas personalizadas)</p>
+        <p className="text-muted-foreground mt-2">
+          Gerencie as páginas do seu site (Início, Todas as Ferramentas e páginas personalizadas)
+        </p>
       </div>
       <Link href="/dashboard/pages/custom/create">
         <Button>

@@ -24,13 +24,7 @@ export const ImageBlock = ({ data }: { data: ImageBlockData }) => {
           .join(" ")}
         style={{ aspectRatio: "16/9" }}
       >
-        <Image
-          src={url}
-          alt={data.caption ?? ""}
-          fill
-          sizes="(min-width: 1024px) 800px, 100vw"
-          className="object-contain"
-        />
+        <Image src={url} alt={data.caption ?? ""} fill sizes="(min-width: 1024px) 800px, 100vw" className="object-contain" />
       </div>
       {data.caption && (
         <figcaption

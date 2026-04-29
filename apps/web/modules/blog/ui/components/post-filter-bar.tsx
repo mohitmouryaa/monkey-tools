@@ -45,9 +45,7 @@ export const PostFilterBar = () => {
       </div>
       <Select
         value={params.tool ?? "all"}
-        onValueChange={(value) =>
-          setParams({ ...params, tool: value === "all" ? null : value, page: PAGINATION.DEFAULT_PAGE })
-        }
+        onValueChange={(value) => setParams({ ...params, tool: value === "all" ? null : value, page: PAGINATION.DEFAULT_PAGE })}
       >
         <SelectTrigger className="sm:w-64">
           <SelectValue placeholder="Todas as ferramentas" />

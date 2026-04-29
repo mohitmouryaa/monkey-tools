@@ -353,7 +353,11 @@ export default function WebpToJpg() {
                     </div>
                     <div className="relative overflow-hidden border border-cyan-200 rounded-xl aspect-square bg-secondary dark:border-cyan-900">
                       {/* biome-ignore lint/performance/noImgElement: <Required for image preview because nextjs Image cannot be used for object URLs> */}
-                      <img src={convertedImages[0]?.convertedUrl} alt="Imagem convertida" className="absolute inset-0 object-contain" />
+                      <img
+                        src={convertedImages[0]?.convertedUrl}
+                        alt="Imagem convertida"
+                        className="absolute inset-0 object-contain"
+                      />
                     </div>
                   </div>
                 </div>

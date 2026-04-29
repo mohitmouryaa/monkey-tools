@@ -351,7 +351,8 @@ export default function CompressImage() {
         <AlertTriangle className="w-4 h-4 text-yellow-600" />
         <AlertTitle>Aviso de Compressão</AlertTitle>
         <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-          A compressão de imagem reduz o tamanho do arquivo otimizando qualidade e dimensões. Os resultados podem variar com base na imagem original.
+          A compressão de imagem reduz o tamanho do arquivo otimizando qualidade e dimensões. Os resultados podem variar com base
+          na imagem original.
         </AlertDescription>
       </Alert>
     </div>

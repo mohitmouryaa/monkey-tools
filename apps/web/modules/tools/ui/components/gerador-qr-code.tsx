@@ -142,7 +142,9 @@ export default function QRCodeGenerator() {
                 <h4 className="font-semibold text-emerald-800 dark:text-emerald-200">QR Code Gerado!</h4>
               </div>
               <div className="flex flex-col gap-3 mt-2 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm text-emerald-700 dark:text-emerald-300">Seu QR code está pronto para download e compartilhamento.</p>
+                <p className="text-sm text-emerald-700 dark:text-emerald-300">
+                  Seu QR code está pronto para download e compartilhamento.
+                </p>
                 <Button
                   onClick={downloadQRCode}
                   size="sm"

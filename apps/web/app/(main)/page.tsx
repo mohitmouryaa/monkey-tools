@@ -30,7 +30,8 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "pdfs.com.br - Ferramentas Online Grátis para Todos",
       description:
         "Oferecemos ferramentas online de PDF, texto, imagem e muito mais para facilitar sua vida. Rápido, seguro e sem cadastro. Converta, comprima e mescle arquivos em segundos.",
-      keywords: "ferramentas online, ferramentas grátis, ferramentas pdf, ferramentas de imagem, ferramentas de texto, conversor, compressor",
+      keywords:
+        "ferramentas online, ferramentas grátis, ferramentas pdf, ferramentas de imagem, ferramentas de texto, conversor, compressor",
     };
   }
 }

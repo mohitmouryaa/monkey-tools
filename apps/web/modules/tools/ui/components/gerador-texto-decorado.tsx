@@ -148,7 +148,9 @@ export default function FancyTextGenerator() {
             <Type className="h-5 w-5 text-primary" />
             Texto de Entrada
           </CardTitle>
-          <CardDescription>Digite ou cole seu texto abaixo para vê-lo transformado instantaneamente em vários estilos.</CardDescription>
+          <CardDescription>
+            Digite ou cole seu texto abaixo para vê-lo transformado instantaneamente em vários estilos.
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea

@@ -21,13 +21,7 @@ export const PostCard = ({ post }: PostCardProps) => {
     <Link href={`/blog/${post.slug}`} className="block group">
       <div className="bg-card border border-border rounded-2xl p-4 transition hover:border-primary">
         <div className="relative aspect-[16/9] overflow-hidden rounded-xl">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            sizes="(min-width: 1024px) 33vw, 100vw"
-            className="object-cover"
-          />
+          <Image src={post.coverImage} alt={post.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
         </div>
         <h3 className="mt-4 text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
           {post.title}

@@ -77,9 +77,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     <div className="container px-4 py-12 mx-auto max-w-6xl">
       <header className="mb-10">
         <h1 className="text-4xl font-bold tracking-tight text-foreground">Blog</h1>
-        <p className="mt-2 text-muted-foreground">
-          Aprenda a usar nossas ferramentas com tutoriais, dicas e novidades.
-        </p>
+        <p className="mt-2 text-muted-foreground">Aprenda a usar nossas ferramentas com tutoriais, dicas e novidades.</p>
       </header>
 
       <div className="mb-8">

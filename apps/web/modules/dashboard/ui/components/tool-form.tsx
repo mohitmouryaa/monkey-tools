@@ -186,15 +186,9 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Post em destaque</FormLabel>
-                <FormDescription>
-                  Este post aparecerá na seção "Aprenda mais" da página pública da tool.
-                </FormDescription>
+                <FormDescription>Este post aparecerá na seção "Aprenda mais" da página pública da tool.</FormDescription>
                 <FormControl>
-                  <PostCombobox
-                    value={field.value ?? null}
-                    onChange={field.onChange}
-                    disabled={disabled}
-                  />
+                  <PostCombobox value={field.value ?? null} onChange={field.onChange} disabled={disabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -320,9 +314,15 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Título H1 (Opcional)</FormLabel>
-                <FormDescription>H1 personalizado para a página da ferramenta. Deixe vazio para usar o título da ferramenta.</FormDescription>
+                <FormDescription>
+                  H1 personalizado para a página da ferramenta. Deixe vazio para usar o título da ferramenta.
+                </FormDescription>
                 <FormControl>
-                  <Input placeholder="ex: Comprimir PDF: reduza o tamanho do arquivo online gratuitamente" {...field} disabled={disabled} />
+                  <Input
+                    placeholder="ex: Comprimir PDF: reduza o tamanho do arquivo online gratuitamente"
+                    {...field}
+                    disabled={disabled}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -412,7 +412,12 @@ export const ToolForm = ({ defaultValues, onSubmit, submitLabel = "Salvar", disa
                 <FormLabel>Texto de Encerramento</FormLabel>
                 <FormDescription>Chamada final para ação ou resumo (80-120 palavras recomendado)</FormDescription>
                 <FormControl>
-                  <Textarea placeholder="Mensagem de encerramento da página da ferramenta..." {...field} disabled={disabled} rows={3} />
+                  <Textarea
+                    placeholder="Mensagem de encerramento da página da ferramenta..."
+                    {...field}
+                    disabled={disabled}
+                    rows={3}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

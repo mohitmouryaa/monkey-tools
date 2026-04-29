@@ -36,7 +36,9 @@ export const CreateToolView = () => {
                 <div>
                   <h1 className="text-4xl font-bold tracking-tight text-foreground">Criar Nova Ferramenta</h1>
                   <div className="flex items-center gap-3 mt-2">
-                    <span className="text-sm text-muted-foreground">Adicione uma nova ferramenta à plataforma com configurações de SEO</span>
+                    <span className="text-sm text-muted-foreground">
+                      Adicione uma nova ferramenta à plataforma com configurações de SEO
+                    </span>
                   </div>
                 </div>
               </div>

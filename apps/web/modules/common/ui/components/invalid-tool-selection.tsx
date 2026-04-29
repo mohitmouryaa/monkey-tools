@@ -32,7 +32,8 @@ export const InvalidToolSelection = () => {
 
               <h2 className="mb-4 text-2xl font-bold text-foreground">O que aconteceu?</h2>
               <p className="mb-6 text-muted-foreground">
-                Isso pode ser devido a um erro de digitação na URL, um link desatualizado ou a ferramenta pode ter sido temporariamente removida. Mas não se preocupe — temos muitas outras ferramentas incríveis para você explorar!
+                Isso pode ser devido a um erro de digitação na URL, um link desatualizado ou a ferramenta pode ter sido
+                temporariamente removida. Mas não se preocupe — temos muitas outras ferramentas incríveis para você explorar!
               </p>
 
               {/* Action Buttons */}

@@ -148,7 +148,9 @@ export default function CnpjGenerator() {
       <Card className="p-6 space-y-6">
         <div className="space-y-2">
           <h2 className="text-xl font-bold">Validador</h2>
-          <p className="text-sm text-muted-foreground">Verifique se um número de CNPJ é válido de acordo com o algoritmo oficial.</p>
+          <p className="text-sm text-muted-foreground">
+            Verifique se um número de CNPJ é válido de acordo com o algoritmo oficial.
+          </p>
         </div>
 
         <div className="space-y-4">

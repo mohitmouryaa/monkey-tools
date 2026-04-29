@@ -89,7 +89,8 @@ export default function AdvancedPdfCompressor() {
         <AlertTriangle className="w-4 h-4 text-orange-600 dark:text-orange-400" />
         <AlertTitle className="font-semibold text-orange-800 dark:text-orange-300">Perda de Qualidade Irreversível</AlertTitle>
         <AlertDescription className="font-semibold">
-          Esta ferramenta usa algoritmos agressivos para minimizar o tamanho do arquivo. Imagens serão reduzidas e fontes podem ser simplificadas.
+          Esta ferramenta usa algoritmos agressivos para minimizar o tamanho do arquivo. Imagens serão reduzidas e fontes podem
+          ser simplificadas.
           <span className="font-bold"> Não recomendado para impressão profissional.</span>
         </AlertDescription>
       </Alert>
@@ -143,8 +144,8 @@ export default function AdvancedPdfCompressor() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  O arquivo será processado usando nosso algoritmo multi-pass mais agressivo (Ghostscript + qpdf + Otimização
-                  de Imagem).
+                  O arquivo será processado usando nosso algoritmo multi-pass mais agressivo (Ghostscript + qpdf + Otimização de
+                  Imagem).
                 </p>
                 <div className="flex flex-col mt-6 space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
                   <Button variant="outline" onClick={handleReset} className="flex-1" size={"lg"}>

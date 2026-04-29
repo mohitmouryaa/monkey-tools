@@ -15,7 +15,9 @@ export const PageSeoFields = ({ form }: PageSeoFieldsProps) => {
     <div className="space-y-4">
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Configurações SEO</h3>
-        <p className="text-sm text-muted-foreground">Configure os metadados SEO para melhor visibilidade nos mecanismos de busca</p>
+        <p className="text-sm text-muted-foreground">
+          Configure os metadados SEO para melhor visibilidade nos mecanismos de busca
+        </p>
       </div>
 
       <FormField

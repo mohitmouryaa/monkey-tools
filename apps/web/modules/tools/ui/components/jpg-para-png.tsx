@@ -337,7 +337,11 @@ export default function JpgToPng() {
                     </div>
                     <div className="relative overflow-hidden border border-purple-200 rounded-xl aspect-square bg-secondary dark:border-purple-900">
                       {/* biome-ignore lint/performance/noImgElement: <Required for image preview because nextjs Image cannot be used for object URLs> */}
-                      <img src={convertedImages[0]?.convertedUrl} alt="Imagem convertida" className="absolute inset-0 object-contain" />
+                      <img
+                        src={convertedImages[0]?.convertedUrl}
+                        alt="Imagem convertida"
+                        className="absolute inset-0 object-contain"
+                      />
                     </div>
                   </div>
                 </div>
@@ -363,7 +367,8 @@ export default function JpgToPng() {
         <AlertTriangle className="w-4 h-4 text-yellow-600" />
         <AlertTitle>Aviso de Conversão</AlertTitle>
         <AlertDescription className="text-yellow-700 dark:text-yellow-300">
-          A conversão de JPG para PNG preserva a qualidade da imagem, mas pode resultar em arquivos maiores devido à compressão sem perdas do PNG.
+          A conversão de JPG para PNG preserva a qualidade da imagem, mas pode resultar em arquivos maiores devido à compressão
+          sem perdas do PNG.
         </AlertDescription>
       </Alert>
     </div>

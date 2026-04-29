@@ -285,8 +285,8 @@ export default function CepAddressGenerator() {
 
       <div className="p-3 text-xs border rounded-md text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900">
         <strong>⚠️ Aviso:</strong> Os endereços gerados são <strong>sintéticos e apenas para fins de teste</strong>. Embora o
-        formato do CEP seja válido e mapeado para a região/estado correto, os números de rua e combinações de bairro específicos são
-        aleatórios e podem não existir fisicamente. Não use para entregas reais.
+        formato do CEP seja válido e mapeado para a região/estado correto, os números de rua e combinações de bairro específicos
+        são aleatórios e podem não existir fisicamente. Não use para entregas reais.
       </div>
     </div>
   );

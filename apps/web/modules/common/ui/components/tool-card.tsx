@@ -16,17 +16,16 @@ interface ToolCardProps {
   bgColor?: string;
 }
 
-// Category-specific icon colors
-const categoryIconColors: Record<string, string> = {
-  "pdf-tools": "#ef4444", // red-500
-  "image-tools": "#00E5A8", // neon green (secondary)
-  "text-tools": "#635BFF", // purple-blue (primary)
-  "text-ai-tools": "#635BFF", // purple-blue (primary)
-  converters: "#eab308", // yellow-500
+const categoryVar: Record<string, string> = {
+  "pdf-tools": "var(--category-pdf)",
+  "image-tools": "var(--category-image)",
+  "text-tools": "var(--category-text)",
+  "text-ai-tools": "var(--category-text)",
+  converters: "var(--category-converter)",
 };
 
 export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon }: ToolCardProps) => {
-  const categoryColor = categoryIconColors[categorySlug] || "#635BFF";
+  const categoryColor = `hsl(${categoryVar[categorySlug] ?? "var(--category-pdf)"})`;
 
   return (
     <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="block group">
