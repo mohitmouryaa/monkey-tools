@@ -2,7 +2,7 @@ import "reflect-metadata";
 import mongoose from "mongoose";
 import { PostStatus } from "@workspace/types";
 import { prop, getModelForClass, modelOptions, Severity, type Ref } from "@typegoose/typegoose";
-import { Tool } from "./Tool.js";
+import type { Tool } from "./Tool.js";
 
 export class PostSeo {
   @prop()
@@ -53,7 +53,7 @@ export class Post {
   @prop({ default: false })
   public isFeaturedGlobal!: boolean;
 
-  @prop({ ref: () => Tool, type: () => [mongoose.Schema.Types.ObjectId], default: [] })
+  @prop({ ref: "Tool", type: () => [mongoose.Schema.Types.ObjectId], default: [] })
   public tools!: Ref<Tool>[];
 
   @prop({ type: () => Object })

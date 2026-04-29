@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import "reflect-metadata";
 import mongoose from "mongoose";
 import { Category } from "./Category.js";
-import { Post } from "./Post.js";
 import { prop, getModelForClass, modelOptions, Severity } from "@typegoose/typegoose";
 let Tool = class Tool {
     _id;
@@ -118,7 +117,7 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Tool.prototype, "isActive", void 0);
 __decorate([
-    prop({ ref: () => Post, type: () => mongoose.Schema.Types.ObjectId, default: null }),
+    prop({ ref: "Post", type: () => mongoose.Schema.Types.ObjectId, default: null }),
     __metadata("design:type", Object)
 ], Tool.prototype, "featuredPostId", void 0);
 __decorate([
