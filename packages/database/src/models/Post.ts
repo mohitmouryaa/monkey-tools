@@ -44,7 +44,7 @@ export class Post {
   // biome-ignore lint/suspicious/noExplicitAny: <Editor.js JSON content shape is dynamic>
   public content!: Record<string, any>;
 
-  @prop({ required: true, enum: PostStatus, index: true, default: PostStatus.DRAFT })
+  @prop({ type: String, required: true, enum: PostStatus, index: true, default: PostStatus.DRAFT })
   public status!: PostStatus;
 
   @prop({ index: true })
