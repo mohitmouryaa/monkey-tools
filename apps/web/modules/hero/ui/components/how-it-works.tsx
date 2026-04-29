@@ -57,17 +57,17 @@ export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
   const sortedSteps = [...content.steps].sort((a, b) => a.order - b.order).slice(0, 3);
 
   return (
-    <section className="bg-muted/40 py-20">
-      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{content.title}</h2>
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">{content.subtitle}</p>
+    <section className="bg-muted/70 border-t border-border pt-24 md:pt-32 pb-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center">
+        <div className="text-center mb-20 max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5">{content.title}</h2>
+          <p className="text-base md:text-lg text-muted-foreground">{content.subtitle}</p>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-20">
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-10 w-full mb-16 justify-items-center">
           <div className="hidden md:block absolute top-12 left-[16.66%] right-[16.66%] h-px bg-border" aria-hidden />
           {sortedSteps.map((step, index) => (
-            <div key={step.title} className="relative flex flex-col items-center text-center">
+            <div key={step.title} className="relative flex flex-col items-center text-center max-w-xs">
               <div className="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center mb-6 shadow-lg shadow-primary/20 relative z-10">
                 <DynamicIcon
                   name={step.iconName as IconName}
@@ -78,23 +78,25 @@ export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
               <h3 className="text-lg font-semibold text-foreground mb-2">
                 {index + 1}. {step.title}
               </h3>
-              <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">{step.description}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-border">
-          {trustBadges.map(({ Icon, title, description, tone }) => (
-            <div key={title} className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${tone}`}>
-                <Icon className="w-5 h-5" />
+        <div className="w-full max-w-4xl mx-auto pt-10 border-t border-border">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 justify-items-center">
+            {trustBadges.map(({ Icon, title, description, tone }) => (
+              <div key={title} className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${tone}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
+                  <p className="text-xs text-muted-foreground">{description}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
-                <p className="text-xs text-muted-foreground">{description}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
