@@ -75,22 +75,27 @@ export default async function CustomPage({ params }: CustomPageProps) {
 
     const isLegacyHtml = typeof page.content === "string";
 
-    return (
-      <div className="flex flex-col min-h-screen bg-background">
-        <main className="container flex-1 px-4 py-12 mx-auto">
-          <article className="max-w-4xl mx-auto">
-            <h1 className="mb-8 text-3xl font-bold md:text-4xl text-foreground">{page.title}</h1>
-
-            {isLegacyHtml ? (
+    if (isLegacyHtml) {
+      return (
+        <div className="flex flex-col min-h-screen bg-background">
+          <main className="container flex-1 px-4 py-12 mx-auto">
+            <article className="max-w-4xl mx-auto">
+              <h1 className="mb-8 text-3xl font-bold md:text-4xl text-foreground">{page.title}</h1>
               <div
                 className={legacyHtmlClasses}
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: conteudo migrado do TipTap admin, confiavel
                 dangerouslySetInnerHTML={{ __html: page.content as string }}
               />
-            ) : (
-              <PageContentRenderer content={page.content as OutputData} />
-            )}
-          </article>
+            </article>
+          </main>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col min-h-screen bg-background">
+        <main className="flex-1">
+          <PageContentRenderer content={page.content as OutputData} />
         </main>
       </div>
     );

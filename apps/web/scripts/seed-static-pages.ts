@@ -28,7 +28,7 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "Quem somos",
+          badge: "Sobre",
           heading: "Ferramentas que resolvem em segundos, sem cadastro",
           description:
             "Nascemos para tornar tarefas chatas — converter, comprimir, juntar arquivos — em um clique. Tudo gratuito, no navegador.",
@@ -122,7 +122,7 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "Tutorial rápido",
+          badge: "Como funciona",
           heading: "Três passos. Sem cadastro. Sem instalação.",
           description: "Veja como tirar proveito das ferramentas em menos de um minuto, do envio ao download.",
           primaryButtonText: "Ver ferramentas",
@@ -239,7 +239,7 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "Sua privacidade vem primeiro",
+          badge: "Segurança",
           heading: "Seus arquivos são seus. Ponto.",
           description:
             "Trabalhamos com o mínimo de dados necessário para entregar o resultado e descartamos tudo logo em seguida.",
@@ -357,10 +357,10 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "Última atualização: abril/2026",
+          badge: "Privacidade",
           heading: "Política de Privacidade",
           description:
-            "Esta política explica que dados o pdfs.com.br coleta, como utiliza e quais são seus direitos enquanto titular.",
+            "Esta política explica que dados o pdfs.com.br coleta, como utiliza e quais são seus direitos enquanto titular. Última atualização: abril/2026.",
         },
       },
       {
@@ -491,10 +491,10 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "Última atualização: abril/2026",
-          heading: "Termos de Uso",
+          badge: "Termos de Uso",
+          heading: "As regras do jogo, em bom português",
           description:
-            "Ao utilizar o pdfs.com.br, você concorda com os termos abaixo. Eles existem para tornar o uso justo, seguro e previsível para todo mundo.",
+            "Ao utilizar o pdfs.com.br, você concorda com os termos abaixo. Eles existem para tornar o uso justo, seguro e previsível para todo mundo. Última atualização: abril/2026.",
         },
       },
       {
@@ -610,7 +610,7 @@ const pages: StaticPageSeed[] = [
       {
         type: "hero",
         data: {
-          badge: "A gente responde",
+          badge: "Contato",
           heading: "Fala com o time",
           description:
             "Sugestão de ferramenta, problema técnico, parceria ou questão de privacidade — escolha o canal e manda. Lemos tudo.",
