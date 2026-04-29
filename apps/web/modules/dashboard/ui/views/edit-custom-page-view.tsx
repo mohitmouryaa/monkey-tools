@@ -5,6 +5,7 @@ import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft } from "lucide-react";
 import { EditCustomPageForm } from "../components/edit-custom-page-form";
 import { usePageById } from "../../hooks/use-page-by-id";
+import type { UpdateCustomPageFormValues } from "../../schema/page";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
 interface EditCustomPageViewProps {
@@ -42,7 +43,7 @@ export const EditCustomPageView = ({ pageId }: EditCustomPageViewProps) => {
             seoTitle: page.seoTitle,
             seoDescription: page.seoDescription,
             seoKeywords: page.seoKeywords,
-            content: page.content || "",
+            content: (page.content ?? "") as UpdateCustomPageFormValues["content"] | string,
             showInFooter: page.showInFooter ?? true,
             footerOrder: page.footerOrder ?? 0,
             footerLabel: page.footerLabel || "",
