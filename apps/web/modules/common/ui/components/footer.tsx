@@ -82,13 +82,66 @@ export const Footer = async () => {
           <div>
             <h4 className="text-sm font-semibold text-foreground mb-4">Institucional</h4>
             <ul className="space-y-3">
-              {customPages.map((page) => (
-                <li key={page._id}>
-                  <Link href={`/${page.slug}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                    {page.footerLabel || page.title}
-                  </Link>
-                </li>
-              ))}
+              {customPages.length > 0 ? (
+                customPages.map((page) => (
+                  <li key={page._id}>
+                    <Link
+                      href={`/${page.slug}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {page.footerLabel || page.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li>
+                    <Link href="/sobre" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Sobre
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/como-funciona"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Como Funciona
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/seguranca"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Segurança
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/privacidade"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Privacidade
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/termos-de-uso"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Termos de Uso
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/contato"
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Contato
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
