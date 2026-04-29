@@ -45,11 +45,7 @@ export const CategoryCard = ({ name, slug, description, icon, color, toolsCount 
               boxShadow: `0 12px 30px -8px ${accent}`,
             }}
           >
-            <DynamicIcon
-              name={icon as IconName}
-              className="h-8 w-8"
-              fallback={() => <FolderOpen className="h-8 w-8" />}
-            />
+            <DynamicIcon name={icon as IconName} className="h-8 w-8" fallback={() => <FolderOpen className="h-8 w-8" />} />
           </div>
 
           <h3 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-foreground">{name}</h3>

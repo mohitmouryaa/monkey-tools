@@ -85,10 +85,7 @@ export const Footer = async () => {
               {customPages.length > 0 ? (
                 customPages.map((page) => (
                   <li key={page._id}>
-                    <Link
-                      href={`/${page.slug}`}
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href={`/${page.slug}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       {page.footerLabel || page.title}
                     </Link>
                   </li>
@@ -101,42 +98,27 @@ export const Footer = async () => {
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/como-funciona"
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href="/como-funciona" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       Como Funciona
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/seguranca"
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href="/seguranca" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       Segurança
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/privacidade"
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href="/privacidade" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       Privacidade
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/termos-de-uso"
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href="/termos-de-uso" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       Termos de Uso
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/contato"
-                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
+                    <Link href="/contato" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                       Contato
                     </Link>
                   </li>

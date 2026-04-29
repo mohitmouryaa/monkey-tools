@@ -43,9 +43,7 @@ export const ToolsFilterGrid = ({ tools, categories, showAllOption = true }: Too
             type="button"
             onClick={() => setActiveSlug("all")}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeSlug === "all"
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/70"
+              activeSlug === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"
             }`}
           >
             Todas
@@ -57,9 +55,7 @@ export const ToolsFilterGrid = ({ tools, categories, showAllOption = true }: Too
             key={cat._id}
             onClick={() => setActiveSlug(cat.slug)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-              activeSlug === cat.slug
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-muted/70"
+              activeSlug === cat.slug ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"
             }`}
           >
             {cat.name}

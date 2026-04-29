@@ -135,11 +135,27 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
     const audienceTitle = "Para quem é esta ferramenta";
     const audienceIntro = `Nossa ferramenta de ${toolData.title.toLowerCase()} foi desenhada para qualquer pessoa que precise resolver essa tarefa de forma rápida e eficiente, sem instalar nada. Ela é especialmente útil para:`;
     const audience = [
-      { label: "Estudantes", description: "envie trabalhos e pesquisas sem se preocupar com limites de tamanho.", iconName: "GraduationCap" },
+      {
+        label: "Estudantes",
+        description: "envie trabalhos e pesquisas sem se preocupar com limites de tamanho.",
+        iconName: "GraduationCap",
+      },
       { label: "Profissionais", description: "envie documentos e relatórios por e-mail sem complicação.", iconName: "Briefcase" },
-      { label: "Criadores de conteúdo", description: "otimize arquivos para sites mais rápidos e melhor experiência.", iconName: "Sparkles" },
-      { label: "Desenvolvedores", description: "reduza o peso de assets para aplicações web e produtos digitais.", iconName: "Code2" },
-      { label: "Pequenas empresas", description: "arquive documentos com eficiência e economize espaço de armazenamento.", iconName: "Building2" },
+      {
+        label: "Criadores de conteúdo",
+        description: "otimize arquivos para sites mais rápidos e melhor experiência.",
+        iconName: "Sparkles",
+      },
+      {
+        label: "Desenvolvedores",
+        description: "reduza o peso de assets para aplicações web e produtos digitais.",
+        iconName: "Code2",
+      },
+      {
+        label: "Pequenas empresas",
+        description: "arquive documentos com eficiência e economize espaço de armazenamento.",
+        iconName: "Building2",
+      },
     ];
 
     const benefitsTitle = "Principais benefícios";
@@ -148,10 +164,22 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
       { label: "100% online", description: "não exige instalação, funciona direto no seu navegador.", iconName: "Globe" },
       { label: "Gratuito", description: "uso ilimitado, sem custos e sem taxas escondidas.", iconName: "Gift" },
       { label: "Sem cadastro", description: "comece imediatamente, sem precisar criar uma conta.", iconName: "UserX" },
-      { label: "Funciona em qualquer dispositivo", description: "compatível com desktop, tablet e celular.", iconName: "Smartphone" },
+      {
+        label: "Funciona em qualquer dispositivo",
+        description: "compatível com desktop, tablet e celular.",
+        iconName: "Smartphone",
+      },
       { label: "Resultados instantâneos", description: "receba o arquivo pronto em segundos, não em minutos.", iconName: "Zap" },
-      { label: "Privado e seguro", description: "todo o processamento acontece no seu navegador, seus arquivos não saem do dispositivo.", iconName: "ShieldCheck" },
-      { label: "Qualidade preservada", description: "tecnologia inteligente mantém a legibilidade e a aparência do documento.", iconName: "Award" },
+      {
+        label: "Privado e seguro",
+        description: "todo o processamento acontece no seu navegador, seus arquivos não saem do dispositivo.",
+        iconName: "ShieldCheck",
+      },
+      {
+        label: "Qualidade preservada",
+        description: "tecnologia inteligente mantém a legibilidade e a aparência do documento.",
+        iconName: "Award",
+      },
     ];
 
     return (

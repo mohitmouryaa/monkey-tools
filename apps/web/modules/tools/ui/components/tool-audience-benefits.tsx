@@ -56,9 +56,7 @@ const Block = ({
         {eyebrow}
       </span>
 
-      <h2 className="mb-4 text-2xl md:text-[28px] font-bold text-foreground tracking-tight leading-tight max-w-2xl">
-        {title}
-      </h2>
+      <h2 className="mb-4 text-2xl md:text-[28px] font-bold text-foreground tracking-tight leading-tight max-w-2xl">{title}</h2>
 
       <p className="mb-8 text-[15px] md:text-base text-muted-foreground leading-relaxed max-w-2xl">{intro}</p>
 

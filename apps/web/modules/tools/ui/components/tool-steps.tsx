@@ -61,9 +61,7 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
 
               <h3 className="text-base font-semibold text-foreground mb-2">{step.title}</h3>
 
-              {step.description && (
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">{step.description}</p>
-              )}
+              {step.description && <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">{step.description}</p>}
             </div>
           );
         })}

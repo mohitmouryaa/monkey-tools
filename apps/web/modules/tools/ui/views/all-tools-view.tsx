@@ -26,8 +26,16 @@ const HUB_AUDIENCE = [
 const HUB_BENEFITS = [
   { label: "100% gratuito", description: "todas as ferramentas, sem custos ou taxas escondidas.", iconName: "Gift" },
   { label: "Sem cadastro", description: "use imediatamente, sem precisar criar conta.", iconName: "UserX" },
-  { label: "Funciona em qualquer dispositivo", description: "desktop, tablet ou celular — basta um navegador moderno.", iconName: "Smartphone" },
-  { label: "Privado e seguro", description: "muitas ferramentas processam direto no navegador, sem upload.", iconName: "ShieldCheck" },
+  {
+    label: "Funciona em qualquer dispositivo",
+    description: "desktop, tablet ou celular — basta um navegador moderno.",
+    iconName: "Smartphone",
+  },
+  {
+    label: "Privado e seguro",
+    description: "muitas ferramentas processam direto no navegador, sem upload.",
+    iconName: "ShieldCheck",
+  },
   { label: "Resultados instantâneos", description: "o arquivo fica pronto em segundos, não em minutos.", iconName: "Zap" },
   { label: "Qualidade preservada", description: "tecnologia inteligente mantém legibilidade e aparência.", iconName: "Award" },
   { label: "Open by default", description: "compatível com formatos abertos e padrões da web.", iconName: "Globe" },
@@ -51,11 +59,13 @@ const HUB_FAQS = [
   },
   {
     question: "Posso usar para fins comerciais?",
-    answer: "Sim. Você pode usar as ferramentas livremente para qualquer finalidade, inclusive trabalho profissional e comercial.",
+    answer:
+      "Sim. Você pode usar as ferramentas livremente para qualquer finalidade, inclusive trabalho profissional e comercial.",
   },
   {
     question: "As ferramentas funcionam em celulares e tablets?",
-    answer: "Sim. O site é responsivo e todas as ferramentas funcionam em smartphones (iOS e Android) e tablets, além de desktops.",
+    answer:
+      "Sim. O site é responsivo e todas as ferramentas funcionam em smartphones (iOS e Android) e tablets, além de desktops.",
   },
   {
     question: "Há limite de tamanho do arquivo?",
@@ -64,7 +74,8 @@ const HUB_FAQS = [
   },
   {
     question: "Como o pdfs.com.br se mantém gratuito?",
-    answer: "O serviço é mantido por publicidade leve e por planos premium opcionais. O uso básico continua gratuito e ilimitado.",
+    answer:
+      "O serviço é mantido por publicidade leve e por planos premium opcionais. O uso básico continua gratuito e ilimitado.",
   },
 ];
 
@@ -176,14 +187,14 @@ export const AllToolsView = ({ tools, categories, h1Heading, description }: AllT
               </div>
               <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed">
                 <p>
-                  pdfs.com.br nasceu para ser a forma mais simples de trabalhar com arquivos pela web. Você abre o site,
-                  escolhe a ferramenta, faz a tarefa e baixa o resultado. Sem instalar programa, sem criar conta, sem
-                  esperar e-mail de confirmação.
+                  pdfs.com.br nasceu para ser a forma mais simples de trabalhar com arquivos pela web. Você abre o site, escolhe a
+                  ferramenta, faz a tarefa e baixa o resultado. Sem instalar programa, sem criar conta, sem esperar e-mail de
+                  confirmação.
                 </p>
                 <p>
                   Cada ferramenta é construída para resolver <strong>uma única coisa muito bem</strong> — comprimir um PDF,
-                  converter uma imagem, juntar páginas, limpar metadados — em vez de empilhar funções dentro de uma
-                  interface complicada. É a filosofia das ferramentas Unix aplicada ao navegador.
+                  converter uma imagem, juntar páginas, limpar metadados — em vez de empilhar funções dentro de uma interface
+                  complicada. É a filosofia das ferramentas Unix aplicada ao navegador.
                 </p>
                 <p>
                   Tudo é gratuito por padrão. Quando faz sentido, oferecemos opções premium para uso intensivo, mas a

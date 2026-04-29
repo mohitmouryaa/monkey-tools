@@ -19,10 +19,7 @@ export const ToolHeader = ({ title, introText, iconName, iconColor, bgColor }: T
 
   return (
     <header className="flex flex-col items-center text-center pt-2 pb-4 md:pt-6 md:pb-6">
-      <div
-        className="flex items-center justify-center w-16 h-16 mb-6 rounded-2xl shadow-md"
-        style={{ backgroundColor: accent }}
-      >
+      <div className="flex items-center justify-center w-16 h-16 mb-6 rounded-2xl shadow-md" style={{ backgroundColor: accent }}>
         {iconName ? (
           <DynamicIcon
             name={iconName as IconName}
@@ -39,9 +36,7 @@ export const ToolHeader = ({ title, introText, iconName, iconColor, bgColor }: T
         {title}
       </h1>
 
-      {introText && (
-        <p className="mt-5 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">{introText}</p>
-      )}
+      {introText && <p className="mt-5 text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">{introText}</p>}
     </header>
   );
 };

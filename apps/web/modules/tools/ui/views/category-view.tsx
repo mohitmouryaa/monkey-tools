@@ -22,10 +22,26 @@ function buildCategoryContent(name: string) {
   return {
     audience: [
       { label: "Estudantes", description: `use ${lower} para entregar trabalhos no formato certo.`, iconName: "GraduationCap" },
-      { label: "Profissionais", description: `prepare documentos e entregáveis com ${lower} sem fricção.`, iconName: "Briefcase" },
-      { label: "Criadores de conteúdo", description: `${lower} ajuda a otimizar e adaptar arquivos para publicação.`, iconName: "Sparkles" },
-      { label: "Pequenas empresas", description: `automatize tarefas com ${lower} sem precisar de software pago.`, iconName: "Building2" },
-      { label: "Desenvolvedores", description: `integre ${lower} ao seu fluxo via web, sem instalar dependências.`, iconName: "Code2" },
+      {
+        label: "Profissionais",
+        description: `prepare documentos e entregáveis com ${lower} sem fricção.`,
+        iconName: "Briefcase",
+      },
+      {
+        label: "Criadores de conteúdo",
+        description: `${lower} ajuda a otimizar e adaptar arquivos para publicação.`,
+        iconName: "Sparkles",
+      },
+      {
+        label: "Pequenas empresas",
+        description: `automatize tarefas com ${lower} sem precisar de software pago.`,
+        iconName: "Building2",
+      },
+      {
+        label: "Desenvolvedores",
+        description: `integre ${lower} ao seu fluxo via web, sem instalar dependências.`,
+        iconName: "Code2",
+      },
     ],
     benefits: [
       { label: "100% online", description: "tudo direto no navegador, sem instalar nada.", iconName: "Globe" },
@@ -113,9 +129,7 @@ export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
               <span className="h-1 w-1 rounded-full bg-primary" aria-hidden />
               Categoria
             </span>
-            <h1 className="mb-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
-              {category.name}
-            </h1>
+            <h1 className="mb-5 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">{category.name}</h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">{category.description}</p>
           </header>
 
@@ -126,9 +140,7 @@ export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
                 <h2 className="text-xl md:text-2xl font-semibold text-foreground">
                   Ferramentas de {category.name.toLowerCase()}
                 </h2>
-                <p className="hidden md:block text-sm text-muted-foreground">
-                  Cada ferramenta resolve uma tarefa específica.
-                </p>
+                <p className="hidden md:block text-sm text-muted-foreground">Cada ferramenta resolve uma tarefa específica.</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {category.tools.map((tool) => (
@@ -163,18 +175,16 @@ export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
                 </h2>
               </div>
               <div className="space-y-4 text-base md:text-lg text-muted-foreground leading-relaxed">
+                <p>{category.description}</p>
                 <p>
-                  {category.description}
+                  No pdfs.com.br, agrupamos sob <strong>{category.name}</strong> as ferramentas que resolvem as tarefas mais
+                  frequentes desse domínio — de operações simples como conversão e compressão até manipulações mais específicas.
+                  Cada ferramenta foi construída pra fazer <em>uma</em> coisa muito bem.
                 </p>
                 <p>
-                  No pdfs.com.br, agrupamos sob <strong>{category.name}</strong> as ferramentas que resolvem as tarefas
-                  mais frequentes desse domínio — de operações simples como conversão e compressão até manipulações mais
-                  específicas. Cada ferramenta foi construída pra fazer <em>uma</em> coisa muito bem.
-                </p>
-                <p>
-                  Todas funcionam direto no navegador, sem instalação, e a maioria processa os arquivos localmente — ou
-                  seja, seus dados não saem do seu dispositivo. Quando há upload, ele é mínimo, criptografado em trânsito
-                  e o arquivo é removido automaticamente após o processamento.
+                  Todas funcionam direto no navegador, sem instalação, e a maioria processa os arquivos localmente — ou seja, seus
+                  dados não saem do seu dispositivo. Quando há upload, ele é mínimo, criptografado em trânsito e o arquivo é
+                  removido automaticamente após o processamento.
                 </p>
               </div>
             </div>

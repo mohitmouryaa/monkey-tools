@@ -15,11 +15,7 @@ export const ToolFAQ = ({ faqs }: ToolFAQProps) => {
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqs.map((faq, index) => (
-        <AccordionItem
-          key={faq.question}
-          value={`item-${index}`}
-          className="border-b border-border/60 last:border-b-0"
-        >
+        <AccordionItem key={faq.question} value={`item-${index}`} className="border-b border-border/60 last:border-b-0">
           <AccordionTrigger className="py-5 text-left text-base md:text-[17px] font-semibold text-foreground hover:no-underline">
             {faq.question}
           </AccordionTrigger>
