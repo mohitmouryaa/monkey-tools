@@ -16,8 +16,7 @@ export const NewHeroSection = ({ heroSection }: NewHeroSectionProps) => {
   const isDefault = !heroSection;
   const heading = heroSection?.heading;
   const description =
-    heroSection?.description ??
-    "Converter, juntar, comprimir e editar PDFs online gratuitamente. Rápido, seguro e simples.";
+    heroSection?.description ?? "Converter, juntar, comprimir e editar PDFs online gratuitamente. Rápido, seguro e simples.";
 
   return (
     <section className="container max-w-4xl mx-auto px-4 py-20 md:py-32 text-center">

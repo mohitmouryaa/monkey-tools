@@ -12,9 +12,7 @@ export const Footer = () => {
               PDFs<span className="text-primary">.com.br</span>
             </span>
           </Link>
-          <p className="text-sm text-muted-foreground text-center">
-            Tudo que você precisa para trabalhar com PDFs.
-          </p>
+          <p className="text-sm text-muted-foreground text-center">Tudo que você precisa para trabalhar com PDFs.</p>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Shield className="h-3.5 w-3.5" />
             <span>Seus arquivos são protegidos e apagados em 1h</span>

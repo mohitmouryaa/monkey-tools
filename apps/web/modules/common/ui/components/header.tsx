@@ -16,11 +16,7 @@ export const Header = async () => {
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
           {categories.items.slice(0, 5).map((category) => (
-            <Link
-              key={category._id}
-              href={`/ferramentas/${category.slug}`}
-              className="hover:text-foreground transition-colors"
-            >
+            <Link key={category._id} href={`/ferramentas/${category.slug}`} className="hover:text-foreground transition-colors">
               {category.name}
             </Link>
           ))}
