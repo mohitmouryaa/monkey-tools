@@ -11,11 +11,11 @@ export const EmbedBlock = ({ data }: { data: EmbedBlockData }) => {
   if (!data.embed) return null;
 
   return (
-    <figure className="my-6">
-      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted">
+    <figure className="my-10">
+      <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-muted ring-1 ring-border shadow-sm">
         <iframe
           src={data.embed}
-          title={data.caption || data.service || "Embedded content"}
+          title={data.caption || data.service || "Conteúdo incorporado"}
           className="absolute inset-0 h-full w-full border-0"
           loading="lazy"
           referrerPolicy="strict-origin-when-cross-origin"
@@ -26,7 +26,7 @@ export const EmbedBlock = ({ data }: { data: EmbedBlockData }) => {
       </div>
       {data.caption && (
         <figcaption
-          className="mt-2 text-sm text-center text-muted-foreground"
+          className="mt-3 text-center text-sm text-muted-foreground italic"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: caption do Editor.js
           dangerouslySetInnerHTML={{ __html: data.caption }}
         />

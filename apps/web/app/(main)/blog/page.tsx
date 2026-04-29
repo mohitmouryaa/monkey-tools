@@ -2,15 +2,22 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { PostStatus } from "@workspace/types";
 import { caller } from "@/trpc/server";
-import { PostCard } from "@/modules/blog/ui/components/post-card";
-import { PostFilterBar } from "@/modules/blog/ui/components/post-filter-bar";
-import { FeaturedPostsSection } from "@/modules/blog/ui/components/featured-posts-section";
-import { BlogPagination } from "@/modules/blog/ui/components/blog-pagination";
+import { BlogView } from "@/modules/blog/ui/views/blog-view";
 import { PAGINATION } from "@/modules/common/constants";
 
 export const metadata: Metadata = {
-  title: "Blog - Monkey Tools",
-  description: "Aprenda a usar nossas ferramentas com tutoriais, dicas e novidades.",
+  title: "Blog - pdfs.com.br",
+  description: "Tutoriais, comparativos e dicas para resolver tarefas com PDFs, imagens e documentos online.",
+  openGraph: {
+    title: "Blog - pdfs.com.br",
+    description: "Tutoriais, comparativos e dicas para resolver tarefas com PDFs, imagens e documentos online.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog - pdfs.com.br",
+    description: "Tutoriais, comparativos e dicas para resolver tarefas com PDFs, imagens e documentos online.",
+  },
 };
 
 interface BlogPageProps {
@@ -71,32 +78,18 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   const { list, featured } = await fetchBlogList(page, pageSize, q, tool);
 
-  const showFeatured = page === 1 && !q && !tool;
+  const isFiltered = Boolean(q) || Boolean(tool);
+  const showFeatured = page === 1 && !isFiltered;
 
   return (
-    <div className="container px-4 py-12 mx-auto max-w-6xl">
-      <header className="mb-10">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground">Blog</h1>
-        <p className="mt-2 text-muted-foreground">Aprenda a usar nossas ferramentas com tutoriais, dicas e novidades.</p>
-      </header>
-
-      <div className="mb-8">
-        <PostFilterBar />
-      </div>
-
-      {showFeatured && <FeaturedPostsSection posts={featured} />}
-
-      {list.items.length === 0 ? (
-        <div className="py-16 text-center text-muted-foreground">Nenhum artigo encontrado.</div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {list.items.map((post) => (
-            <PostCard key={post._id} post={post} />
-          ))}
-        </div>
-      )}
-
-      <BlogPagination page={list.page} totalPages={list.totalPages} />
-    </div>
+    <BlogView
+      posts={list.items}
+      featured={featured}
+      page={list.page}
+      totalPages={list.totalPages}
+      totalCount={list.totalCount}
+      showFeatured={showFeatured}
+      isFiltered={isFiltered}
+    />
   );
 }

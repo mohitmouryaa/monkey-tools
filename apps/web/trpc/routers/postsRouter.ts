@@ -9,12 +9,25 @@ import { createPostSchema, updatePostSchema } from "@/modules/dashboard/schema/p
 import { revalidateBlog } from "@/modules/blog/lib/revalidate";
 import { tagForTool } from "@/modules/tools/lib/cache";
 
-type PopulatedTool = { _id: { toString: () => string } } & Record<string, unknown>;
+type PopulatedTool = { _id: { toString: () => string }; category?: unknown } & Record<string, unknown>;
+type PopulatedCategory = { _id: { toString: () => string } } & Record<string, unknown>;
+
+function serializeCategory(category: unknown) {
+  if (category && typeof category === "object" && "_id" in category) {
+    const c = category as PopulatedCategory;
+    return { ...c, _id: c._id.toString() };
+  }
+  return category;
+}
 
 function serializeTool(tool: unknown) {
   if (tool && typeof tool === "object" && "_id" in tool) {
     const t = tool as PopulatedTool;
-    return { ...t, _id: t._id.toString() };
+    return {
+      ...t,
+      _id: t._id.toString(),
+      category: t.category !== undefined ? serializeCategory(t.category) : t.category,
+    };
   }
   return tool;
 }
@@ -84,7 +97,9 @@ export const postsRouter = createTRPCRouter({
     }),
 
   getBySlug: baseProcedure.input(z.object({ slug: z.string().min(1) })).query(async ({ input, ctx }) => {
-    const post = await PostModel.findOne({ slug: input.slug }).populate("tools").lean();
+    const post = await PostModel.findOne({ slug: input.slug })
+      .populate({ path: "tools", populate: { path: "category" } })
+      .lean();
 
     if (!post) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });

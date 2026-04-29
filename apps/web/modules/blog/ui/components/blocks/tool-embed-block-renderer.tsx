@@ -34,16 +34,18 @@ export const ToolEmbedBlockRenderer = async ({ data, tools }: ToolEmbedBlockRend
   }
 
   return (
-    <div className="my-8 p-6 border rounded-xl bg-card border-border">
-      <div className="mb-4">
-        <p className="text-xs font-medium tracking-wide uppercase text-muted-foreground">Experimente agora</p>
-        <h3 className="text-lg font-semibold text-foreground">{tool.title}</h3>
+    <div className="my-10 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="border-b border-border bg-muted/30 px-6 py-4">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Experimente agora</p>
+        <h3 className="mt-1 text-lg md:text-xl font-semibold tracking-tight text-foreground">{tool.title}</h3>
       </div>
-      <Suspense fallback={<ToolLoading />}>
-        <PDFLibProvider>
-          <ToolComponent />
-        </PDFLibProvider>
-      </Suspense>
+      <div className="p-6">
+        <Suspense fallback={<ToolLoading />}>
+          <PDFLibProvider>
+            <ToolComponent />
+          </PDFLibProvider>
+        </Suspense>
+      </div>
     </div>
   );
 };
