@@ -12,10 +12,16 @@ import { tagForTool } from "@/modules/tools/lib/cache";
 type PopulatedTool = { _id: { toString: () => string }; category?: unknown } & Record<string, unknown>;
 type PopulatedCategory = { _id: { toString: () => string } } & Record<string, unknown>;
 
+function isObjectId(value: unknown): value is { toString: () => string } {
+  return value instanceof mongoose.Types.ObjectId;
+}
+
 function serializeCategory(category: unknown) {
-  if (category && typeof category === "object" && "_id" in category) {
+  if (category == null) return category;
+  if (isObjectId(category)) return category.toString();
+  if (typeof category === "object" && "_id" in category) {
     const c = category as PopulatedCategory;
-    return { ...c, _id: c._id.toString() };
+    return { ...c, _id: isObjectId(c._id) ? c._id.toString() : c._id };
   }
   return category;
 }
