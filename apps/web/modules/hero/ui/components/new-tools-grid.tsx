@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { Button } from "@workspace/ui/components/button";
+"use client";
+
+import { useState } from "react";
 import { ToolCard } from "@/modules/common/ui/components/tool-card";
 
 interface Tool {
@@ -31,40 +32,54 @@ interface NewToolsGridProps {
 }
 
 export const NewToolsGrid = ({ toolsByCategory }: NewToolsGridProps) => {
-  // Flatten all tools from all categories
-  const allTools = toolsByCategory.flatMap(({ category, tools }) =>
-    tools.map((tool) => ({
-      ...tool,
-      category: category,
-    })),
-  );
+  const [activeSlug, setActiveSlug] = useState<string>("all");
+
+  const allTools = toolsByCategory.flatMap(({ category, tools }) => tools.map((tool) => ({ ...tool, category })));
+
+  const visibleTools = activeSlug === "all" ? allTools : allTools.filter((t) => t.category.slug === activeSlug);
 
   return (
-    <section className="py-12 bg-background" id="ferramentas">
-      <div className="container px-4 mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Ferramentas mais usadas</h2>
-          <Link href="/ferramentas">
-            <Button variant="ghost" className="text-primary hover:text-primary/80 hover:bg-muted">
-              Ver todas as ferramentas
-            </Button>
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {allTools.slice(0, 20).map((tool) => (
-            <ToolCard
-              key={tool._id}
-              name={tool.title}
-              description={tool.description}
-              category={tool.category.name}
-              categorySlug={tool.category.slug}
-              toolSlug={tool.link}
-              icon={tool.icon}
-              iconColor={tool.iconColor}
-              bgColor={tool.bgColor}
-            />
-          ))}
-        </div>
+    <section className="container max-w-7xl mx-auto px-4 sm:px-6 pb-20" id="ferramentas">
+      <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+        <button
+          type="button"
+          onClick={() => setActiveSlug("all")}
+          className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeSlug === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/70"
+          }`}
+        >
+          Todas
+        </button>
+        {toolsByCategory.map(({ category }) => (
+          <button
+            type="button"
+            key={category._id}
+            onClick={() => setActiveSlug(category.slug)}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+              activeSlug === category.slug
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted/70"
+            }`}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        {visibleTools.map((tool) => (
+          <ToolCard
+            key={tool._id}
+            name={tool.title}
+            description={tool.description}
+            category={tool.category.name}
+            categorySlug={tool.category.slug}
+            toolSlug={tool.link}
+            icon={tool.icon}
+            iconColor={tool.iconColor}
+            bgColor={tool.bgColor}
+          />
+        ))}
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload } from "lucide-react";
+import { Upload, Shield, Zap, Lock, FileText } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 
 interface HowItWorksStep {
@@ -20,68 +20,81 @@ interface HowItWorksProps {
   howItWorksSection?: HowItWorksSection;
 }
 
-export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
-  // Fallback to default content if not provided
-  const defaultSteps = [
+const defaultContent: HowItWorksSection = {
+  title: "Como Funciona",
+  subtitle: "Trabalhar com PDFs nunca foi tão fácil. Em três passos simples você resolve qualquer tarefa.",
+  steps: [
     {
       iconName: "Upload",
-      title: "Envie seu arquivo",
-      description: "Arraste ou selecione o arquivo que deseja processar",
+      title: "Selecione seu arquivo",
+      description: "Arraste e solte ou clique para escolher seus arquivos PDF do computador ou celular.",
       order: 0,
     },
     {
       iconName: "Settings",
-      title: "Processamento automático",
-      description: "Nossa ferramenta processa seu arquivo em segundos",
+      title: "Processe automaticamente",
+      description: "Nossa ferramenta processa seu arquivo instantaneamente com segurança total.",
       order: 1,
     },
     {
       iconName: "Download",
       title: "Baixe o resultado",
-      description: "Faça o download do arquivo processado gratuitamente",
+      description: "Faça o download do arquivo processado. Simples assim, sem complicação.",
       order: 2,
     },
-  ];
+  ],
+};
 
-  const content = howItWorksSection || {
-    title: "Como Funciona",
-    subtitle: "Três passos simples para usar qualquer ferramenta",
-    steps: defaultSteps,
-  };
+const trustBadges = [
+  { Icon: Shield, title: "100% Seguro", description: "Arquivos protegidos", tone: "bg-green-100 text-green-700" },
+  { Icon: Zap, title: "Rápido", description: "Processamento instantâneo", tone: "bg-blue-100 text-blue-700" },
+  { Icon: Lock, title: "Privado", description: "Arquivos não armazenados", tone: "bg-emerald-100 text-emerald-700" },
+  { Icon: FileText, title: "Grátis", description: "Sem cadastro", tone: "bg-orange-100 text-orange-700" },
+];
 
-  // Sort steps by order and take only first 3
+export const HowItWorks = ({ howItWorksSection }: HowItWorksProps) => {
+  const content = howItWorksSection ?? defaultContent;
   const sortedSteps = [...content.steps].sort((a, b) => a.order - b.order).slice(0, 3);
 
   return (
-    <section className="py-20 bg-card">
-      <div className="container px-4 mx-auto">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl text-foreground">{content.title}</h2>
-          <p className="text-lg text-muted-foreground">{content.subtitle}</p>
+    <section className="bg-muted/40 py-20">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">{content.title}</h2>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">{content.subtitle}</p>
         </div>
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 max-w-5xl mx-auto">
-          {sortedSteps.map((step, index) => {
-            return (
-              <div key={step.title} className="text-center">
-                <div className="relative inline-flex items-center justify-center mb-6">
-                  {/* Icon Container */}
-                  <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center">
-                    <DynamicIcon
-                      name={step.iconName as IconName}
-                      className="w-10 h-10 text-primary"
-                      fallback={() => <Upload className="w-10 h-10 text-primary" />}
-                    />
-                  </div>
-                  {/* Number Badge */}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-secondary text-background flex items-center justify-center font-bold text-sm">
-                    {index + 1}
-                  </div>
-                </div>
-                <h3 className="mb-3 text-xl font-semibold text-foreground">{step.title}</h3>
-                <p className="text-base text-muted-foreground">{step.description}</p>
+
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 mb-20">
+          <div className="hidden md:block absolute top-12 left-[16.66%] right-[16.66%] h-px bg-border" aria-hidden />
+          {sortedSteps.map((step, index) => (
+            <div key={step.title} className="relative flex flex-col items-center text-center">
+              <div className="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center mb-6 shadow-lg shadow-primary/20 relative z-10">
+                <DynamicIcon
+                  name={step.iconName as IconName}
+                  className="w-10 h-10 text-primary-foreground"
+                  fallback={() => <Upload className="w-10 h-10 text-primary-foreground" />}
+                />
               </div>
-            );
-          })}
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                {index + 1}. {step.title}
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">{step.description}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-border">
+          {trustBadges.map(({ Icon, title, description, tone }) => (
+            <div key={title} className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${tone}`}>
+                <Icon className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-foreground leading-tight">{title}</p>
+                <p className="text-xs text-muted-foreground">{description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

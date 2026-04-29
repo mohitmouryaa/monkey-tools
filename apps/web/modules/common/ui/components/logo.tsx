@@ -1,17 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
+import { FileText } from "lucide-react";
 
 export const Logo = () => {
   return (
-    <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-      <div className="rounded-lg flex items-center justify-center relative w-14 h-14 transition-transform group-hover:scale-110">
-        <Image src="/logo.svg" alt="pdfs.com.br Logo" fill sizes="56px" className="object-contain" />
+    <Link href="/" className="flex items-center gap-3 group">
+      <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
+        <FileText className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
       </div>
-      <div className="flex flex-col">
-        <span className="text-3xl font-extrabold leading-none tracking-tight text-primary font-[family-name:var(--font-fredoka)]">
-          pdfs.com.br
-        </span>
-      </div>
+      <span className="text-xl font-bold tracking-tight text-foreground">
+        PDFS<span className="text-primary">.com.br</span>
+      </span>
     </Link>
   );
 };
