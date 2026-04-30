@@ -1,5 +1,3 @@
-"use client";
-
 import { EntityHeader } from "@/modules/common/ui/components/entity-components";
 
 export const PagesHeader = () => {

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ToolsBulkActionsBar } from "@/modules/dashboard/ui/components/tools-bulk-actions-bar";
 import { ToolsCommandPalette } from "@/modules/dashboard/ui/components/tools-command-palette";
@@ -12,7 +10,7 @@ import { ToolsSelectionProvider } from "@/modules/dashboard/hooks/use-tools-sele
 
 export const ToolsBoard = () => {
   return (
-    <ToolsSelectionProvider>
+    <>
       <div className="flex flex-col gap-y-6">
         <nav aria-label="Navegação" className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
           <Link href="/dashboard" className="transition-colors hover:text-foreground">
@@ -25,12 +23,14 @@ export const ToolsBoard = () => {
         <ToolsStats />
         <div className="flex flex-col gap-y-4">
           <ToolsFilterBar />
-          <ToolsBulkActionsBar />
-          <ToolsView />
+          <ToolsSelectionProvider>
+            <ToolsBulkActionsBar />
+            <ToolsView />
+          </ToolsSelectionProvider>
         </div>
         <ToolsPagination />
       </div>
       <ToolsCommandPalette />
-    </ToolsSelectionProvider>
+    </>
   );
 };

@@ -29,6 +29,8 @@ export const PagesSearch = () => {
     setLocalSearch(params.search ?? "");
   }, [params.search]);
 
+  if (params.tab !== "custom") return null;
+
   return (
     <div className="relative">
       <SearchIcon className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
