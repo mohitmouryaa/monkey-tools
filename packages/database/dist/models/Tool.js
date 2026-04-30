@@ -52,7 +52,7 @@ __decorate([
     __metadata("design:type", String)
 ], Tool.prototype, "title", void 0);
 __decorate([
-    prop({ required: true }),
+    prop({ required: true, unique: true, index: true }),
     __metadata("design:type", String)
 ], Tool.prototype, "link", void 0);
 __decorate([

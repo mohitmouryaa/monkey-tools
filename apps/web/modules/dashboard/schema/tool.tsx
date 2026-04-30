@@ -4,9 +4,13 @@ export const createToolSchema = z.object({
   title: z.string().min(2, {
     message: "O nome da ferramenta deve ter pelo menos 2 caracteres.",
   }),
-  link: z.string().min(1, {
-    message: "A URL da ferramenta é obrigatória.",
-  }),
+  link: z
+    .string()
+    .min(1, { message: "A URL da ferramenta é obrigatória." })
+    .regex(
+      /^\/?[a-z0-9]+(-[a-z0-9]+)*$/,
+      "Caminho deve ser kebab-case: apenas letras minúsculas, números e hífens (sem espaços, underscores, maiúsculas ou acentos). Barra inicial opcional.",
+    ),
   componentName: z.string().min(2, {
     message: "O nome do componente deve ter pelo menos 2 caracteres.",
   }),

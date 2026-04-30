@@ -17,6 +17,7 @@ import { Textarea } from "@workspace/ui/components/textarea";
 import { Switch } from "@workspace/ui/components/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
+import { slugify } from "@/lib/slug";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@workspace/ui/components/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { VisualStepsBuilder } from "./visual-steps-builder";
@@ -198,6 +199,18 @@ export const ToolForm = ({ defaultValues, onSubmit, onCancel, submitLabel = "Sal
     }
   }, [defaultValues, form]);
 
+  // Auto-popula o link em kebab-case enquanto o admin não digitou nada manualmente.
+  // Quando admin edita o link, currentLink fica != "" e nunca mais sobrescreve.
+  const titleValue = useWatch({ control: form.control, name: "title" });
+  useEffect(() => {
+    const currentLink = form.getValues("link");
+    if (currentLink && currentLink !== "/") return;
+    if (!titleValue) return;
+    const slug = slugify(titleValue);
+    if (!slug) return;
+    form.setValue("link", `/${slug}`, { shouldDirty: false, shouldValidate: false });
+  }, [titleValue, form]);
+
   const errors = form.formState.errors;
   const isDirty = form.formState.isDirty;
 
@@ -307,8 +320,11 @@ export const ToolForm = ({ defaultValues, onSubmit, onCancel, submitLabel = "Sal
                     <FormItem>
                       <FormLabel>Caminho URL da Ferramenta</FormLabel>
                       <FormControl>
-                        <Input placeholder="ex: /pdf-to-jpg" {...field} disabled={disabled} />
+                        <Input placeholder="ex: /comprimir-pdf" {...field} disabled={disabled} />
                       </FormControl>
+                      <FormDescription>
+                        Auto-gerado a partir do nome. Apenas letras minúsculas, números e hífens (kebab-case).
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

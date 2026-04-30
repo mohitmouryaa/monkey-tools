@@ -20,7 +20,7 @@ export class Tool {
   @prop({ required: true, minlength: 2 })
   public title!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, unique: true, index: true })
   public link!: string;
 
   @prop({ required: true, minlength: 2 })
