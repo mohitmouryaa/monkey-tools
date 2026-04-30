@@ -31,6 +31,12 @@ export declare class Tool {
         answer: string;
     }>;
     closingText?: string;
+    videoId?: string;
+    videoTitle?: string;
+    videoDescription?: string;
+    videoThumbnailUrl?: string;
+    videoUploadDate?: Date;
+    videoDurationISO?: string;
     isActive: boolean;
     featuredPostId?: Ref<Post> | null;
     metadata?: Record<string, any>;

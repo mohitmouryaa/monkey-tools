@@ -23,7 +23,7 @@ export default async function PagesPage({ searchParams }: Props) {
     page: params.page,
     pageSize: params.pageSize,
     search: params.search,
-    pageType: PageType.CUSTOM,
+    pageType: [PageType.CUSTOM, PageType.COMPARISON],
   });
 
   return (

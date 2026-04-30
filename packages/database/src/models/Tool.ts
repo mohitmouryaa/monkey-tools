@@ -83,6 +83,25 @@ export class Tool {
   @prop({ default: "" })
   public closingText?: string;
 
+  // YouTube tutorial fields (optional)
+  @prop()
+  public videoId?: string;
+
+  @prop()
+  public videoTitle?: string;
+
+  @prop()
+  public videoDescription?: string;
+
+  @prop()
+  public videoThumbnailUrl?: string;
+
+  @prop()
+  public videoUploadDate?: Date;
+
+  @prop()
+  public videoDurationISO?: string;
+
   @prop({ default: true })
   public isActive!: boolean;
 

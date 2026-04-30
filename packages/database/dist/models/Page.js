@@ -35,6 +35,9 @@ let Page = class Page {
     showInFooter;
     footerOrder;
     footerLabel;
+    // Comparison pages specific (pageType === COMPARISON)
+    competitorName;
+    competitorLogo;
     createdAt;
     updatedAt;
 };
@@ -100,6 +103,14 @@ __decorate([
     prop(),
     __metadata("design:type", String)
 ], Page.prototype, "footerLabel", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Page.prototype, "competitorName", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Page.prototype, "competitorLogo", void 0);
 Page = __decorate([
     modelOptions({
         schemaOptions: {

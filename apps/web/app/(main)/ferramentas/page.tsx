@@ -1,33 +1,25 @@
 import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
 import { AllToolsView } from "@/modules/tools/ui/views/all-tools-view";
+import { buildMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const allToolsPage = await caller.pages.getAllToolsPage();
-
-    return {
+    return buildMetadata({
       title: allToolsPage.seoTitle,
       description: allToolsPage.seoDescription,
       keywords: allToolsPage.seoKeywords,
-      openGraph: {
-        title: allToolsPage.seoTitle,
-        description: allToolsPage.seoDescription,
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: allToolsPage.seoTitle,
-        description: allToolsPage.seoDescription,
-      },
-    };
+      path: "/ferramentas",
+    });
   } catch {
-    return {
+    return buildMetadata({
       title: "Todas as Ferramentas Online Grátis - pdfs.com.br",
       description:
-        "Explore todas as ferramentas online gratuitas do pdfs.com.br: PDF, imagens, texto, conversões. Sem cadastro, sem instalação, direto no navegador.",
+        "Veja todas as ferramentas online gratuitas do pdfs.com.br: PDF, imagens, texto, conversões. Sem cadastro, sem instalação, direto no navegador.",
       keywords: "ferramentas online, ferramentas grátis, pdf online, conversor online, ferramentas web",
-    };
+      path: "/ferramentas",
+    });
   }
 }
 

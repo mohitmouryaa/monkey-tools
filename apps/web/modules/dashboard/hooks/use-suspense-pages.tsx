@@ -16,7 +16,7 @@ export const useSuspensePages = () => {
 export const usePagesQuery = () => {
   const trpc = useTRPC();
   const [params] = usePagesParams();
-  const pageType = params.tab === "custom" ? PageType.CUSTOM : undefined;
+  const pageType = params.tab === "custom" ? [PageType.CUSTOM, PageType.COMPARISON] : undefined;
 
   return useQuery(
     trpc.pages.getMany.queryOptions(

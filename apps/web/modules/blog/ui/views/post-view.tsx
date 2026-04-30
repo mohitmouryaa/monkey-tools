@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Clock, ChevronRight } from "lucide-react";
+import { ArrowRight, CalendarDays, Clock } from "lucide-react";
 import type { OutputData } from "@editorjs/editorjs";
 import { PostContentRenderer } from "@/modules/blog/ui/components/post-content-renderer";
 import { ArticleToc } from "@/modules/blog/ui/components/article-toc";
@@ -10,6 +10,7 @@ import { ArticleTags } from "@/modules/blog/ui/components/article-tags";
 import { ArticleRelatedTools } from "@/modules/blog/ui/components/article-related-tools";
 import { PostCard } from "@/modules/blog/ui/components/post-card";
 import { BreadcrumbSchema } from "@/modules/tools/ui/components/breadcrumb-schema";
+import { Breadcrumb } from "@/modules/common/ui/components/breadcrumb";
 import { buildHeadingPlan, estimateReadingMinutes } from "@/modules/blog/lib/article";
 
 interface PostViewTool {
@@ -91,20 +92,10 @@ export const PostView = ({ post, relatedPosts }: PostViewProps) => {
       <main className="container flex-1 px-4 py-12 md:py-16 mx-auto max-w-6xl">
         {/* HERO */}
         <header className="max-w-3xl mx-auto">
-          <nav
-            aria-label="breadcrumb"
-            className="mb-6 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground"
-          >
-            <Link href="/" className="hover:text-foreground transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" aria-hidden />
-            <Link href="/blog" className="hover:text-foreground transition-colors">
-              Blog
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" aria-hidden />
-            <span className="text-foreground line-clamp-1">{post.title}</span>
-          </nav>
+          <Breadcrumb
+            className="mb-6"
+            items={[{ label: "Início", href: "/" }, { label: "Blog", href: "/blog" }, { label: post.title }]}
+          />
 
           {primaryCategory && (
             <Link

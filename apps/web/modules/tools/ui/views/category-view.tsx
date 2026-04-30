@@ -7,6 +7,7 @@ import { FAQSchema } from "@/modules/tools/ui/components/faq-schema";
 import { BreadcrumbSchema } from "@/modules/tools/ui/components/breadcrumb-schema";
 import { ToolAudienceBenefits } from "@/modules/tools/ui/components/tool-audience-benefits";
 import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
+import { Breadcrumb } from "@/modules/common/ui/components/breadcrumb";
 import { caller } from "@/trpc/server";
 
 interface CategoryViewProps {
@@ -111,20 +112,15 @@ export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
         <div className="space-y-32 md:space-y-40">
           {/* Breadcrumb visual + Hero — eyebrow + h1 dominante */}
           <header className="text-center max-w-3xl mx-auto">
-            <nav
-              aria-label="breadcrumb"
-              className="mb-6 flex items-center justify-center gap-1.5 text-sm text-muted-foreground scroll-mt-24"
-            >
-              <Link href="/" className="hover:text-foreground transition-colors">
-                Home
-              </Link>
-              <span aria-hidden>/</span>
-              <Link href="/ferramentas" className="hover:text-foreground transition-colors">
-                Ferramentas
-              </Link>
-              <span aria-hidden>/</span>
-              <span className="text-foreground">{category.name}</span>
-            </nav>
+            <Breadcrumb
+              align="center"
+              className="mb-6 scroll-mt-24"
+              items={[
+                { label: "Início", href: "/" },
+                { label: "Ferramentas", href: "/ferramentas" },
+                { label: category.name },
+              ]}
+            />
             <span className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full bg-primary/10 text-primary text-[11px] font-semibold uppercase tracking-[0.18em]">
               <span className="h-1 w-1 rounded-full bg-primary" aria-hidden />
               Categoria

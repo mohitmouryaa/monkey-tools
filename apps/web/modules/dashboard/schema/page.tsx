@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PageType } from "@workspace/types";
 import { pageOutputDataSchema } from "./page-blocks";
 
 // Homepage schema
@@ -48,8 +49,9 @@ export const updateAllToolsPageSchema = z.object({
 
 export type UpdateAllToolsPageInput = z.infer<typeof updateAllToolsPageSchema>;
 
-// Custom page schema
-export const createCustomPageSchema = z.object({
+// Custom page schema (suporta CUSTOM e COMPARISON)
+const customPageBaseShape = {
+  pageType: z.enum([PageType.CUSTOM, PageType.COMPARISON]).default(PageType.CUSTOM),
   title: z.string().min(1, "O título é obrigatório"),
   slug: z
     .string()
@@ -63,12 +65,24 @@ export const createCustomPageSchema = z.object({
   footerOrder: z.number().default(0),
   footerLabel: z.string().optional(),
   isActive: z.boolean().default(true),
-});
+  competitorName: z.string().optional(),
+  competitorLogo: z.string().url("URL inválida").optional().or(z.literal("")),
+} as const;
+
+const competitorRefine = <T extends { pageType: PageType; competitorName?: string }>(data: T) =>
+  data.pageType !== PageType.COMPARISON || (data.competitorName !== undefined && data.competitorName.trim().length > 0);
+
+const competitorRefineMessage = {
+  message: "Nome do concorrente é obrigatório quando o tipo é Comparison",
+  path: ["competitorName"],
+};
+
+export const createCustomPageSchema = z.object(customPageBaseShape).refine(competitorRefine, competitorRefineMessage);
 
 export type CreateCustomPageFormValues = z.input<typeof createCustomPageSchema>;
 
-export const updateCustomPageSchema = createCustomPageSchema.extend({
-  id: z.string().min(1, "O ID da página é obrigatório"),
-});
+export const updateCustomPageSchema = z
+  .object({ ...customPageBaseShape, id: z.string().min(1, "O ID da página é obrigatório") })
+  .refine(competitorRefine, competitorRefineMessage);
 
 export type UpdateCustomPageFormValues = z.input<typeof updateCustomPageSchema>;

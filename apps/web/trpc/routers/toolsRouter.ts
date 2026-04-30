@@ -31,6 +31,12 @@ export const toolsRouter = createTRPCRouter({
         richContent: input.richContent,
         faqs: input.faqs,
         closingText: input.closingText,
+        videoId: input.videoId || undefined,
+        videoTitle: input.videoTitle || undefined,
+        videoDescription: input.videoDescription || undefined,
+        videoThumbnailUrl: input.videoThumbnailUrl || undefined,
+        videoUploadDate: input.videoUploadDate ? new Date(input.videoUploadDate) : undefined,
+        videoDurationISO: input.videoDurationISO || undefined,
         isActive: input.isActive ?? true,
         featuredPostId: input.featuredPostId && input.featuredPostId !== "" ? input.featuredPostId : null,
       });
@@ -176,14 +182,19 @@ export const toolsRouter = createTRPCRouter({
         }
 
         // Prepare update data, mapping categoryId to category
-        const { categoryId, ...updateData } = input.data;
-        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId"> & {
+        const { categoryId, videoUploadDate, ...updateData } = input.data;
+        const finalUpdateData = { ...updateData } as Omit<typeof updateData, "categoryId" | "videoUploadDate"> & {
           category?: string;
           featuredPostId?: string | null;
+          videoUploadDate?: Date | null;
         };
 
         if (categoryId !== undefined) {
           finalUpdateData.category = categoryId;
+        }
+
+        if (videoUploadDate !== undefined) {
+          finalUpdateData.videoUploadDate = videoUploadDate ? new Date(videoUploadDate) : null;
         }
 
         const featuredPostIdProvided = "featuredPostId" in finalUpdateData;

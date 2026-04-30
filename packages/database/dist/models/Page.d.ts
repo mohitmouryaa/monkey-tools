@@ -34,6 +34,8 @@ export declare class Page {
     showInFooter?: boolean;
     footerOrder?: number;
     footerLabel?: string;
+    competitorName?: string;
+    competitorLogo?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

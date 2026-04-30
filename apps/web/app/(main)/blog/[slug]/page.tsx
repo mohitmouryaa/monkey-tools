@@ -5,6 +5,7 @@ import type { OutputData } from "@editorjs/editorjs";
 import { PostStatus } from "@workspace/types";
 import { caller } from "@/trpc/server";
 import { PostView } from "@/modules/blog/ui/views/post-view";
+import { buildMetadata } from "@/lib/seo";
 
 interface BlogSlugPageProps {
   params: Promise<{ slug: string }>;
@@ -74,41 +75,26 @@ export async function generateMetadata({ params }: BlogSlugPageProps): Promise<M
   const post = await fetchPostBySlug(slug);
 
   if (!post) {
-    return {
+    return buildMetadata({
       title: "Post não encontrado",
       description: "O artigo solicitado não foi encontrado.",
-    };
+      path: `/blog/${slug}`,
+      noIndex: true,
+    });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
   const title = post.seo?.title ?? post.title;
   const description = post.seo?.description ?? post.excerpt;
   const ogImage = post.seo?.ogImage ?? post.coverImage;
-  const url = `${baseUrl}/blog/${post.slug}`;
-  const keywords = (post.tools ?? []).map((t) => t.title);
+  const keywords = (post.tools ?? []).map((t) => t.title).join(", ");
 
-  return {
+  return buildMetadata({
     title,
     description,
     keywords: keywords.length > 0 ? keywords : undefined,
-    alternates: { canonical: url },
-    openGraph: {
-      title,
-      description,
-      url,
-      type: "article",
-      images: ogImage ? [{ url: ogImage }] : undefined,
-      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
-      modifiedTime: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
-      siteName: "pdfs.com.br",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: ogImage ? [ogImage] : undefined,
-    },
-  };
+    path: `/blog/${post.slug}`,
+    ogImage,
+  });
 }
 
 export default async function BlogSlugPage({ params }: BlogSlugPageProps) {

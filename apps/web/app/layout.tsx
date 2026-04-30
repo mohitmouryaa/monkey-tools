@@ -6,7 +6,11 @@ import { Toaster } from "@workspace/ui/components/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/modules/common/ui/components/providers";
 import { connectToDatabase, GlobalScriptModel } from "@workspace/database";
+import { defaultMetadata, defaultViewport } from "@/lib/seo";
 import "@workspace/ui/globals.css";
+
+export const metadata = defaultMetadata;
+export const viewport = defaultViewport;
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,7 +44,7 @@ export default async function RootLayout({
   const bodyScripts = scripts.filter((s) => s.location === "BODY");
 
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+    <html lang="pt-BR" dir="ltr" suppressHydrationWarning className="scroll-smooth">
       <head>
         {headScripts.map((script) => (
           <Fragment key={script._id.toString()}>{parse(script.content)}</Fragment>

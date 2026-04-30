@@ -34,6 +34,13 @@ let Tool = class Tool {
     richContent;
     faqs;
     closingText;
+    // YouTube tutorial fields (optional)
+    videoId;
+    videoTitle;
+    videoDescription;
+    videoThumbnailUrl;
+    videoUploadDate;
+    videoDurationISO;
     isActive;
     featuredPostId;
     metadata;
@@ -112,6 +119,30 @@ __decorate([
     prop({ default: "" }),
     __metadata("design:type", String)
 ], Tool.prototype, "closingText", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Tool.prototype, "videoId", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Tool.prototype, "videoTitle", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Tool.prototype, "videoDescription", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Tool.prototype, "videoThumbnailUrl", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", Date)
+], Tool.prototype, "videoUploadDate", void 0);
+__decorate([
+    prop(),
+    __metadata("design:type", String)
+], Tool.prototype, "videoDurationISO", void 0);
 __decorate([
     prop({ default: true }),
     __metadata("design:type", Boolean)

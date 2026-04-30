@@ -45,7 +45,21 @@ const TAB_DEFINITIONS = [
     id: "content",
     label: "Conteúdo",
     icon: FileText,
-    fields: ["h1Heading", "introText", "stepsTitle", "visualSteps", "richContent", "faqs", "closingText"] as FieldKey[],
+    fields: [
+      "h1Heading",
+      "introText",
+      "stepsTitle",
+      "visualSteps",
+      "richContent",
+      "faqs",
+      "closingText",
+      "videoId",
+      "videoTitle",
+      "videoDescription",
+      "videoThumbnailUrl",
+      "videoUploadDate",
+      "videoDurationISO",
+    ] as FieldKey[],
   },
   {
     id: "seo",
@@ -90,6 +104,12 @@ const FORM_DEFAULTS: ToolFormValues = {
   richContent: "",
   faqs: [],
   closingText: "",
+  videoId: "",
+  videoTitle: "",
+  videoDescription: "",
+  videoThumbnailUrl: "",
+  videoUploadDate: "",
+  videoDurationISO: "",
   isActive: true,
   featuredPostId: null,
 };
@@ -532,6 +552,108 @@ export const ToolForm = ({ defaultValues, onSubmit, onCancel, submitLabel = "Sal
                   </FormItem>
                 )}
               />
+
+              <details className="rounded-lg border border-border/60 bg-muted/30 p-4 group">
+                <summary className="cursor-pointer text-sm font-semibold text-foreground select-none">
+                  Vídeo do YouTube (opcional)
+                </summary>
+                <div className="mt-4 space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="videoId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>ID do vídeo</FormLabel>
+                        <FormDescription>Apenas o ID do YouTube (ex: dQw4w9WgXcQ).</FormDescription>
+                        <FormControl>
+                          <Input placeholder="dQw4w9WgXcQ" {...field} value={field.value || ""} disabled={disabled} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="videoTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Título do vídeo</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Como usar a ferramenta" {...field} value={field.value || ""} disabled={disabled} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="videoDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Descrição do vídeo</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="O que o vídeo demonstra..."
+                            {...field}
+                            value={field.value || ""}
+                            disabled={disabled}
+                            rows={3}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="videoThumbnailUrl"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>URL da thumbnail (opcional)</FormLabel>
+                        <FormDescription>
+                          Se vazio, usamos a thumbnail padrão do YouTube ({"https://i.ytimg.com/vi/<id>/hqdefault.jpg"}).
+                        </FormDescription>
+                        <FormControl>
+                          <Input placeholder="https://i.ytimg.com/vi/<id>/maxresdefault.jpg" {...field} value={field.value || ""} disabled={disabled} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="videoUploadDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Data de upload</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} value={field.value || ""} disabled={disabled} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="videoDurationISO"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Duração (ISO 8601)</FormLabel>
+                        <FormDescription>Formato ISO 8601: PT5M30S = 5 min 30 s.</FormDescription>
+                        <FormControl>
+                          <Input placeholder="PT5M30S" {...field} value={field.value || ""} disabled={disabled} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </details>
             </TabsContent>
 
             <TabsContent value="seo" className="space-y-6 mt-0">

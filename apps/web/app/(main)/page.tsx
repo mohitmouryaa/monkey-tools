@@ -4,35 +4,26 @@ import { ErrorBoundary } from "react-error-boundary";
 import { NewHeroSection } from "@/modules/hero/ui/components/new-hero-section";
 import { NewToolsGrid } from "@/modules/hero/ui/components/new-tools-grid";
 import { HowItWorks } from "@/modules/hero/ui/components/how-it-works";
+import { JsonLd } from "@/modules/common/ui/components/json-ld";
+import { buildMetadata, buildOrganizationJsonLd, buildWebsiteJsonLd } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const homepage = await caller.pages.getHomepage();
-
-    return {
+    return buildMetadata({
       title: homepage.seoTitle,
       description: homepage.seoDescription,
       keywords: homepage.seoKeywords,
-      openGraph: {
-        title: homepage.seoTitle,
-        description: homepage.seoDescription,
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: homepage.seoTitle,
-        description: homepage.seoDescription,
-      },
-    };
+      path: "/",
+    });
   } catch {
-    // Fallback metadata if page not found
-    return {
+    return buildMetadata({
       title: "pdfs.com.br - Ferramentas Online Grátis para Todos",
       description:
-        "Oferecemos ferramentas online de PDF, texto, imagem e muito mais para facilitar sua vida. Rápido, seguro e sem cadastro. Converta, comprima e mescle arquivos em segundos.",
-      keywords:
-        "ferramentas online, ferramentas grátis, ferramentas pdf, ferramentas de imagem, ferramentas de texto, conversor, compressor",
-    };
+        "Oferecemos ferramentas online de PDF, texto, imagem e muito mais para facilitar sua vida. Rápido, seguro e sem cadastro.",
+      keywords: "ferramentas online, ferramentas grátis, pdf online, conversor online, compressor, mesclar pdf",
+      path: "/",
+    });
   }
 }
 
@@ -79,6 +70,8 @@ export default async function Home() {
 
   return (
     <ErrorBoundary fallback={<div>Algo deu errado.</div>}>
+      <JsonLd id="ld-organization" data={buildOrganizationJsonLd()} />
+      <JsonLd id="ld-website" data={buildWebsiteJsonLd()} />
       <NewHeroSection heroSection={homepage.heroSection} />
       <NewToolsGrid toolsByCategory={toolsByCategory} />
       <HowItWorks howItWorksSection={homepage.howItWorksSection} />

@@ -12,6 +12,8 @@
     "create:admin": "tsx scripts/create-admin.ts",
     "migrate:pages": "tsx --env-file=.env scripts/migrate-pages-content.ts",
     "seed:static-pages": "tsx --env-file=.env scripts/seed-static-pages.ts",
+    "audit:orphan-pages": "tsx --env-file=.env scripts/audit-orphan-pages.ts",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -73,6 +75,7 @@
     "react-error-boundary": "^6.0.1",
     "react-hook-form": "^7.69.0",
     "react-image-crop": "^11.0.10",
+    "react-lite-youtube-embed": "^3.5.1",
     "recharts": "^3.8.1",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
@@ -88,6 +91,7 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
   }
 }

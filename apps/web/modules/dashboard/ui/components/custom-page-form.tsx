@@ -5,10 +5,12 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+import { PageType } from "@workspace/types";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@workspace/ui/components/form";
 import { Input } from "@workspace/ui/components/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { Switch } from "@workspace/ui/components/switch";
 import { useCreateCustomPage } from "@/modules/dashboard/hooks/use-create-custom-page";
 import { useUpdateCustomPage } from "@/modules/dashboard/hooks/use-update-custom-page";
@@ -62,6 +64,7 @@ const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) 
     // biome-ignore lint/suspicious/noExplicitAny: Resolver type mismatch with union types
     resolver: zodResolver(schema) as any,
     defaultValues: {
+      pageType: PageType.CUSTOM,
       title: "",
       slug: "",
       seoTitle: "",
@@ -72,9 +75,14 @@ const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) 
       footerOrder: 0,
       footerLabel: "",
       isActive: true,
+      competitorName: "",
+      competitorLogo: "",
       ...defaultValues,
     },
   });
+
+  const pageType = form.watch("pageType");
+  const isComparison = pageType === PageType.COMPARISON;
 
   const onSubmit = (data: PageFormValues) => {
     if (isCreate) {
@@ -103,12 +111,37 @@ const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) 
 
               <FormField
                 control={form.control}
+                name="pageType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tipo de página</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value={PageType.CUSTOM}>Personalizada (ex: Política de privacidade)</SelectItem>
+                        <SelectItem value={PageType.COMPARISON}>Comparação (ex: Alternativa a X)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Páginas de comparação são servidas em /comparar/[slug] e voltadas para conteúdo "alternativa a X".
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Título da Página</FormLabel>
                     <FormControl>
-                      <Input placeholder="ex: Política de Privacidade" {...field} />
+                      <Input placeholder={isComparison ? "ex: Alternativa ao iLovePDF" : "ex: Política de Privacidade"} {...field} />
                     </FormControl>
                     <FormDescription>Título exibido na página</FormDescription>
                     <FormMessage />
@@ -123,9 +156,13 @@ const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) 
                   <FormItem>
                     <FormLabel>Slug da URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="ex: politica-de-privacidade" {...field} />
+                      <Input placeholder={isComparison ? "ex: ilovepdf" : "ex: politica-de-privacidade"} {...field} />
                     </FormControl>
-                    <FormDescription>Caminho da URL (apenas letras minúsculas, números e hífens)</FormDescription>
+                    <FormDescription>
+                      {isComparison
+                        ? "URL final: /comparar/<slug>. Apenas letras minúsculas, números e hífens."
+                        : "Caminho da URL (apenas letras minúsculas, números e hífens)"}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -133,6 +170,49 @@ const CustomPageFormInner = ({ mode, defaultValues }: CustomPageFormInnerProps) 
             </div>
           </CardContent>
         </Card>
+
+        {isComparison && (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold">Detalhes da comparação</h3>
+                  <p className="text-sm text-muted-foreground">Identifique o concorrente comparado nesta página</p>
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="competitorName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nome do concorrente</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ex: iLovePDF" {...field} value={field.value || ""} />
+                      </FormControl>
+                      <FormDescription>Nome da marca do concorrente (obrigatório para páginas de comparação)</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="competitorLogo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Logo do concorrente (opcional)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://..." {...field} value={field.value || ""} />
+                      </FormControl>
+                      <FormDescription>URL pública do logo do concorrente</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardContent className="pt-6">

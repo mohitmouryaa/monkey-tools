@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
 import { ToolView } from "@/modules/tools/ui/views/tool-view";
+import { buildMetadata } from "@/lib/seo";
 
 interface ToolsPageProps {
   params: Promise<{
@@ -9,55 +10,35 @@ interface ToolsPageProps {
   }>;
 }
 
-// Generate dynamic metadata for SEO
 export async function generateMetadata({ params }: ToolsPageProps): Promise<Metadata> {
   const { toolCategory, tool } = await params;
 
   try {
-    // Fetch category with all its tools
     const category = await caller.categories.getCategoryWithTools({ slug: toolCategory });
-
-    // Find the specific tool by matching the link
     const toolData = category.tools.find((t) => [`/${tool}`, tool].includes(t.link));
 
     if (!toolData) {
-      return {
+      return buildMetadata({
         title: "Ferramenta não encontrada - pdfs.com.br",
         description: "A ferramenta solicitada não foi encontrada.",
-      };
+        path: `/ferramentas/${toolCategory}/${tool}`,
+        noIndex: true,
+      });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
-    const canonicalUrl = `${baseUrl}/ferramentas/${toolCategory}/${tool}`;
-
-    // Return SEO metadata from the database
-    return {
+    return buildMetadata({
       title: toolData.seoTitle || `${toolData.title} - pdfs.com.br`,
       description: toolData.seoDescription || toolData.description,
       keywords: toolData.seoKeywords || "",
-      alternates: {
-        canonical: canonicalUrl,
-      },
-      robots: {
-        index: true,
-        follow: true,
-      },
-      openGraph: {
-        title: toolData.seoTitle || toolData.title,
-        description: toolData.seoDescription || toolData.description,
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: toolData.seoTitle || toolData.title,
-        description: toolData.seoDescription || toolData.description,
-      },
-    };
+      path: `/ferramentas/${toolCategory}/${tool}`,
+    });
   } catch {
-    return {
+    return buildMetadata({
       title: "pdfs.com.br",
       description: "Ferramentas online grátis para facilitar seu dia a dia",
-    };
+      path: `/ferramentas/${toolCategory}/${tool}`,
+      noIndex: true,
+    });
   }
 }
 

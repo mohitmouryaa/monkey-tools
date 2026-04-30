@@ -258,21 +258,30 @@ export const ToolView = ({ id }: ToolViewProps) => {
           </header>
 
           <ToolForm
-            defaultValues={{
-              ...toolData,
-              categoryId: toolData.category?._id || "",
-              seoTitle: toolData.seoTitle || "",
-              seoDescription: toolData.seoDescription || "",
-              seoKeywords: toolData.seoKeywords || "",
-              h1Heading: toolData.h1Heading || "",
-              introText: toolData.introText || "",
-              stepsTitle: toolData.stepsTitle || "",
-              visualSteps: toolData.visualSteps || [],
-              richContent: toolData.richContent || "",
-              faqs: toolData.faqs || [],
-              closingText: toolData.closingText || "",
-              featuredPostId: toolData.featuredPostId ? String(toolData.featuredPostId) : null,
-            }}
+            defaultValues={(() => {
+              const { videoUploadDate, ...rest } = toolData;
+              return {
+                ...rest,
+                categoryId: toolData.category?._id || "",
+                seoTitle: toolData.seoTitle || "",
+                seoDescription: toolData.seoDescription || "",
+                seoKeywords: toolData.seoKeywords || "",
+                h1Heading: toolData.h1Heading || "",
+                introText: toolData.introText || "",
+                stepsTitle: toolData.stepsTitle || "",
+                visualSteps: toolData.visualSteps || [],
+                richContent: toolData.richContent || "",
+                faqs: toolData.faqs || [],
+                closingText: toolData.closingText || "",
+                videoId: toolData.videoId || "",
+                videoTitle: toolData.videoTitle || "",
+                videoDescription: toolData.videoDescription || "",
+                videoThumbnailUrl: toolData.videoThumbnailUrl || "",
+                videoUploadDate: videoUploadDate ? new Date(videoUploadDate).toISOString().slice(0, 10) : "",
+                videoDurationISO: toolData.videoDurationISO || "",
+                featuredPostId: toolData.featuredPostId ? String(toolData.featuredPostId) : null,
+              };
+            })()}
             onSubmit={handleUpdate}
             onCancel={() => setIsEditing(false)}
             submitLabel="Salvar Alterações"

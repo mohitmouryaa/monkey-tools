@@ -85,6 +85,13 @@ export class Page {
   @prop()
   footerLabel?: string;
 
+  // Comparison pages specific (pageType === COMPARISON)
+  @prop()
+  competitorName?: string;
+
+  @prop()
+  competitorLogo?: string;
+
   public createdAt?: Date;
   public updatedAt?: Date;
 }

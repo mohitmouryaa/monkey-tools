@@ -8,9 +8,14 @@ import { FAQSchema } from "@/modules/tools/ui/components/faq-schema";
 import { RelatedTools } from "@/modules/tools/ui/components/related-tools";
 import { SoftwareSchema } from "@/modules/tools/ui/components/software-schema";
 import { BreadcrumbSchema } from "@/modules/tools/ui/components/breadcrumb-schema";
+import { HowToSchema } from "@/modules/tools/ui/components/howto-schema";
+import { YouTubeEmbed } from "@/modules/tools/ui/components/youtube-embed";
+import { JsonLd } from "@/modules/common/ui/components/json-ld";
+import { buildVideoJsonLd } from "@/lib/seo";
 import { ToolHeader } from "@/modules/tools/ui/components/tool-header";
 import { ToolAudienceBenefits } from "@/modules/tools/ui/components/tool-audience-benefits";
 import { ToolLoading } from "@/modules/common/ui/components/tool-loading";
+import { Breadcrumb } from "@/modules/common/ui/components/breadcrumb";
 import { PDFLibProvider } from "@/modules/common/providers/pdf-lib-provider";
 import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
 import { AdPlaceholder } from "@/modules/common/ui/components/ad-placeholder";
@@ -192,8 +197,24 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
             { name: toolData.title, url: currentUrl },
           ]}
         />
+        <HowToSchema
+          toolId={toolData._id as string}
+          name={`Como usar ${toolData.title}`}
+          description={toolData.seoDescription || toolData.description}
+          steps={visualSteps.map((step) => ({ name: step.title, text: step.description }))}
+        />
 
         <div className="container mx-auto max-w-4xl px-4 py-12 md:py-16">
+          <Breadcrumb
+            className="mb-6"
+            items={[
+              { label: "Início", href: "/" },
+              { label: "Ferramentas", href: "/ferramentas" },
+              { label: category.name, href: `/ferramentas/${toolCategory}` },
+              { label: toolData.title },
+            ]}
+          />
+
           {/* Fluxo 1 — A ferramenta em si */}
           <div className="space-y-12 md:space-y-16">
             {/* Hero */}
@@ -216,6 +237,26 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
                 </PDFLibProvider>
               </Suspense>
             </section>
+
+            {toolData.videoId && (
+              <section className="space-y-4">
+                <h2 className="text-xl md:text-2xl font-bold text-foreground">Veja como usar em vídeo</h2>
+                <YouTubeEmbed videoId={toolData.videoId} title={toolData.videoTitle || toolData.title} />
+                {toolData.videoUploadDate && toolData.videoDurationISO && (
+                  <JsonLd
+                    id={`ld-video-${toolData._id}`}
+                    data={buildVideoJsonLd({
+                      name: toolData.videoTitle || toolData.title,
+                      description: toolData.videoDescription || toolData.description,
+                      thumbnailUrl: toolData.videoThumbnailUrl || `https://i.ytimg.com/vi/${toolData.videoId}/hqdefault.jpg`,
+                      uploadDate: toolData.videoUploadDate,
+                      durationISO: toolData.videoDurationISO,
+                      embedUrl: `https://www.youtube.com/embed/${toolData.videoId}`,
+                    })}
+                  />
+                )}
+              </section>
+            )}
           </div>
 
           {/* Fluxo 2 — Educacional / explicativo */}

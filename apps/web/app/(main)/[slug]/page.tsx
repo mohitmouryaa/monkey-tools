@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageContentRenderer } from "@/modules/pages/ui/components/page-content-renderer";
 import { caller } from "@/trpc/server";
+import { buildMetadata } from "@/lib/seo";
 
 const legacyHtmlClasses = [
   "text-foreground text-base md:text-lg leading-[1.75]",
@@ -36,27 +37,25 @@ export async function generateMetadata({ params }: CustomPageProps): Promise<Met
   try {
     const { slug } = await params;
     const page = await caller.pages.getBySlug({ slug });
+    const seoTitle = page.seoTitle?.trim();
+    const seoDescription = page.seoDescription?.trim();
+    const fallbackTitle = page.title?.trim();
+    const bothMissing = !seoTitle && !seoDescription;
 
-    return {
-      title: page.seoTitle,
-      description: page.seoDescription,
+    return buildMetadata({
+      title: seoTitle || fallbackTitle || "Página",
+      description: seoDescription || `Saiba mais sobre ${fallbackTitle || "esta página"} em pdfs.com.br.`,
       keywords: page.seoKeywords,
-      openGraph: {
-        title: page.seoTitle,
-        description: page.seoDescription,
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: page.seoTitle,
-        description: page.seoDescription,
-      },
-    };
+      path: `/${slug}`,
+      noIndex: bothMissing,
+    });
   } catch {
-    return {
-      title: "Página Não Encontrada",
-      description: "A página solicitada não foi encontrada",
-    };
+    return buildMetadata({
+      title: "Página não encontrada",
+      description: "A página solicitada não foi encontrada.",
+      path: "/",
+      noIndex: true,
+    });
   }
 }
 

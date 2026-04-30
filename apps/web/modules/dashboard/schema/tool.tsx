@@ -45,6 +45,17 @@ export const createToolSchema = z.object({
     )
     .optional(),
   closingText: z.string().optional(),
+  // Vídeo tutorial (YouTube) — opcional
+  videoId: z.string().optional(),
+  videoTitle: z.string().optional(),
+  videoDescription: z.string().optional(),
+  videoThumbnailUrl: z.string().url("URL da thumbnail inválida").optional().or(z.literal("")),
+  videoUploadDate: z.string().optional(),
+  videoDurationISO: z
+    .string()
+    .regex(/^PT(\d+H)?(\d+M)?(\d+S)?$/, "Formato ISO 8601 inválido (ex: PT5M30S)")
+    .optional()
+    .or(z.literal("")),
   isActive: z.boolean(),
   featuredPostId: z.string().nullable().optional(),
 });
