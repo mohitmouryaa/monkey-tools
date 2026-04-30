@@ -9,7 +9,7 @@ export async function GET(_request: NextRequest) {
   const baseUrl = getBaseUrl();
   const lastmod = new Date().toISOString();
 
-  const sitemaps = ["sitemap-tools.xml", "sitemap-categories.xml", "sitemap-pages.xml"];
+  const sitemaps = ["sitemap-tools.xml", "sitemap-categories.xml", "sitemap-blog.xml", "sitemap-pages.xml"];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

@@ -60,12 +60,6 @@ export async function GET(_request: NextRequest) {
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  <url>
-    <loc>${escapeXml(`${baseUrl}/blog`)}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
 ${[...customEntries, ...comparisonEntries].join("\n")}
 </urlset>
 `;

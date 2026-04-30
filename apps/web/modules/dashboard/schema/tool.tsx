@@ -21,8 +21,16 @@ export const createToolSchema = z.object({
   icon: z.string(),
   iconColor: z.string(),
   bgColor: z.string(),
-  seoTitle: z.string(),
-  seoDescription: z.string(),
+  seoTitle: z
+    .string()
+    .refine((v) => v === "" || (v.length >= 50 && v.length <= 60), {
+      message: "Title deve ter entre 50 e 60 caracteres (ou ficar vazio).",
+    }),
+  seoDescription: z
+    .string()
+    .refine((v) => v === "" || (v.length >= 150 && v.length <= 160), {
+      message: "Meta description deve ter entre 150 e 160 caracteres (ou ficar vazia).",
+    }),
   seoKeywords: z.string(),
   // Page Content
   h1Heading: z.string().optional(),
