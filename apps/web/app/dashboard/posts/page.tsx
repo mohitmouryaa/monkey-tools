@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import type { SearchParams } from "nuqs/server";
 import { ErrorBoundary } from "react-error-boundary";
@@ -8,6 +9,11 @@ import { postsParamsLoader } from "@/modules/dashboard/posts/server/params-loade
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { PostsContainer } from "@/modules/dashboard/ui/components/posts-container";
 import { PostsView } from "@/modules/dashboard/ui/views/posts-view";
+
+export const metadata: Metadata = {
+  title: "Posts",
+  description: "Gerenciar posts do blog.",
+};
 
 type Props = { searchParams: Promise<SearchParams> };
 

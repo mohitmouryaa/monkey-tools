@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { HydrateClient } from "@/trpc/server";
@@ -5,6 +6,11 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prefetchPost } from "@/modules/dashboard/posts/server/prefetch";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { EditPostView } from "@/modules/dashboard/ui/views/edit-post-view";
+
+export const metadata: Metadata = {
+  title: "Editar post",
+  description: "Editar post do blog.",
+};
 
 interface EditPostPageProps {
   params: Promise<{ id: string }>;

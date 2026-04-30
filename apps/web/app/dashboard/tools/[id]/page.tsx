@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { HydrateClient } from "@/trpc/server";
 import { requireAuth } from "@/lib/auth-utils";
@@ -5,6 +6,11 @@ import { ErrorBoundary } from "react-error-boundary";
 import { prefetchTool } from "@/modules/common/prefetch";
 import { ToolView } from "@/modules/dashboard/ui/views/tool-view";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
+
+export const metadata: Metadata = {
+  title: "Editar ferramenta",
+  description: "Editar ferramenta.",
+};
 
 interface ToolPageProps {
   params: Promise<{

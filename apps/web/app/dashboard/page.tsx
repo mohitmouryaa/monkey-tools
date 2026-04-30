@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { HydrateClient } from "@/trpc/server";
@@ -5,6 +6,11 @@ import { requireAuth } from "@/lib/auth-utils";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { prefetchDashboardOverview } from "@/modules/dashboard/server/overview-prefetch";
 import { DashboardOverviewView } from "@/modules/dashboard/ui/views/dashboard-overview-view";
+
+export const metadata: Metadata = {
+  title: "Visão geral",
+  description: "Painel administrativo — visão geral.",
+};
 
 export default async function Page() {
   await requireAuth();

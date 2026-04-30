@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import type { SearchParams } from "nuqs/server";
 import { ErrorBoundary } from "react-error-boundary";
@@ -8,6 +9,11 @@ import { scriptsParamsLoader } from "@/modules/dashboard/server/params-loader";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { ScriptsContainer } from "@/modules/dashboard/ui/components/scripts-container";
 import { ScriptsView } from "@/modules/dashboard/ui/views/scripts-view";
+
+export const metadata: Metadata = {
+  title: "Scripts globais",
+  description: "Gerenciar scripts globais injetados no site.",
+};
 
 type Props = { searchParams: Promise<SearchParams> };
 

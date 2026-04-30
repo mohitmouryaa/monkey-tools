@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { HydrateClient } from "@/trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
@@ -5,6 +6,11 @@ import { requireAuth } from "@/lib/auth-utils";
 import { prefetchScript } from "@/modules/common/prefetch";
 import { ScriptView } from "@/modules/dashboard/ui/views/script-view";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
+
+export const metadata: Metadata = {
+  title: "Editar script",
+  description: "Editar script global.",
+};
 
 interface Props {
   params: Promise<{ id: string }>;

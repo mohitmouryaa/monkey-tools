@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import type { SearchParams } from "nuqs/server";
 import { ErrorBoundary } from "react-error-boundary";
@@ -9,6 +10,11 @@ import { pagesParamsLoader } from "@/modules/dashboard/server/params-loader";
 import { PagesContainer } from "@/modules/dashboard/ui/components/pages-container";
 import { PagesBoard } from "@/modules/dashboard/ui/components/pages-board";
 import { PagesListSkeleton } from "@/modules/dashboard/ui/components/pages-list-skeleton";
+
+export const metadata: Metadata = {
+  title: "Páginas",
+  description: "Gerenciar páginas do site.",
+};
 
 type Props = {
   searchParams: Promise<SearchParams>;

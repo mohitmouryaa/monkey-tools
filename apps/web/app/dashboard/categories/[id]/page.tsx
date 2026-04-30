@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { HydrateClient } from "@/trpc/server";
 import { ErrorBoundary } from "react-error-boundary";
@@ -5,6 +6,11 @@ import { prefetchCategory } from "@/modules/common/prefetch";
 import { CategoryView } from "@/modules/dashboard/ui/views/category-view";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { requireAuth } from "@/lib/auth-utils";
+
+export const metadata: Metadata = {
+  title: "Editar categoria",
+  description: "Editar categoria de ferramentas.",
+};
 
 interface CategoryPageProps {
   params: Promise<{
