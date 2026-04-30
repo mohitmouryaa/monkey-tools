@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
 import { caller } from "@/trpc/server";
-import { CategoryView } from "@/modules/dashboard/ui/views/category-view";
+import { EditCategoryView } from "@/modules/dashboard/ui/views/edit-category-view";
 
 export const metadata: Metadata = {
-  title: "Categoria",
-  description: "Detalhes da categoria de ferramentas.",
+  title: "Editar categoria",
+  description: "Editar categoria de ferramentas.",
 };
 
-interface CategoryPageProps {
+interface EditCategoryPageProps {
   params: Promise<{
     id: string;
   }>;
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function EditCategoryPage({ params }: EditCategoryPageProps) {
   await requireAuth();
   const { id } = await params;
   const category = await caller.categories.getOne({ id });
   return (
     <main className="flex-1">
-      <CategoryView category={category} />
+      <EditCategoryView category={category} />
     </main>
   );
 }

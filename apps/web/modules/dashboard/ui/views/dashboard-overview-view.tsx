@@ -1,25 +1,23 @@
-"use client";
-
 import Link from "next/link";
-import { Activity, AlertTriangle, ArrowUpRight, CheckCircle2, Clock, FileText, Newspaper, Wrench } from "lucide-react";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, XAxis, YAxis } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@workspace/ui/components/card";
+import { Activity, AlertTriangle, ArrowUpRight, CheckCircle2, Clock, Newspaper, Wrench } from "lucide-react";
+import type { caller } from "@/trpc/server";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@workspace/ui/components/chart";
-import { useSuspenseOverview } from "@/modules/dashboard/hooks/use-suspense-overview";
+import { DashboardOverviewAreaChart } from "@/modules/dashboard/ui/components/dashboard-overview-area-chart";
+import { DashboardOverviewBarChart } from "@/modules/dashboard/ui/components/dashboard-overview-bar-chart";
+import { DashboardOverviewPieChart } from "@/modules/dashboard/ui/components/dashboard-overview-pie-chart";
 
-const STATUS_LABELS: Record<string, string> = {
-  COMPLETED: "Concluídos",
-  FAILED: "Falhas",
-  IN_PROGRESS: "Em andamento",
+export type DashboardOverviewData = Awaited<ReturnType<typeof caller.dashboard.overview>>;
+
+type RecentFailedJob = { _id: string; tool: string; error: string | null; createdAt: string | null };
+type RecentPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  status: string;
+  publishedAt: string | null;
+  updatedAt: string | null;
 };
 
 const POST_STATUS_LABELS: Record<string, string> = {
@@ -34,33 +32,14 @@ const POST_STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> =
   published: "default",
 };
 
-const jobsChartConfig = {
-  completed: { label: "Concluídos", color: "var(--chart-1)" },
-  failed: { label: "Falhas", color: "var(--chart-5)" },
-  inProgress: { label: "Em andamento", color: "var(--chart-3)" },
-} satisfies ChartConfig;
+const formatNumber = (n: number) => n.toLocaleString("pt-BR");
 
-const statusChartConfig = {
-  count: { label: "Jobs" },
-  COMPLETED: { label: "Concluídos", color: "var(--chart-1)" },
-  FAILED: { label: "Falhas", color: "var(--chart-5)" },
-  IN_PROGRESS: { label: "Em andamento", color: "var(--chart-3)" },
-} satisfies ChartConfig;
-
-const topToolsChartConfig = {
-  count: { label: "Jobs (7d)", color: "var(--chart-2)" },
-} satisfies ChartConfig;
-
-function formatNumber(n: number) {
-  return n.toLocaleString("pt-BR");
-}
-
-function formatPercent(v: number | null) {
+const formatPercent = (v: number | null) => {
   if (v == null) return "—";
   return `${(v * 100).toFixed(1)}%`;
-}
+};
 
-function formatRelative(iso: string | null) {
+const formatRelative = (iso: string | null) => {
   if (!iso) return "—";
   const d = new Date(iso);
   const diff = Date.now() - d.getTime();
@@ -72,182 +51,83 @@ function formatRelative(iso: string | null) {
   const days = Math.floor(h / 24);
   if (days < 30) return `${days} d atrás`;
   return d.toLocaleDateString("pt-BR");
-}
+};
 
-function shortDay(iso: string) {
-  const d = new Date(`${iso}T00:00:00Z`);
-  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
-}
+export const DashboardOverviewView = ({ data }: { data: DashboardOverviewData }) => (
+  <div className="flex flex-col gap-6 px-6 py-8 mx-auto w-full max-w-7xl">
+    <header className="flex flex-col gap-1">
+      <h1 className="text-3xl font-bold tracking-tight">Visão geral</h1>
+      <p className="text-muted-foreground text-sm">
+        Resumo dos últimos 7 dias · atualizado <span className="text-foreground/80">{formatRelative(data.generatedAt)}</span>
+      </p>
+    </header>
 
-export const DashboardOverviewView = () => {
-  const { data } = useSuspenseOverview();
+    <KpiGrid kpis={data.kpis} />
 
-  return (
-    <div className="flex flex-col gap-6 px-6 py-8 mx-auto w-full max-w-7xl">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold tracking-tight">Visão geral</h1>
-        <p className="text-muted-foreground text-sm">
-          Resumo dos últimos 7 dias · atualizado{" "}
-          <span className="text-foreground/80">{formatRelative(data.generatedAt)}</span>
-        </p>
-      </header>
+    <div className="grid gap-6 lg:grid-cols-3">
+      <Card className="lg:col-span-2">
+        <CardHeader>
+          <CardTitle>Jobs nos últimos 14 dias</CardTitle>
+          <CardDescription>Distribuição diária por status — concluídos, falhas e em andamento</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DashboardOverviewAreaChart data={data.jobsByDay} />
+        </CardContent>
+      </Card>
 
-      <KpiGrid kpis={data.kpis} />
+      <Card>
+        <CardHeader>
+          <CardTitle>Distribuição por status</CardTitle>
+          <CardDescription>Últimos 7 dias</CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center">
+          <DashboardOverviewPieChart data={data.jobsByStatus} />
+        </CardContent>
+      </Card>
+    </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Jobs nos últimos 14 dias</CardTitle>
-            <CardDescription>Distribuição diária por status — concluídos, falhas e em andamento</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer config={jobsChartConfig} className="aspect-auto h-[280px] w-full">
-              <AreaChart data={data.jobsByDay} margin={{ left: 4, right: 4, top: 4 }}>
-                <defs>
-                  <linearGradient id="dash-completed" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-completed)" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="var(--color-completed)" stopOpacity={0.05} />
-                  </linearGradient>
-                  <linearGradient id="dash-failed" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-failed)" stopOpacity={0.7} />
-                    <stop offset="95%" stopColor="var(--color-failed)" stopOpacity={0.05} />
-                  </linearGradient>
-                  <linearGradient id="dash-inProgress" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-inProgress)" stopOpacity={0.6} />
-                    <stop offset="95%" stopColor="var(--color-inProgress)" stopOpacity={0.05} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={shortDay} />
-                <YAxis tickLine={false} axisLine={false} tickMargin={8} allowDecimals={false} />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent labelFormatter={(value) => shortDay(String(value))} indicator="dot" />}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="completed"
-                  stackId="a"
-                  stroke="var(--color-completed)"
-                  fill="url(#dash-completed)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="inProgress"
-                  stackId="a"
-                  stroke="var(--color-inProgress)"
-                  fill="url(#dash-inProgress)"
-                />
-                <Area type="monotone" dataKey="failed" stackId="a" stroke="var(--color-failed)" fill="url(#dash-failed)" />
-                <ChartLegend content={<ChartLegendContent />} />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Distribuição por status</CardTitle>
-            <CardDescription>Últimos 7 dias</CardDescription>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center">
-            <StatusPieChart data={data.jobsByStatus} />
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="flex flex-row items-start justify-between">
-            <div>
-              <CardTitle>Top ferramentas</CardTitle>
-              <CardDescription>Mais executadas nos últimos 7 dias</CardDescription>
-            </div>
-            <Button asChild size="sm" variant="ghost">
-              <Link href="/dashboard/tools">
-                Ver todas <ArrowUpRight className="ml-1 size-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {data.topTools.length === 0 ? (
-              <div className="text-muted-foreground py-12 text-center text-sm">Nenhuma execução registrada nos últimos 7 dias.</div>
-            ) : (
-              <ChartContainer config={topToolsChartConfig} className="aspect-auto h-[260px] w-full">
-                <BarChart data={data.topTools} layout="vertical" margin={{ left: 16, right: 16 }}>
-                  <CartesianGrid horizontal={false} strokeDasharray="3 3" />
-                  <XAxis type="number" hide allowDecimals={false} />
-                  <YAxis dataKey="tool" type="category" width={140} tickLine={false} axisLine={false} />
-                  <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
-                  <Bar dataKey="count" fill="var(--color-count)" radius={[0, 6, 6, 0]} />
-                </BarChart>
-              </ChartContainer>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-start justify-between">
-            <div>
-              <CardTitle>Falhas recentes</CardTitle>
-              <CardDescription>Últimos 5 jobs com erro</CardDescription>
-            </div>
-            <AlertTriangle className="text-destructive size-4" />
-          </CardHeader>
-          <CardContent>
-            {data.recentFailedJobs.length === 0 ? (
-              <div className="text-muted-foreground py-12 text-center text-sm">Sem falhas recentes 🎉</div>
-            ) : (
-              <ul className="space-y-3">
-                {data.recentFailedJobs.map((j) => (
-                  <li key={j._id} className="flex flex-col gap-1 border-b last:border-b-0 pb-3 last:pb-0">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-sm">{j.tool}</span>
-                      <span className="text-muted-foreground text-xs">{formatRelative(j.createdAt)}</span>
-                    </div>
-                    {j.error ? <p className="text-muted-foreground text-xs line-clamp-2">{j.error}</p> : null}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+    <div className="grid gap-6 lg:grid-cols-3">
+      <Card className="lg:col-span-2">
+        <CardHeader className="flex flex-row items-start justify-between">
+          <div>
+            <CardTitle>Top ferramentas</CardTitle>
+            <CardDescription>Mais executadas nos últimos 7 dias</CardDescription>
+          </div>
+          <Button asChild size="sm" variant="ghost">
+            <Link href="/dashboard/tools">
+              Ver todas <ArrowUpRight className="ml-1 size-4" />
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {data.topTools.length === 0 ? (
+            <div className="text-muted-foreground py-12 text-center text-sm">Nenhuma execução registrada nos últimos 7 dias.</div>
+          ) : (
+            <DashboardOverviewBarChart data={data.topTools} />
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between">
           <div>
-            <CardTitle>Posts recentes</CardTitle>
-            <CardDescription>Últimas 5 alterações no blog</CardDescription>
+            <CardTitle>Falhas recentes</CardTitle>
+            <CardDescription>Últimos 5 jobs com erro</CardDescription>
           </div>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/dashboard/posts/new">Novo post</Link>
-          </Button>
+          <AlertTriangle className="text-destructive size-4" />
         </CardHeader>
         <CardContent>
-          {data.recentPosts.length === 0 ? (
-            <div className="text-muted-foreground py-12 text-center text-sm">Nenhum post ainda.</div>
+          {data.recentFailedJobs.length === 0 ? (
+            <div className="text-muted-foreground py-12 text-center text-sm">Sem falhas recentes 🎉</div>
           ) : (
-            <ul className="divide-y">
-              {data.recentPosts.map((p) => (
-                <li key={p._id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
-                  <div className="flex min-w-0 flex-col gap-1">
-                    <Link
-                      href={`/dashboard/posts/${p._id}`}
-                      className="hover:text-primary truncate font-medium text-sm"
-                    >
-                      {p.title}
-                    </Link>
-                    <span className="text-muted-foreground truncate text-xs">/{p.slug}</span>
+            <ul className="space-y-3">
+              {(data.recentFailedJobs as RecentFailedJob[]).map((j) => (
+                <li key={j._id} className="flex flex-col gap-1 border-b last:border-b-0 pb-3 last:pb-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-sm">{j.tool}</span>
+                    <span className="text-muted-foreground text-xs">{formatRelative(j.createdAt)}</span>
                   </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <Badge variant={POST_STATUS_VARIANT[p.status] ?? "outline"} className="capitalize">
-                      {POST_STATUS_LABELS[p.status] ?? p.status}
-                    </Badge>
-                    <span className="text-muted-foreground hidden text-xs sm:inline">
-                      {formatRelative(p.publishedAt ?? p.updatedAt)}
-                    </span>
-                  </div>
+                  {j.error ? <p className="text-muted-foreground text-xs line-clamp-2">{j.error}</p> : null}
                 </li>
               ))}
             </ul>
@@ -255,14 +135,48 @@ export const DashboardOverviewView = () => {
         </CardContent>
       </Card>
     </div>
-  );
-};
 
-interface KpiGridProps {
-  kpis: ReturnType<typeof useSuspenseOverview>["data"]["kpis"];
-}
+    <Card>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div>
+          <CardTitle>Posts recentes</CardTitle>
+          <CardDescription>Últimas 5 alterações no blog</CardDescription>
+        </div>
+        <Button asChild size="sm" variant="outline">
+          <Link href="/dashboard/posts/new">Novo post</Link>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        {data.recentPosts.length === 0 ? (
+          <div className="text-muted-foreground py-12 text-center text-sm">Nenhum post ainda.</div>
+        ) : (
+          <ul className="divide-y">
+            {(data.recentPosts as RecentPost[]).map((p) => (
+              <li key={p._id} className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0">
+                <div className="flex min-w-0 flex-col gap-1">
+                  <Link href={`/dashboard/posts/${p._id}`} className="hover:text-primary truncate font-medium text-sm">
+                    {p.title}
+                  </Link>
+                  <span className="text-muted-foreground truncate text-xs">/{p.slug}</span>
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  <Badge variant={POST_STATUS_VARIANT[p.status] ?? "outline"} className="capitalize">
+                    {POST_STATUS_LABELS[p.status] ?? p.status}
+                  </Badge>
+                  <span className="text-muted-foreground hidden text-xs sm:inline">
+                    {formatRelative(p.publishedAt ?? p.updatedAt)}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  </div>
+);
 
-const KpiGrid = ({ kpis }: KpiGridProps) => {
+const KpiGrid = ({ kpis }: { kpis: DashboardOverviewData["kpis"] }) => {
   const queueTotal = kpis.queueWaiting + kpis.queueActive + kpis.queueDelayed;
   const items = [
     {
@@ -321,36 +235,5 @@ const KpiGrid = ({ kpis }: KpiGridProps) => {
         );
       })}
     </div>
-  );
-};
-
-const StatusPieChart = ({ data }: { data: { status: string; count: number }[] }) => {
-  const total = data.reduce((acc, d) => acc + d.count, 0);
-
-  if (total === 0) {
-    return (
-      <div className="text-muted-foreground py-12 text-center text-sm">
-        <FileText className="mx-auto mb-2 size-6" />
-        Nenhum job nos últimos 7 dias
-      </div>
-    );
-  }
-
-  return (
-    <ChartContainer config={statusChartConfig} className="mx-auto aspect-square h-[240px]">
-      <PieChart>
-        <ChartTooltip content={<ChartTooltipContent nameKey="status" hideLabel />} />
-        <Pie data={data} dataKey="count" nameKey="status" innerRadius={56} outerRadius={88} strokeWidth={2}>
-          {data.map((entry) => (
-            <Cell key={entry.status} fill={`var(--color-${entry.status})`} />
-          ))}
-        </Pie>
-        <ChartLegend
-          verticalAlign="bottom"
-          content={<ChartLegendContent nameKey="status" />}
-          formatter={(value) => STATUS_LABELS[String(value)] ?? value}
-        />
-      </PieChart>
-    </ChartContainer>
   );
 };

@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { HydrateClient } from "@/trpc/server";
 import { requireAuth } from "@/lib/auth-utils";
-import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
-import { prefetchDashboardOverview } from "@/modules/dashboard/server/overview-prefetch";
+import { caller } from "@/trpc/server";
 import { DashboardOverviewView } from "@/modules/dashboard/ui/views/dashboard-overview-view";
 
 export const metadata: Metadata = {
@@ -14,16 +10,10 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   await requireAuth();
-  prefetchDashboardOverview();
+  const data = await caller.dashboard.overview();
   return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div className="p-6 text-sm text-muted-foreground">Falha ao carregar a visão geral.</div>}>
-        <Suspense fallback={<SuspenseLoader />}>
-          <main className="flex-1">
-            <DashboardOverviewView />
-          </main>
-        </Suspense>
-      </ErrorBoundary>
-    </HydrateClient>
+    <main className="flex-1">
+      <DashboardOverviewView data={data} />
+    </main>
   );
 }
