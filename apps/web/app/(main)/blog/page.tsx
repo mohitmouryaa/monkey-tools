@@ -48,6 +48,11 @@ interface BlogListResult {
   hasPreviousPage: boolean;
 }
 
+interface FilterTool {
+  _id: string;
+  title: string;
+}
+
 const fetchBlogList = unstable_cache(
   async (page: number, pageSize: number, q: string, toolId: string | undefined) => {
     const [list, featured] = await Promise.all([
@@ -69,6 +74,18 @@ const fetchBlogList = unstable_cache(
   { revalidate: 60, tags: ["blog"] },
 );
 
+const fetchFilterTools = unstable_cache(
+  async () => {
+    const result = await caller.tools.getMany({ pageSize: 100 });
+    const items = (result as unknown as { items: Array<{ _id?: string; title: string }> }).items;
+    return items
+      .filter((t): t is { _id: string; title: string } => Boolean(t._id))
+      .map((t) => ({ _id: t._id, title: t.title })) satisfies FilterTool[];
+  },
+  ["blog-filter-tools-v1"],
+  { revalidate: 300, tags: ["tools"] },
+);
+
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   const sp = await searchParams;
   const page = Number(sp.page) > 0 ? Number(sp.page) : PAGINATION.DEFAULT_PAGE;
@@ -76,7 +93,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const q = sp.q ?? "";
   const tool = sp.tool || undefined;
 
-  const { list, featured } = await fetchBlogList(page, pageSize, q, tool);
+  const [{ list, featured }, filterTools] = await Promise.all([
+    fetchBlogList(page, pageSize, q, tool),
+    fetchFilterTools(),
+  ]);
 
   const isFiltered = Boolean(q) || Boolean(tool);
   const showFeatured = page === 1 && !isFiltered;
@@ -90,6 +110,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       totalCount={list.totalCount}
       showFeatured={showFeatured}
       isFiltered={isFiltered}
+      filterTools={filterTools}
+      activeQuery={q}
+      activeTool={tool}
     />
   );
 }

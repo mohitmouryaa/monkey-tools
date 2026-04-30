@@ -1,5 +1,3 @@
-"use client";
-
 import { Upload } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 import type { StepsBlockData } from "@workspace/types";

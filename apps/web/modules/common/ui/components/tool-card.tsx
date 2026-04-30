@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";

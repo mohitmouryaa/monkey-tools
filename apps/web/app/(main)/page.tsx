@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
-import { ErrorBoundary } from "react-error-boundary";
 import { NewHeroSection } from "@/modules/hero/ui/components/new-hero-section";
 import { NewToolsGrid } from "@/modules/hero/ui/components/new-tools-grid";
 import { HowItWorks } from "@/modules/hero/ui/components/how-it-works";
 import { JsonLd } from "@/modules/common/ui/components/json-ld";
+import { SectionErrorBoundary } from "@/modules/common/ui/components/section-error-boundary";
 import { buildMetadata, buildOrganizationJsonLd, buildWebsiteJsonLd } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -69,12 +69,14 @@ export default async function Home() {
   );
 
   return (
-    <ErrorBoundary fallback={<div>Algo deu errado.</div>}>
+    <>
       <JsonLd id="ld-organization" data={buildOrganizationJsonLd()} />
       <JsonLd id="ld-website" data={buildWebsiteJsonLd()} />
       <NewHeroSection heroSection={homepage.heroSection} />
-      <NewToolsGrid toolsByCategory={toolsByCategory} />
+      <SectionErrorBoundary message="Não foi possível carregar a lista de ferramentas agora.">
+        <NewToolsGrid toolsByCategory={toolsByCategory} />
+      </SectionErrorBoundary>
       <HowItWorks howItWorksSection={homepage.howItWorksSection} />
-    </ErrorBoundary>
+    </>
   );
 }

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, Wrench } from "lucide-react";
 import type { Tool } from "@workspace/database";

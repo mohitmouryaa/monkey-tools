@@ -15,6 +15,11 @@ interface BlogViewPost {
   tools?: Array<{ _id: string; title: string }>;
 }
 
+interface BlogViewFilterTool {
+  _id: string;
+  title: string;
+}
+
 interface BlogViewProps {
   posts: BlogViewPost[];
   featured: BlogViewPost[];
@@ -23,9 +28,23 @@ interface BlogViewProps {
   totalCount: number;
   showFeatured: boolean;
   isFiltered: boolean;
+  filterTools: BlogViewFilterTool[];
+  activeQuery: string;
+  activeTool?: string;
 }
 
-export const BlogView = ({ posts, featured, page, totalPages, totalCount, showFeatured, isFiltered }: BlogViewProps) => {
+export const BlogView = ({
+  posts,
+  featured,
+  page,
+  totalPages,
+  totalCount,
+  showFeatured,
+  isFiltered,
+  filterTools,
+  activeQuery,
+  activeTool,
+}: BlogViewProps) => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br";
 
   return (
@@ -72,7 +91,7 @@ export const BlogView = ({ posts, featured, page, totalPages, totalCount, showFe
             </div>
 
             <div className="mb-8">
-              <PostFilterBar />
+              <PostFilterBar tools={filterTools} />
             </div>
 
             {posts.length === 0 ? (
@@ -90,7 +109,7 @@ export const BlogView = ({ posts, featured, page, totalPages, totalCount, showFe
               </div>
             )}
 
-            <BlogPagination page={page} totalPages={totalPages} />
+            <BlogPagination page={page} totalPages={totalPages} q={activeQuery} tool={activeTool} />
           </section>
         </div>
 

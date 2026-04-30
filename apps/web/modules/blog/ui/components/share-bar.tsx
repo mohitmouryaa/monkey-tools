@@ -1,7 +1,5 @@
-"use client";
-
-import { useState } from "react";
-import { Check, Copy, Facebook, Linkedin, Mail, Share2 } from "lucide-react";
+import { Facebook, Linkedin, Mail } from "lucide-react";
+import { ShareActions } from "@/modules/blog/ui/components/share-actions";
 
 interface ShareBarProps {
   url: string;
@@ -21,39 +19,18 @@ const WhatsappIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const enc = (s: string) => encodeURIComponent(s);
+
+const buildLinks = (url: string, title: string) => [
+  { label: "X", href: `https://x.com/intent/post?text=${enc(title)}&url=${enc(url)}`, Icon: XIcon },
+  { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, Icon: Facebook },
+  { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, Icon: Linkedin },
+  { label: "WhatsApp", href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`, Icon: WhatsappIcon },
+  { label: "E-mail", href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`, Icon: Mail },
+];
+
 export const ShareBar = ({ url, title, variant = "inline" }: ShareBarProps) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const handleNative = async () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch {
-        /* user cancelled */
-      }
-    } else {
-      handleCopy();
-    }
-  };
-
-  const enc = (s: string) => encodeURIComponent(s);
-  const links = [
-    { label: "X", href: `https://x.com/intent/post?text=${enc(title)}&url=${enc(url)}`, Icon: XIcon },
-    { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, Icon: Facebook },
-    { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`, Icon: Linkedin },
-    { label: "WhatsApp", href: `https://wa.me/?text=${enc(`${title} — ${url}`)}`, Icon: WhatsappIcon },
-    { label: "E-mail", href: `mailto:?subject=${enc(title)}&body=${enc(`${title}\n\n${url}`)}`, Icon: Mail },
-  ];
+  const links = buildLinks(url, title);
 
   if (variant === "compact") {
     return (
@@ -72,14 +49,7 @@ export const ShareBar = ({ url, title, variant = "inline" }: ShareBarProps) => {
               <Icon className="h-4 w-4" />
             </a>
           ))}
-          <button
-            type="button"
-            onClick={handleCopy}
-            aria-label="Copiar link"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          >
-            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
-          </button>
+          <ShareActions url={url} title={title} variant="compact" />
         </div>
       </div>
     );
@@ -104,22 +74,7 @@ export const ShareBar = ({ url, title, variant = "inline" }: ShareBarProps) => {
             <Icon className="h-4 w-4" />
           </a>
         ))}
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-        >
-          {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
-          {copied ? "Copiado!" : "Copiar link"}
-        </button>
-        <button
-          type="button"
-          onClick={handleNative}
-          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 sm:hidden"
-        >
-          <Share2 className="h-4 w-4" />
-          Compartilhar
-        </button>
+        <ShareActions url={url} title={title} variant="inline" />
       </div>
     </div>
   );

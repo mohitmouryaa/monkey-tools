@@ -1,5 +1,3 @@
-"use client";
-
 import { Sparkles } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
 

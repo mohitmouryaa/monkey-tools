@@ -2,22 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { useQueryStates } from "nuqs";
-import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "lucide-react";
 import { Input } from "@workspace/ui/components/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
-import { useTRPC } from "@/trpc/client";
 import { blogParams } from "@/modules/blog/blog-params";
 import { PAGINATION } from "@/modules/common/constants";
 
 const DEBOUNCE_MS = 500;
 
-export const PostFilterBar = () => {
+interface PostFilterBarTool {
+  _id: string;
+  title: string;
+}
+
+interface PostFilterBarProps {
+  tools: PostFilterBarTool[];
+}
+
+export const PostFilterBar = ({ tools }: PostFilterBarProps) => {
   const [params, setParams] = useQueryStates(blogParams);
   const [localSearch, setLocalSearch] = useState(params.q ?? "");
-
-  const trpc = useTRPC();
-  const { data: toolsData } = useQuery(trpc.tools.getMany.queryOptions({ pageSize: 100 }));
 
   useEffect(() => {
     if (localSearch === "" && params.q !== "") {
@@ -52,8 +56,8 @@ export const PostFilterBar = () => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Todas as ferramentas</SelectItem>
-          {toolsData?.items.map((tool) => (
-            <SelectItem key={tool._id} value={tool._id ?? ""}>
+          {tools.map((tool) => (
+            <SelectItem key={tool._id} value={tool._id}>
               {tool.title}
             </SelectItem>
           ))}

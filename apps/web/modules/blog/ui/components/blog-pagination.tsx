@@ -1,18 +1,27 @@
-"use client";
-
-import { useQueryStates } from "nuqs";
+import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
-import { blogParams } from "@/modules/blog/blog-params";
 
 interface BlogPaginationProps {
   page: number;
   totalPages: number;
+  q?: string;
+  tool?: string;
 }
 
-export const BlogPagination = ({ page, totalPages }: BlogPaginationProps) => {
-  const [, setParams] = useQueryStates(blogParams);
+const buildHref = (page: number, q?: string, tool?: string) => {
+  const params = new URLSearchParams();
+  if (page > 1) params.set("page", String(page));
+  if (q) params.set("q", q);
+  if (tool) params.set("tool", tool);
+  const qs = params.toString();
+  return qs ? `/blog?${qs}` : "/blog";
+};
 
+export const BlogPagination = ({ page, totalPages, q, tool }: BlogPaginationProps) => {
   if (totalPages <= 1) return null;
+
+  const previousDisabled = page === 1;
+  const nextDisabled = page === totalPages;
 
   return (
     <div className="flex items-center justify-between w-full gap-x-2 mt-8">
@@ -20,22 +29,28 @@ export const BlogPagination = ({ page, totalPages }: BlogPaginationProps) => {
         Página {page} de {totalPages}
       </div>
       <div className="flex items-center justify-end space-x-2">
-        <Button
-          disabled={page === 1}
-          variant="outline"
-          size="sm"
-          onClick={() => setParams((p) => ({ ...p, page: Math.max(1, page - 1) }))}
-        >
-          Anterior
-        </Button>
-        <Button
-          disabled={page === totalPages}
-          variant="outline"
-          size="sm"
-          onClick={() => setParams((p) => ({ ...p, page: Math.min(totalPages, page + 1) }))}
-        >
-          Próximo
-        </Button>
+        {previousDisabled ? (
+          <Button disabled variant="outline" size="sm">
+            Anterior
+          </Button>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <Link href={buildHref(page - 1, q, tool)} prefetch={false} rel="prev">
+              Anterior
+            </Link>
+          </Button>
+        )}
+        {nextDisabled ? (
+          <Button disabled variant="outline" size="sm">
+            Próximo
+          </Button>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <Link href={buildHref(page + 1, q, tool)} prefetch={false} rel="next">
+              Próximo
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );

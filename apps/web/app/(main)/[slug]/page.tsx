@@ -1,6 +1,7 @@
 import type { OutputData } from "@editorjs/editorjs";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { SectionErrorBoundary } from "@/modules/common/ui/components/section-error-boundary";
 import { PageContentRenderer } from "@/modules/pages/ui/components/page-content-renderer";
 import { caller } from "@/trpc/server";
 import { buildMetadata } from "@/lib/seo";
@@ -94,7 +95,9 @@ export default async function CustomPage({ params }: CustomPageProps) {
     return (
       <div className="flex flex-col min-h-screen bg-background">
         <main className="flex-1">
-          <PageContentRenderer content={page.content as OutputData} />
+          <SectionErrorBoundary message="Não foi possível renderizar o conteúdo desta página.">
+            <PageContentRenderer content={page.content as OutputData} />
+          </SectionErrorBoundary>
         </main>
       </div>
     );
