@@ -87,6 +87,14 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
+type ChartTooltipPayloadItem = {
+  value?: number | string;
+  name?: string | number;
+  dataKey?: string | number;
+  color?: string;
+  payload?: { fill?: string } & Record<string, unknown>;
+};
+
 function ChartTooltipContent({
   active,
   payload,
@@ -101,14 +109,26 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
-  React.ComponentProps<"div"> & {
-    hideLabel?: boolean;
-    hideIndicator?: boolean;
-    indicator?: "line" | "dot" | "dashed";
-    nameKey?: string;
-    labelKey?: string;
-  }) {
+}: Omit<React.ComponentProps<"div">, "color"> & {
+  active?: boolean;
+  payload?: ChartTooltipPayloadItem[];
+  label?: unknown;
+  labelFormatter?: (value: unknown, payload: ChartTooltipPayloadItem[]) => React.ReactNode;
+  formatter?: (
+    value: unknown,
+    name: unknown,
+    item: ChartTooltipPayloadItem,
+    index: number,
+    payload: ChartTooltipPayloadItem["payload"],
+  ) => React.ReactNode;
+  color?: string;
+  hideLabel?: boolean;
+  hideIndicator?: boolean;
+  indicator?: "line" | "dot" | "dashed";
+  nameKey?: string;
+  labelKey?: string;
+  labelClassName?: string;
+}) {
   const { config } = useChart();
 
   const tooltipLabel = React.useMemo(() => {
@@ -198,17 +218,26 @@ function ChartTooltipContent({
 
 const ChartLegend = RechartsPrimitive.Legend;
 
+type ChartLegendPayloadItem = {
+  value?: unknown;
+  dataKey?: string | number;
+  color?: string;
+  type?: string;
+  payload?: unknown;
+};
+
 function ChartLegendContent({
   className,
   hideIcon = false,
   payload,
   verticalAlign = "bottom",
   nameKey,
-}: React.ComponentProps<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
-    hideIcon?: boolean;
-    nameKey?: string;
-  }) {
+}: React.ComponentProps<"div"> & {
+  payload?: ChartLegendPayloadItem[];
+  verticalAlign?: "top" | "bottom" | "middle";
+  hideIcon?: boolean;
+  nameKey?: string;
+}) {
   const { config } = useChart();
   if (!payload?.length) return null;
 
@@ -240,9 +269,9 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
 
   let configLabelKey: string = key;
   if (key in payload && typeof (payload as Record<string, unknown>)[key] === "string") {
-    configLabelKey = (payload as Record<string, string>)[key];
+    configLabelKey = (payload as Record<string, string>)[key] ?? key;
   } else if (payloadPayload && key in payloadPayload && typeof (payloadPayload as Record<string, unknown>)[key] === "string") {
-    configLabelKey = (payloadPayload as Record<string, string>)[key];
+    configLabelKey = (payloadPayload as Record<string, string>)[key] ?? key;
   }
   return configLabelKey in config ? config[configLabelKey] : config[key];
 }

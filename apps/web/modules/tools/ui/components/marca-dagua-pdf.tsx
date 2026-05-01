@@ -7,7 +7,8 @@ import { Input } from "@workspace/ui/components/input";
 import { Slider } from "@workspace/ui/components/slider";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
-import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
+import type { PDFDocument } from "pdf-lib";
+import { lazyLoadPdfLib } from "@/modules/common/lib/lazy-load-libs";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { Download, Loader2, FileText, Trash2, Settings, CheckCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
@@ -91,6 +92,7 @@ export default function AddWatermarkPDF() {
 
     try {
       const arrayBuffer = await file.arrayBuffer();
+      const { PDFDocument } = await lazyLoadPdfLib();
       const pdf = await PDFDocument.load(arrayBuffer);
       setPdfDoc(pdf);
       setTotalPages(pdf.getPageCount());
@@ -106,21 +108,21 @@ export default function AddWatermarkPDF() {
   }, []);
 
   const addWatermarkToPage = useCallback(
-    async (pdf: PDFDocument, pageIndex: number) => {
+    async (pdf: PDFDocument, pageIndex: number, pdfLib: typeof import("pdf-lib")) => {
       const page = pdf.getPage(pageIndex);
       const { width, height } = page.getSize();
 
       // Load font
       const fontMap: Record<string, string> = {
-        Helvetica: StandardFonts.Helvetica,
-        "Helvetica-Bold": StandardFonts.HelveticaBold,
-        "Times-Roman": StandardFonts.TimesRoman,
-        "Times-Bold": StandardFonts.TimesRomanBold,
-        Courier: StandardFonts.Courier,
-        "Courier-Bold": StandardFonts.CourierBold,
+        Helvetica: pdfLib.StandardFonts.Helvetica,
+        "Helvetica-Bold": pdfLib.StandardFonts.HelveticaBold,
+        "Times-Roman": pdfLib.StandardFonts.TimesRoman,
+        "Times-Bold": pdfLib.StandardFonts.TimesRomanBold,
+        Courier: pdfLib.StandardFonts.Courier,
+        "Courier-Bold": pdfLib.StandardFonts.CourierBold,
       };
 
-      const font = await pdf.embedFont(fontMap[settings.fontFamily] || StandardFonts.HelveticaBold);
+      const font = await pdf.embedFont(fontMap[settings.fontFamily] || pdfLib.StandardFonts.HelveticaBold);
       const textWidth = font.widthOfTextAtSize(settings.text, settings.fontSize);
 
       // Get approximate text height (for visual positioning)
@@ -203,9 +205,9 @@ export default function AddWatermarkPDF() {
         y,
         size: settings.fontSize,
         font,
-        color: rgb(color.r, color.g, color.b),
+        color: pdfLib.rgb(color.r, color.g, color.b),
         opacity: settings.opacity,
-        rotate: degrees(settings.rotation),
+        rotate: pdfLib.degrees(settings.rotation),
       };
 
       if (settings.layer === "under") {
@@ -226,13 +228,14 @@ export default function AddWatermarkPDF() {
       // Removed unused width/height
 
       // Create a temporary PDF for preview
-      const tempPdf = await PDFDocument.create();
+      const pdfLib = await lazyLoadPdfLib();
+      const tempPdf = await pdfLib.PDFDocument.create();
       const [copiedPage] = await tempPdf.copyPages(pdfDoc, [currentPage - 1]);
       tempPdf.addPage(copiedPage);
 
       // Only add watermark if current page is within the selected range
       if (currentPage >= pageRange.from && currentPage <= pageRange.to) {
-        await addWatermarkToPage(tempPdf, 0);
+        await addWatermarkToPage(tempPdf, 0, pdfLib);
       }
 
       // Render to canvas
@@ -258,7 +261,8 @@ export default function AddWatermarkPDF() {
 
     try {
       // Create a new PDF with watermarks
-      const watermarkedPdf = await PDFDocument.create();
+      const pdfLib = await lazyLoadPdfLib();
+      const watermarkedPdf = await pdfLib.PDFDocument.create();
       const pageCount = pdfDoc.getPageCount();
 
       // Determine which pages to watermark
@@ -272,7 +276,7 @@ export default function AddWatermarkPDF() {
 
       // Add watermark to selected pages
       for (let i = startPage - 1; i < endPage; i++) {
-        await addWatermarkToPage(watermarkedPdf, i);
+        await addWatermarkToPage(watermarkedPdf, i, pdfLib);
       }
 
       // Save and download

@@ -1,11 +1,11 @@
 "use client";
 
-import JSZip from "jszip";
 import { toast } from "sonner";
 import { useState, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
+import { lazyLoadJsZip } from "@/modules/common/lib/lazy-load-libs";
 import { Download, Loader2, ImageIcon, FileText } from "lucide-react";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 
@@ -179,6 +179,7 @@ export default function PdfToJpg() {
     }
 
     try {
+      const JSZip = await lazyLoadJsZip();
       const zip = new JSZip();
       const baseName = file?.file.name.replace(/\.pdf$/i, "") || "pdf_images";
 

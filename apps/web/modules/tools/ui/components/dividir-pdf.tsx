@@ -1,12 +1,12 @@
 "use client";
 
 import { toast } from "sonner";
-import { degrees, PDFDocument } from "pdf-lib";
 import { useState, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Download, Plus, Loader2 } from "lucide-react";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
 import { Progress } from "@workspace/ui/components/progress";
+import { lazyLoadPdfLib } from "@/modules/common/lib/lazy-load-libs";
 import { usePdfManager } from "@/modules/common/hooks/use-pdf-manager";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { SelectablePDFGrid } from "@/modules/common/ui/components/selectable-pdf-grid";
@@ -72,8 +72,9 @@ export default function SplitPDF() {
     setSplitPdf(null);
 
     try {
+      const { PDFDocument, degrees } = await lazyLoadPdfLib();
       const splitPdfDoc = await PDFDocument.create();
-      const loadedPdfs: Record<string, PDFDocument> = {};
+      const loadedPdfs: Record<string, Awaited<ReturnType<typeof PDFDocument.create>>> = {};
 
       const selectedPagesList = Array.from(pages).filter((p) => selectedPages.has(p.id));
 
