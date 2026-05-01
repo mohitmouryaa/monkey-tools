@@ -201,7 +201,7 @@ Tools confirmadas com import eager (verificadas por inspeção):
 
 ---
 
-### Fase 4 — Dynamic import de Recharts no /dashboard e TipTap no tool form
+### Fase 4 — Dynamic import de Recharts no /dashboard e TipTap no tool form ✅
 
 **Objetivo:** retirar 411 KB (recharts) de `/dashboard` e 400 KB (TipTap) das
 rotas `/dashboard/tools/[id]` e `/dashboard/tools/create`. Como `/dashboard` é
@@ -214,25 +214,25 @@ autenticado, aceita-se `ssr: false`.
 > `next/dynamic({ ssr: false })` NÃO funciona dentro de RSC (Next 15+ baniu).
 > A estratégia exige um Client Component wrapper intermediário.
 
-#### 4.1 — Criar wrapper client component para os 3 charts
+#### 4.1 — Criar wrapper client component para os 3 charts ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/components/dashboard-overview-charts.tsx` (novo)
 **Depende de:** —
 Criar Client Component (`"use client"`) que recebe como props os 3 datasets (`jobsByDay`, `jobsByStatus`, `topTools`) e renderiza os 3 charts. Dentro DESTE arquivo, importar os 3 charts via `next/dynamic(() => import("./dashboard-overview-area-chart").then(m => ({ default: m.DashboardOverviewAreaChart })), { ssr: false, loading: () => <ChartSkeleton /> })`. Idem para os outros 2. [DECISÃO PENDENTE 4.1]: criar `<ChartSkeleton />` ou reusar componente existente? **Default razoável**: usar `<div className="h-[280px] w-full animate-pulse bg-muted/30 rounded" />` inline. Se já existir Skeleton em `@workspace/ui`, usar.
 **Feito quando:** componente client compila, types ok.
 
-#### 4.2 — Trocar imports diretos por wrapper em dashboard-overview-view
+#### 4.2 — Trocar imports diretos por wrapper em dashboard-overview-view ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/views/dashboard-overview-view.tsx`
 **Depende de:** 4.1
 Remover os 3 imports estáticos de chart. Importar `DashboardOverviewCharts` (do wrapper criado em 4.1). Substituir as 3 invocações `<DashboardOverviewAreaChart .../>`, `<DashboardOverviewPieChart .../>`, `<DashboardOverviewBarChart .../>` por uma única `<DashboardOverviewCharts jobsByDay={data.jobsByDay} jobsByStatus={data.jobsByStatus} topTools={data.topTools} />`. Manter o resto do layout igual (cards, headings, etc.). Se a estrutura visual exigir charts em locais separados (3 cards distintos), criar 3 wrappers individuais ao invés de um só — escolher conforme leitura do JSX atual.
 **Feito quando:** `/dashboard` renderiza sem charts no SSR, charts aparecem após hydration, e analyzer mostra recharts em chunk separado do bundle inicial do `/dashboard`.
 
-#### 4.3 — Wrapper dynamic do RichTextEditor em tool-form
+#### 4.3 — Wrapper dynamic do RichTextEditor em tool-form ✅
 **Arquivo:** `apps/web/modules/dashboard/ui/components/tool-form.tsx`
 **Depende de:** —
 `tool-form.tsx` JÁ é Client Component (linha 1). Trocar `import { RichTextEditor } from "./rich-text-editor"` por `const RichTextEditor = dynamic(() => import("./rich-text-editor").then(m => ({ default: m.RichTextEditor })), { ssr: false, loading: () => <div className="h-[300px] animate-pulse bg-muted/30 rounded" /> })`. Adicionar `import dynamic from "next/dynamic"` no topo.
 **Feito quando:** form de tool renderiza, editor aparece após hydration, analyzer mostra TipTap em chunk separado de `tool-form`.
 
-#### 4.4 — Verificar outros usos de RichTextEditor
+#### 4.4 — Verificar outros usos de RichTextEditor ✅
 **Arquivo:** N/A (busca)
 **Depende de:** 4.3
 `grep -r RichTextEditor apps/web/modules/`. Se houver outras superfícies usando, aplicar o mesmo dynamic. Hoje só `tool-form.tsx` consome (segundo grep prévio).
@@ -240,7 +240,7 @@ Remover os 3 imports estáticos de chart. Importar `DashboardOverviewCharts` (do
 
 ---
 
-### Fase 5 — Auditoria de Zod em client components (sem mover schemas)
+### Fase 5 — Auditoria de Zod em client components (sem mover schemas) ✅
 
 **Objetivo:** confirmar que NÃO há schemas que deveriam estar em server-only
 sendo arrastados pro client. Hoje a hipótese é que Zod no client é necessário
@@ -251,13 +251,13 @@ valida a hipótese e documenta.
 client e justificando manutenção. Zero schemas movidos. `import { z }` que só
 serve para tipagem virou `import type { z }`.
 
-#### 5.1 — Listar todos os imports `from "zod"` em client components
+#### 5.1 — Listar todos os imports `from "zod"` em client components ✅
 **Arquivo:** N/A (relatório)
 **Depende de:** —
 `grep -rn "from \"zod\"" apps/web/modules/`. Para cada arquivo retornado, anotar: (a) é client component? (b) é usado por `zodResolver` ou apenas para tipagem? Se só tipagem, virar `import type { z } from "zod"`. Conhecidos: `dashboard/schema/*.tsx` (todos `z.object` em runtime), `dashboard/ui/components/account-tabs.tsx` (`z.object`), `auth/ui/views/login-view.tsx` (`z.object`), `dashboard/ui/components/tool-form.tsx` (já é `import type`).
 **Feito quando:** lista completa anexada ao PR.
 
-#### 5.2 — Trocar `import z` por `import type z` onde só serve para tipagem
+#### 5.2 — Trocar `import z` por `import type z` onde só serve para tipagem ✅
 **Arquivo:** múltiplos (definidos em 5.1)
 **Depende de:** 5.1
 Em cada arquivo onde Zod só aparece como `z.infer<typeof schema>` ou em type-only positions, trocar para `import type { z } from "zod"`. Não afeta runtime, mas garante que o bundler nunca puxe Zod por engano em arquivos que só tipam.
@@ -308,7 +308,7 @@ Linha 207-210: `Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign">
 
 ---
 
-### Fase 8 — Resolver índices duplicados de PostModel
+### Fase 8 — Resolver índices duplicados de PostModel ✅
 
 **Objetivo:** Mongoose loga warnings ruidosos sobre índices duplicados em
 `packages/database/src/models/Post.ts`. Limpar.
@@ -316,13 +316,13 @@ Linha 207-210: `Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign">
 **Critério de conclusão:** ao iniciar o app (`pnpm dev`), zero warnings
 "Duplicate schema index" ou "Mongoose: ..." sobre `posts`.
 
-#### 8.1 — Remover @prop({index:true}) de status (composto cobre)
+#### 8.1 — Remover @prop({index:true}) de status (composto cobre) ✅
 **Arquivo:** `packages/database/src/models/Post.ts`
 **Depende de:** —
 Hoje há (a) `@prop({ enum, index: true })` em `status` (linha 47), (b) `@prop({ index: true })` em `publishedAt` (linha 50), (c) `model.schema.index({ status: 1, publishedAt: -1 })` na função `getPostModel()`. O composto cobre prefixo de `status`, então remover `index: true` de `status` (linha 47). [DECISÃO PENDENTE 8.1]: manter index em `publishedAt` standalone? **Default razoável**: manter `index: true` em `publishedAt` (sort em listagem pública por `publishedAt` independe de `status`). Composto continua.
 **Feito quando:** zero warning de duplicate index em `posts.status` no boot.
 
-#### 8.2 — Idempotência do text index em getPostModel()
+#### 8.2 — Idempotência do text index em getPostModel() ✅
 **Arquivo:** `packages/database/src/models/Post.ts`
 **Depende de:** —
 A função `getPostModel()` chama `model.schema.index(...)` toda vez. Quando o módulo é reimportado (HMR ou serverless cold start), Mongoose pode logar "duplicate text index" porque `mongoose.models.Post` já existe e os índices já foram declarados. Mover as duas chamadas `model.schema.index(...)` para dentro do branch que cria o model pela primeira vez (`if (!mongoose.models.Post) { const created = getModelForClass(Post); created.schema.index(...); created.schema.index(...); return created; }`). Quando o model já existe em `mongoose.models.Post`, retornar direto sem tocar nos índices.

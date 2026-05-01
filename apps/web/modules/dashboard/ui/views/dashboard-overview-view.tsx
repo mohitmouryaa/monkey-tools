@@ -4,9 +4,11 @@ import type { caller } from "@/trpc/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { DashboardOverviewAreaChart } from "@/modules/dashboard/ui/components/dashboard-overview-area-chart";
-import { DashboardOverviewBarChart } from "@/modules/dashboard/ui/components/dashboard-overview-bar-chart";
-import { DashboardOverviewPieChart } from "@/modules/dashboard/ui/components/dashboard-overview-pie-chart";
+import {
+  DashboardOverviewAreaChartLazy,
+  DashboardOverviewBarChartLazy,
+  DashboardOverviewPieChartLazy,
+} from "@/modules/dashboard/ui/components/dashboard-overview-charts";
 
 export type DashboardOverviewData = Awaited<ReturnType<typeof caller.dashboard.overview>>;
 
@@ -71,7 +73,7 @@ export const DashboardOverviewView = ({ data }: { data: DashboardOverviewData })
           <CardDescription>Distribuição diária por status — concluídos, falhas e em andamento</CardDescription>
         </CardHeader>
         <CardContent>
-          <DashboardOverviewAreaChart data={data.jobsByDay} />
+          <DashboardOverviewAreaChartLazy data={data.jobsByDay} />
         </CardContent>
       </Card>
 
@@ -81,7 +83,7 @@ export const DashboardOverviewView = ({ data }: { data: DashboardOverviewData })
           <CardDescription>Últimos 7 dias</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center">
-          <DashboardOverviewPieChart data={data.jobsByStatus} />
+          <DashboardOverviewPieChartLazy data={data.jobsByStatus} />
         </CardContent>
       </Card>
     </div>
@@ -103,7 +105,7 @@ export const DashboardOverviewView = ({ data }: { data: DashboardOverviewData })
           {data.topTools.length === 0 ? (
             <div className="text-muted-foreground py-12 text-center text-sm">Nenhuma execução registrada nos últimos 7 dias.</div>
           ) : (
-            <DashboardOverviewBarChart data={data.topTools} />
+            <DashboardOverviewBarChartLazy data={data.topTools} />
           )}
         </CardContent>
       </Card>

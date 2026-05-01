@@ -44,7 +44,7 @@ export class Post {
   // biome-ignore lint/suspicious/noExplicitAny: <Editor.js JSON content shape is dynamic>
   public content!: Record<string, any>;
 
-  @prop({ type: String, required: true, enum: PostStatus, index: true, default: PostStatus.DRAFT })
+  @prop({ type: String, required: true, enum: PostStatus, default: PostStatus.DRAFT })
   public status!: PostStatus;
 
   @prop({ index: true })
@@ -68,12 +68,13 @@ export class Post {
 }
 
 function getPostModel() {
-  const model = (mongoose.models.Post as ReturnType<typeof getModelForClass<typeof Post>>) ?? getModelForClass(Post);
+  const existing = mongoose.models.Post as ReturnType<typeof getModelForClass<typeof Post>> | undefined;
+  if (existing) return existing;
 
-  model.schema.index({ status: 1, publishedAt: -1 });
-  model.schema.index({ title: "text", excerpt: "text" });
-
-  return model;
+  const created = getModelForClass(Post);
+  created.schema.index({ status: 1, publishedAt: -1 });
+  created.schema.index({ title: "text", excerpt: "text" });
+  return created;
 }
 
 export const PostModel = getPostModel();

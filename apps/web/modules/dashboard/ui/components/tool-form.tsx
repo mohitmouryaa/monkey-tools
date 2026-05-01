@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { useForm, useWatch, type Control, type FieldErrors } from "react-hook-form";
 import { AlertCircle, FileText, Info, Loader2, Palette, Save, Search, Sparkles, Star, Wrench } from "lucide-react";
 import { DynamicIcon, type IconName } from "lucide-react/dynamic";
@@ -14,6 +15,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Switch } from "@workspace/ui/components/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { createToolSchema } from "@/modules/dashboard/schema/tool";
@@ -21,9 +23,13 @@ import { slugify } from "@/lib/slug";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@workspace/ui/components/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
 import { VisualStepsBuilder } from "./visual-steps-builder";
-import { RichTextEditor } from "./rich-text-editor";
 import { FAQManager } from "./faq-manager";
 import { PostCombobox } from "./post-combobox";
+
+const RichTextEditor = dynamic(() => import("./rich-text-editor").then((m) => ({ default: m.RichTextEditor })), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[300px] w-full rounded-lg" />,
+});
 
 export type ToolFormValues = z.infer<typeof createToolSchema>;
 
