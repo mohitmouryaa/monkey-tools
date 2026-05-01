@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ToolLoading } from "@/modules/common/ui/components/tool-loading";
 import { PDFLibProvider } from "@/modules/common/providers/pdf-lib-provider";
+import { TOOL_EMBED_REGISTRY } from "@/modules/blog/lib/tool-embed-registry";
 
 interface ToolReference {
   _id: string;
@@ -25,9 +26,12 @@ export const ToolEmbedBlockRenderer = async ({ data, tools }: ToolEmbedBlockRend
 
   const componentSlug = tool.link.startsWith("/") ? tool.link.slice(1) : tool.link;
 
+  const loader = TOOL_EMBED_REGISTRY[componentSlug];
+  if (!loader) return null;
+
   let ToolComponent: React.ComponentType;
   try {
-    const mod = await import(`@/modules/tools/ui/components/${componentSlug}`);
+    const mod = await loader();
     ToolComponent = mod.default;
   } catch {
     return null;

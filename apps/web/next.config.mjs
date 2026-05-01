@@ -1,7 +1,12 @@
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: false,
   transpilePackages: ["@workspace/ui", "@workspace/database", "@workspace/storage", "@workspace/queue", "@workspace/types"],
+  experimental: {
+    optimizePackageImports: ["lucide-react", "zod"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -15,15 +20,19 @@ const nextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {
-        source: "/_next/image:path*",
+        source: "/_next/image",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {
-        source: "/:path*.(svg|png|jpg|jpeg|gif|webp|avif|ico|woff|woff2|ttf|otf)",
+        source: "/_next/image/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/:path(.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|woff|woff2|ttf|otf))",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" })(nextConfig);

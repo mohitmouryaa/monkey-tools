@@ -85,6 +85,7 @@
     "zod": "^4.3.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20.19.27",
     "@types/qrcode": "^1.5.6",
