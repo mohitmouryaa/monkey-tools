@@ -34,6 +34,9 @@ export class Job {
 
   @prop({ default: Date.now })
   public completedAt?: Date;
+
+  public createdAt?: Date;
+  public updatedAt?: Date;
 }
 
 function getJobModel() {
