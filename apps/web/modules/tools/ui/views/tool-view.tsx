@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
-import { caller } from "@/trpc/server";
+import { caller, publicCaller } from "@/trpc/server";
 import { tagForTool } from "@/modules/tools/lib/cache";
 import { ToolSteps } from "@/modules/tools/ui/components/tool-steps";
 import { ToolFAQ } from "@/modules/tools/ui/components/tool-faq";
@@ -42,7 +42,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   }
 
   const category = await unstable_cache(
-    async () => caller.categories.getCategoryWithTools({ slug: toolCategory }),
+    async () => publicCaller.categories.getCategoryWithTools({ slug: toolCategory }),
     ["tool-category-with-tools-v1", toolCategory, tool],
     { revalidate: 3600, tags: [tagForTool(tool)] },
   )();

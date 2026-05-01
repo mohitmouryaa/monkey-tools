@@ -1,10 +1,16 @@
 import "server-only"; // <-- ensure this file cannot be imported from the client
 import { cache } from "react";
+import { connectToDatabase } from "@workspace/database";
 import { createTRPCContext } from "./init";
 import { appRouter } from "./routers/_app";
 import { makeQueryClient } from "./query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createTRPCOptionsProxy, type TRPCQueryOptions } from "@trpc/tanstack-react-query";
+
+const createPublicTRPCContext = cache(async () => {
+  await connectToDatabase();
+  return { session: undefined, user: undefined };
+});
 // IMPORTANT: Create a stable getter for the query client that
 //            will return the same client during the same request.
 export const getQueryClient = cache(makeQueryClient);
@@ -16,6 +22,9 @@ export const trpc = createTRPCOptionsProxy({
 });
 
 export const caller = appRouter.createCaller(createTRPCContext);
+
+// Caller sem headers/auth — seguro de usar dentro de unstable_cache em rotas públicas (não chama dynamic data sources).
+export const publicCaller = appRouter.createCaller(createPublicTRPCContext);
 
 export function HydrateClient(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();

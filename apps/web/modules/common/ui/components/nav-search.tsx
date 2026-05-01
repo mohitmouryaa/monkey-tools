@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, BookOpen, CornerDownLeft, FolderOpen, Search as SearchIcon, Wrench } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 import {
   CommandDialog,
   CommandEmpty,
@@ -134,10 +134,10 @@ export const NavSearch = ({ index }: NavSearchProps) => {
                     }}
                     aria-hidden
                   >
-                    <DynamicIcon
-                      name={tool.icon as IconName}
+                    <SafeDynamicIcon
+                      name={tool.icon}
                       className="h-4 w-4"
-                      fallback={() => <Wrench className="h-4 w-4" />}
+                      fallback={<Wrench className="h-4 w-4" />}
                     />
                   </span>
                   <div className="flex min-w-0 flex-1 flex-col">
@@ -168,10 +168,10 @@ export const NavSearch = ({ index }: NavSearchProps) => {
                       }}
                       aria-hidden
                     >
-                      <DynamicIcon
-                        name={category.icon as IconName}
+                      <SafeDynamicIcon
+                        name={category.icon}
                         className="h-4 w-4"
-                        fallback={() => <FolderOpen className="h-4 w-4" />}
+                        fallback={<FolderOpen className="h-4 w-4" />}
                       />
                     </span>
                     <span className="text-sm font-medium text-foreground">{category.name}</span>

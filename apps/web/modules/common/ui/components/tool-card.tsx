@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface ToolCardProps {
   name: string;
@@ -61,11 +63,11 @@ export const ToolCard = ({ name, description, category, categorySlug, toolSlug, 
               boxShadow: `inset 0 0 0 1px ${accentRing}`,
             }}
           >
-            <DynamicIcon
-              name={icon as IconName}
+            <SafeDynamicIcon
+              name={icon}
               className="h-6 w-6"
               style={{ color: accent }}
-              fallback={() => <FileText className="h-6 w-6" style={{ color: accent }} />}
+              fallback={<FileText className="h-6 w-6" style={{ color: accent }} />}
             />
           </div>
           <span

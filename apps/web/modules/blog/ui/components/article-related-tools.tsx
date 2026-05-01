@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Wrench } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface RelatedTool {
   _id: string;
@@ -54,11 +56,7 @@ export const ArticleRelatedTools = ({ tools }: ArticleRelatedToolsProps) => {
                   color: tool.iconColor || "currentColor",
                 }}
               >
-                {tool.icon ? (
-                  <DynamicIcon name={tool.icon as IconName} className="h-5 w-5" />
-                ) : (
-                  <Wrench className="h-5 w-5" />
-                )}
+                <SafeDynamicIcon name={tool.icon} className="h-5 w-5" fallback={<Wrench className="h-5 w-5" />} />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">

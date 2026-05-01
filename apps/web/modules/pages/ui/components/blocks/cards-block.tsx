@@ -1,5 +1,7 @@
-import { ArrowRight } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+"use client";
+
+import { ArrowRight, Sparkles } from "lucide-react";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 import type { CardsBlockData } from "@workspace/types";
 
 interface CardsBlockProps {
@@ -24,7 +26,7 @@ export function CardsBlock({ data }: CardsBlockProps) {
             <div key={`${card.title}-${index}`} className="rounded-xl border bg-card p-6 transition-shadow hover:shadow-md">
               {card.iconName && (
                 <div className="mb-4 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                  <DynamicIcon name={card.iconName as IconName} className="size-5" />
+                  <SafeDynamicIcon name={card.iconName} className="size-5" fallback={<Sparkles className="size-5" />} />
                 </div>
               )}
               <h3 className="text-lg font-semibold text-foreground mb-2">{card.title}</h3>

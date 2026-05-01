@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Wrench } from "lucide-react";
 import type { Tool } from "@workspace/database";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface RelatedToolsProps {
   currentToolId: string;
@@ -31,15 +33,11 @@ export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedTool
               className="group flex items-center justify-between gap-3 rounded-full border border-emerald-100 bg-emerald-50/70 px-5 py-3 text-foreground transition-all hover:bg-emerald-100 hover:border-emerald-200"
             >
               <span className="flex items-center gap-3 min-w-0">
-                {tool.icon ? (
-                  <DynamicIcon
-                    name={tool.icon as IconName}
-                    className="w-4 h-4 shrink-0 text-foreground/70"
-                    fallback={() => <Wrench className="w-4 h-4 shrink-0 text-foreground/70" />}
-                  />
-                ) : (
-                  <Wrench className="w-4 h-4 shrink-0 text-foreground/70" />
-                )}
+                <SafeDynamicIcon
+                  name={tool.icon}
+                  className="w-4 h-4 shrink-0 text-foreground/70"
+                  fallback={<Wrench className="w-4 h-4 shrink-0 text-foreground/70" />}
+                />
                 <span className="text-sm font-medium truncate">{tool.title}</span>
               </span>
               <ArrowRight className="w-4 h-4 shrink-0 text-foreground/60 transition-transform group-hover:translate-x-1" />

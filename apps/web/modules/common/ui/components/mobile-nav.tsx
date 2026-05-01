@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, FolderOpen, ChevronRight } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 import { Button } from "@workspace/ui/components/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@workspace/ui/components/sheet";
 import type { NavCategory } from "./mega-nav";
@@ -55,10 +55,10 @@ export const MobileNav = ({ categories, searchIndex }: MobileNavProps) => {
                       }}
                       aria-hidden
                     >
-                      <DynamicIcon
-                        name={category.icon as IconName}
+                      <SafeDynamicIcon
+                        name={category.icon}
                         className="h-4 w-4"
-                        fallback={() => <FolderOpen className="h-4 w-4" />}
+                        fallback={<FolderOpen className="h-4 w-4" />}
                       />
                     </span>
                     <span className="flex-1 text-sm font-medium text-foreground">{category.name}</span>

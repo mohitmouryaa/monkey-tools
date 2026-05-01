@@ -1,5 +1,7 @@
+"use client";
+
 import { Upload } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 import type { StepsBlockData } from "@workspace/types";
 
 interface StepsBlockProps {
@@ -26,10 +28,10 @@ export function StepsBlock({ data }: StepsBlockProps) {
           {steps.map((step, index) => (
             <div key={`${step.title}-${index}`} className="relative flex flex-col items-center text-center max-w-xs">
               <div className="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center mb-6 shadow-lg shadow-primary/20 relative z-10">
-                <DynamicIcon
-                  name={step.iconName as IconName}
+                <SafeDynamicIcon
+                  name={step.iconName}
                   className="w-10 h-10 text-primary-foreground"
-                  fallback={() => <Upload className="w-10 h-10 text-primary-foreground" />}
+                  fallback={<Upload className="w-10 h-10 text-primary-foreground" />}
                 />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">

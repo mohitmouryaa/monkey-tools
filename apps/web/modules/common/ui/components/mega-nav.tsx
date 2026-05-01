@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, FolderOpen, Wrench } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 import { cn } from "@workspace/ui/lib/utils";
 
 export interface NavCategory {
@@ -76,10 +76,10 @@ export const MegaNav = ({ categories }: MegaNavProps) => {
                       }}
                       aria-hidden
                     >
-                      <DynamicIcon
-                        name={category.icon as IconName}
+                      <SafeDynamicIcon
+                        name={category.icon}
                         className="h-4 w-4"
-                        fallback={() => <FolderOpen className="h-4 w-4" />}
+                        fallback={<FolderOpen className="h-4 w-4" />}
                       />
                     </span>
                     <span className="text-sm font-semibold tracking-tight text-foreground group-hover/cat:text-primary transition-colors">

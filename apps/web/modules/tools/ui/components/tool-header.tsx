@@ -1,5 +1,7 @@
+"use client";
+
 import { Wrench } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface ToolHeaderProps {
   title: string;
@@ -18,16 +20,12 @@ export const ToolHeader = ({ title, introText, iconName, iconColor, bgColor }: T
   return (
     <header className="flex flex-col items-center text-center pt-2 pb-4 md:pt-6 md:pb-6">
       <div className="flex items-center justify-center w-16 h-16 mb-6 rounded-2xl shadow-md" style={{ backgroundColor: accent }}>
-        {iconName ? (
-          <DynamicIcon
-            name={iconName as IconName}
-            className="w-8 h-8"
-            style={{ color: iconStroke }}
-            fallback={() => <Wrench className="w-8 h-8" style={{ color: iconStroke }} />}
-          />
-        ) : (
-          <Wrench className="w-8 h-8" style={{ color: iconStroke }} />
-        )}
+        <SafeDynamicIcon
+          name={iconName}
+          className="w-8 h-8"
+          style={{ color: iconStroke }}
+          fallback={<Wrench className="w-8 h-8" style={{ color: iconStroke }} />}
+        />
       </div>
 
       <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground tracking-tight max-w-3xl leading-tight">

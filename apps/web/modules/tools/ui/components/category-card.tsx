@@ -1,6 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUpRight, FolderOpen } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface CategoryCardProps {
   name: string;
@@ -43,7 +45,7 @@ export const CategoryCard = ({ name, slug, description, icon, color, toolsCount 
               boxShadow: `0 12px 30px -8px ${accent}`,
             }}
           >
-            <DynamicIcon name={icon as IconName} className="h-8 w-8" fallback={() => <FolderOpen className="h-8 w-8" />} />
+            <SafeDynamicIcon name={icon} className="h-8 w-8" fallback={<FolderOpen className="h-8 w-8" />} />
           </div>
 
           <h3 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-foreground">{name}</h3>

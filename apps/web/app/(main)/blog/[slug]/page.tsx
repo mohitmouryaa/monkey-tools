@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { unstable_cache } from "next/cache";
 import type { OutputData } from "@editorjs/editorjs";
 import { PostStatus } from "@workspace/types";
-import { caller } from "@/trpc/server";
+import { publicCaller } from "@/trpc/server";
 import { PostView } from "@/modules/blog/ui/views/post-view";
 import { buildMetadata } from "@/lib/seo";
 
@@ -49,7 +49,7 @@ const fetchPostBySlug = (slug: string) =>
   unstable_cache(
     async () => {
       try {
-        const result = await caller.posts.getBySlug({ slug });
+        const result = await publicCaller.posts.getBySlug({ slug });
         return result as unknown as PostDetail;
       } catch {
         return null;
@@ -62,7 +62,7 @@ const fetchPostBySlug = (slug: string) =>
 const fetchRelatedPosts = (slug: string) =>
   unstable_cache(
     async () => {
-      const result = await caller.posts.list({ page: 1, pageSize: 4, status: PostStatus.PUBLISHED });
+      const result = await publicCaller.posts.list({ page: 1, pageSize: 4, status: PostStatus.PUBLISHED });
       const items = (result as unknown as { items: RelatedPost[] }).items;
       return items.filter((p) => p.slug !== slug).slice(0, 3);
     },

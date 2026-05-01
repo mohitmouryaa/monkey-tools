@@ -1,5 +1,7 @@
+"use client";
+
 import { FileText } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface VisualStep {
   icon: string;
@@ -45,11 +47,11 @@ export const ToolSteps = ({ steps }: ToolStepsProps) => {
                 className="relative z-10 w-20 h-20 rounded-full flex items-center justify-center shadow-lg mb-5"
                 style={{ backgroundColor: bg }}
               >
-                <DynamicIcon
-                  name={step.icon as IconName}
+                <SafeDynamicIcon
+                  name={step.icon}
                   className="w-9 h-9"
                   style={{ color: fg }}
-                  fallback={() => <FileText className="w-9 h-9" style={{ color: fg }} />}
+                  fallback={<FileText className="w-9 h-9" style={{ color: fg }} />}
                 />
               </div>
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { PostStatus } from "@workspace/types";
-import { caller } from "@/trpc/server";
+import { publicCaller } from "@/trpc/server";
 import { BlogView } from "@/modules/blog/ui/views/blog-view";
 import { PAGINATION } from "@/modules/common/constants";
 
@@ -56,14 +56,14 @@ interface FilterTool {
 const fetchBlogList = unstable_cache(
   async (page: number, pageSize: number, q: string, toolId: string | undefined) => {
     const [list, featured] = await Promise.all([
-      caller.posts.list({
+      publicCaller.posts.list({
         page,
         pageSize,
         search: q,
         toolId,
         status: PostStatus.PUBLISHED,
       }),
-      caller.posts.getFeatured({ limit: 3 }),
+      publicCaller.posts.getFeatured({ limit: 3 }),
     ]);
     return {
       list: list as unknown as BlogListResult,
@@ -76,7 +76,7 @@ const fetchBlogList = unstable_cache(
 
 const fetchFilterTools = unstable_cache(
   async () => {
-    const result = await caller.tools.getMany({ pageSize: 100 });
+    const result = await publicCaller.tools.getMany({ pageSize: 100 });
     const items = (result as unknown as { items: Array<{ _id?: string; title: string }> }).items;
     return items
       .filter((t): t is { _id: string; title: string } => Boolean(t._id))

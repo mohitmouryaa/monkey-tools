@@ -1,5 +1,7 @@
+"use client";
+
 import { Sparkles } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface Item {
   label: string;
@@ -66,10 +68,10 @@ const Block = ({
               <div
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${accent.bg} ring-1 ${accent.ring} transition-transform group-hover:scale-105`}
               >
-                <DynamicIcon
-                  name={(item.iconName as IconName) || "Sparkles"}
+                <SafeDynamicIcon
+                  name={item.iconName}
                   className={`h-[18px] w-[18px] ${accent.color}`}
-                  fallback={() => <Sparkles className={`h-[18px] w-[18px] ${accent.color}`} />}
+                  fallback={<Sparkles className={`h-[18px] w-[18px] ${accent.color}`} />}
                 />
               </div>
               <div className="flex-1 pt-1 min-w-0">
