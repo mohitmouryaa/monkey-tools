@@ -1,94 +1,191 @@
 import type { Metadata, Viewport } from "next";
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br").replace(/\/+$/, "");
 export const SITE_NAME = "pdfs.com.br";
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.png`;
+export const SITE_LOCALE = "pt_BR";
+export const SITE_LANG = "pt-BR";
+
+export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br").replace(/\/+$/, "");
+
+// TODO: substituir quando branding estiver pronto (1200x630, ≤ 1MB, PNG/JPG)
+export const DEFAULT_OG_IMAGE = "/og-default.png";
+export const DEFAULT_OG_IMAGE_WIDTH = 1200;
+export const DEFAULT_OG_IMAGE_HEIGHT = 630;
+export const DEFAULT_OG_IMAGE_ALT = `${SITE_NAME} — ferramentas online gratuitas`;
+
+// TODO: preencher quando criar conta no X/Twitter (ex.: "@pdfscombr")
+export const TWITTER_HANDLE: string | null = null;
+
+const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined;
 
 export const absoluteUrl = (path: string) => {
   if (!path) return SITE_URL;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${SITE_URL}${normalized === "/" ? "" : normalized.replace(/\/+$/, "")}`;
+  return `${SITE_URL}${normalized}`;
 };
+
+const buildOgImages = (image?: string) => [
+  {
+    url: absoluteUrl(image || DEFAULT_OG_IMAGE),
+    width: DEFAULT_OG_IMAGE_WIDTH,
+    height: DEFAULT_OG_IMAGE_HEIGHT,
+    alt: DEFAULT_OG_IMAGE_ALT,
+  },
+];
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — ferramentas online gratuitas para PDF, imagens e textos`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description:
+    "Ferramentas online gratuitas para PDF, imagens e textos. Comprima, converta, mescla e divide arquivos em segundos — sem cadastro.",
   applicationName: SITE_NAME,
   generator: "Next.js",
-  authors: [{ name: SITE_NAME }],
-  creator: SITE_NAME,
-  publisher: SITE_NAME,
+  referrer: "origin-when-cross-origin",
   formatDetection: {
+    telephone: false,
     email: false,
     address: false,
-    telephone: false,
-  },
-  openGraph: {
-    siteName: SITE_NAME,
-    locale: "pt_BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
   },
   alternates: {
+    canonical: SITE_URL,
     languages: {
       "pt-BR": SITE_URL,
     },
   },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: SITE_LOCALE,
+    url: SITE_URL,
+    title: `${SITE_NAME} — ferramentas online gratuitas`,
+    description:
+      "Ferramentas online gratuitas para PDF, imagens e textos. Sem cadastro, processamento rápido e seguro.",
+    images: buildOgImages(),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ferramentas online gratuitas`,
+    description:
+      "Ferramentas online gratuitas para PDF, imagens e textos. Sem cadastro, processamento rápido e seguro.",
+    images: [absoluteUrl(DEFAULT_OG_IMAGE)],
+    ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  ...(GOOGLE_SITE_VERIFICATION ? { verification: { google: GOOGLE_SITE_VERIFICATION } } : {}),
+  // TODO: configurar quando favicon/logo/manifest existirem
+  // icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
+  // manifest: "/manifest.webmanifest",
 };
 
 export const defaultViewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
+  colorScheme: "light dark",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export interface BuildMetadataInput {
   title: string;
   description: string;
   path: string;
-  keywords?: string;
+  keywords?: string | string[];
   ogImage?: string;
+  ogType?: "website" | "article";
   noIndex?: boolean;
 }
 
-export const buildMetadata = ({ title, description, path, keywords, ogImage, noIndex }: BuildMetadataInput): Metadata => {
+const SITE_NAME_SUFFIX_RE = new RegExp(`[\\s\\-—|·:]*${SITE_NAME.replace(/\./g, "\\.")}\\s*$`, "i");
+
+const stripSiteSuffix = (value: string) => value.replace(SITE_NAME_SUFFIX_RE, "").trim();
+
+const titleAlreadyHasSite = (value: string) =>
+  value.toLowerCase().includes(SITE_NAME.toLowerCase()) || /monkey\s*tools/i.test(value);
+
+type ResolvedTitle =
+  | { kind: "absolute"; absolute: string; social: string }
+  | { kind: "templated"; templated: string; social: string };
+
+const resolveTitle = (input: string): ResolvedTitle => {
+  const cleaned = stripSiteSuffix(input);
+  if (titleAlreadyHasSite(cleaned)) {
+    return { kind: "absolute", absolute: cleaned, social: cleaned };
+  }
+  return { kind: "templated", templated: cleaned, social: `${cleaned} | ${SITE_NAME}` };
+};
+
+export const buildMetadata = ({
+  title,
+  description,
+  path,
+  keywords,
+  ogImage,
+  ogType = "website",
+  noIndex,
+}: BuildMetadataInput): Metadata => {
   const url = absoluteUrl(path);
-  const image = ogImage || DEFAULT_OG_IMAGE;
+  const resolved = resolveTitle(title);
+  const titleField = resolved.kind === "absolute" ? { absolute: resolved.absolute } : resolved.templated;
+
   return {
-    title,
+    title: titleField,
     description,
-    keywords,
+    ...(keywords ? { keywords } : {}),
     alternates: {
       canonical: url,
       languages: {
         "pt-BR": url,
       },
     },
-    robots: noIndex
-      ? { index: false, follow: false, nocache: true }
-      : { index: true, follow: true, googleBot: { index: true, follow: true } },
     openGraph: {
-      title,
-      description,
-      url,
+      type: ogType,
       siteName: SITE_NAME,
-      locale: "pt_BR",
-      type: "website",
-      images: [{ url: image, width: 1200, height: 630, alt: title }],
+      locale: SITE_LOCALE,
+      url,
+      title: resolved.social,
+      description,
+      images: buildOgImages(ogImage),
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: resolved.social,
       description,
-      images: [image],
+      images: [absoluteUrl(ogImage || DEFAULT_OG_IMAGE)],
+      ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
     },
+    robots: noIndex
+      ? { index: false, follow: false, nocache: true }
+      : {
+          index: true,
+          follow: true,
+          googleBot: {
+            index: true,
+            follow: true,
+            "max-snippet": -1,
+            "max-image-preview": "large",
+            "max-video-preview": -1,
+          },
+        },
   };
 };
+
+// JSON-LD builders ----------------------------------------------------
 
 export const buildOrganizationJsonLd = () => ({
   "@context": "https://schema.org",
@@ -104,6 +201,7 @@ export const buildWebsiteJsonLd = () => ({
   "@type": "WebSite",
   name: SITE_NAME,
   url: SITE_URL,
+  inLanguage: SITE_LANG,
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -160,12 +258,12 @@ export interface FaqItem {
 export const buildFaqJsonLd = (items: FaqItem[]) => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: items.map((item) => ({
+  mainEntity: items.map((faq) => ({
     "@type": "Question",
-    name: item.question,
+    name: faq.question,
     acceptedAnswer: {
       "@type": "Answer",
-      text: item.answer,
+      text: faq.answer,
     },
   })),
 });
@@ -180,21 +278,23 @@ export interface HowToJsonLdInput {
   name: string;
   description: string;
   steps: HowToStepInput[];
+  path?: string;
   totalTime?: string;
 }
 
-export const buildHowToJsonLd = ({ name, description, steps, totalTime }: HowToJsonLdInput) => ({
+export const buildHowToJsonLd = ({ name, description, steps, path, totalTime }: HowToJsonLdInput) => ({
   "@context": "https://schema.org",
   "@type": "HowTo",
   name,
   description,
   ...(totalTime ? { totalTime } : {}),
-  step: steps.map((s, i) => ({
+  step: steps.map((s, index) => ({
     "@type": "HowToStep",
-    position: i + 1,
+    position: index + 1,
     name: s.name,
     text: s.text,
     ...(s.imageUrl ? { image: s.imageUrl } : {}),
+    ...(path ? { url: `${absoluteUrl(path)}#step-${index + 1}` } : {}),
   })),
 });
 
@@ -207,15 +307,22 @@ export interface VideoJsonLdInput {
   embedUrl: string;
 }
 
-export const buildVideoJsonLd = (input: VideoJsonLdInput) => ({
+export const buildVideoJsonLd = ({
+  name,
+  description,
+  thumbnailUrl,
+  uploadDate,
+  durationISO,
+  embedUrl,
+}: VideoJsonLdInput) => ({
   "@context": "https://schema.org",
   "@type": "VideoObject",
-  name: input.name,
-  description: input.description,
-  thumbnailUrl: input.thumbnailUrl,
-  uploadDate: typeof input.uploadDate === "string" ? input.uploadDate : input.uploadDate.toISOString(),
-  duration: input.durationISO,
-  embedUrl: input.embedUrl,
+  name,
+  description,
+  thumbnailUrl,
+  uploadDate: typeof uploadDate === "string" ? uploadDate : uploadDate.toISOString(),
+  duration: durationISO,
+  embedUrl,
 });
 
 export interface WithUtmInput {
@@ -224,5 +331,8 @@ export interface WithUtmInput {
   campaign: string;
 }
 
+// O link gerado destina-se a canais externos (descrição de YouTube, posts em redes
+// sociais, etc.) — não usar internamente, pois o robots.ts bloqueia URLs com query
+// string para evitar duplicação de indexação.
 export const withUtm = (path: string, { source, medium = "descricao", campaign }: WithUtmInput) =>
   `${absoluteUrl(path)}?utm_source=${encodeURIComponent(source)}&utm_medium=${encodeURIComponent(medium)}&utm_campaign=${encodeURIComponent(campaign)}`;
