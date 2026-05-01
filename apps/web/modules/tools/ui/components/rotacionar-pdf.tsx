@@ -1,11 +1,12 @@
 "use client";
 
 import { toast } from "sonner";
-import { degrees, PDFDocument } from "pdf-lib";
+import type { PDFDocument } from "pdf-lib";
 import { useState, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
+import { lazyLoadPdfLib } from "@/modules/common/lib/lazy-load-libs";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { usePdfManager } from "@/modules/common/hooks/use-pdf-manager";
 import { Download, Plus, Loader2, RotateCw, RotateCcw } from "lucide-react";
@@ -86,6 +87,7 @@ export default function RotatePDF() {
     setRotatedPdf(null);
 
     try {
+      const { PDFDocument, degrees } = await lazyLoadPdfLib();
       const newPdfDoc = await PDFDocument.create();
       const loadedPdfs: Record<string, PDFDocument> = {};
 

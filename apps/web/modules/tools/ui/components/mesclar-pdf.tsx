@@ -3,7 +3,7 @@
 import { toast } from "sonner";
 import { cn } from "@workspace/ui/lib/utils";
 import { useState, useCallback } from "react";
-import { degrees, PDFDocument } from "pdf-lib";
+import { lazyLoadPdfLib } from "@/modules/common/lib/lazy-load-libs";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { MAX_FILE_SIZE } from "@/modules/common/constants";
@@ -92,10 +92,11 @@ export default function MergePDF() {
     setMergedPdf(null);
 
     try {
+      const { PDFDocument, degrees } = await lazyLoadPdfLib();
       const mergedPdfDoc = await PDFDocument.create();
 
       // Cache loaded PDFs to avoid reloading for every page
-      const loadedPdfs: Record<string, PDFDocument> = {};
+      const loadedPdfs: Record<string, Awaited<ReturnType<typeof PDFDocument.create>>> = {};
 
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i];

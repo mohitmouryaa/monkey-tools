@@ -1,11 +1,11 @@
 "use client";
 
-import jsPDF from "jspdf";
 import { toast } from "sonner";
 import NextImage from "next/image";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { useState, useCallback, useRef, useEffect } from "react";
+import { lazyLoadJsPdf } from "@/modules/common/lib/lazy-load-libs";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
 import { Download, Loader2, ImageIcon, AlertTriangle, Trash2 } from "lucide-react";
@@ -103,6 +103,7 @@ export default function JPGToPDF() {
     setConversionProgress(0);
 
     try {
+      const { default: jsPDF } = await lazyLoadJsPdf();
       const pdf = new jsPDF();
       let processedCount = 0;
 

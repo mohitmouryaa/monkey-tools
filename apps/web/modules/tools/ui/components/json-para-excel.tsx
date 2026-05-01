@@ -1,6 +1,5 @@
 "use client";
 
-import * as XLSX from "xlsx";
 import { toast } from "sonner";
 import { useState, useCallback } from "react";
 import { Label } from "@workspace/ui/components/label";
@@ -9,6 +8,7 @@ import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
+import { lazyLoadXlsx } from "@/modules/common/lib/lazy-load-libs";
 import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
 import { Download, Table as TableIcon, Trash2, Code, FileSpreadsheet, RefreshCw } from "lucide-react";
 
@@ -141,10 +141,11 @@ export default function JsonToExcelConverter() {
     handleJsonParse(jsonInput, fileName);
   };
 
-  const downloadExcel = () => {
+  const downloadExcel = async () => {
     if (!sheets) return;
 
     try {
+      const XLSX = await lazyLoadXlsx();
       const workbook = XLSX.utils.book_new();
 
       for (const sheet of sheets) {

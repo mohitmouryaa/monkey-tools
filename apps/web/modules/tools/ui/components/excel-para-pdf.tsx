@@ -1,14 +1,13 @@
 "use client";
 
 import { toast } from "sonner";
-import * as XLSX from "xlsx";
-import { jsPDF } from "jspdf";
 import { useState, useCallback } from "react";
 import { Button } from "@workspace/ui/components/button";
 import { Progress } from "@workspace/ui/components/progress";
 import { FileUpload } from "@/modules/common/ui/components/file-upload";
 import { Download, Loader2, FileSpreadsheet, AlertTriangle } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "@workspace/ui/components/alert";
+import { lazyLoadJsPdf, lazyLoadPdfLib, lazyLoadXlsx } from "@/modules/common/lib/lazy-load-libs";
 
 interface UploadedFile {
   file: File;
@@ -53,8 +52,10 @@ export default function ExcelToPDF() {
       let totalSheetCount = 0;
       let processedCount = 0;
 
-      // Dynamically import pdf-lib for merging
-      const { PDFDocument } = await import("pdf-lib");
+      // Dynamically import xlsx, jspdf and pdf-lib only when handler runs
+      const XLSX = await lazyLoadXlsx();
+      const { default: jsPDF } = await lazyLoadJsPdf();
+      const { PDFDocument } = await lazyLoadPdfLib();
       const mergedPdf = await PDFDocument.create();
       let hasPages = false;
 

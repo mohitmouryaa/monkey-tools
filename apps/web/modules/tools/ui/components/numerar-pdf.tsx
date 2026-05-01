@@ -1,7 +1,8 @@
 "use client";
 
 import { toast } from "sonner";
-import { PDFDocument, StandardFonts, rgb, type PDFPage, type PDFFont } from "pdf-lib";
+import type { PDFDocument, PDFPage, PDFFont } from "pdf-lib";
+import { lazyLoadPdfLib } from "@/modules/common/lib/lazy-load-libs";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
@@ -33,14 +34,16 @@ const marginValues: Record<Margin, number> = {
   large: 80,
 };
 
-// Map accessible outside to avoid recreation
+// Map accessible outside to avoid recreation.
+// Uses string literals matching pdf-lib's StandardFonts enum values to avoid
+// pulling pdf-lib runtime into the initial bundle.
 const fontMap: Record<string, string> = {
-  Helvetica: StandardFonts.Helvetica,
-  "Helvetica-Bold": StandardFonts.HelveticaBold,
-  "Times-Roman": StandardFonts.TimesRoman,
-  "Times-Bold": StandardFonts.TimesRomanBold,
-  Courier: StandardFonts.Courier,
-  "Courier-Bold": StandardFonts.CourierBold,
+  Helvetica: "Helvetica",
+  "Helvetica-Bold": "Helvetica-Bold",
+  "Times-Roman": "Times-Roman",
+  "Times-Bold": "Times-Bold",
+  Courier: "Courier",
+  "Courier-Bold": "Courier-Bold",
 };
 
 export default function AddPageNumberPDF() {
@@ -84,7 +87,13 @@ export default function AddPageNumberPDF() {
    * Does NOT embed fonts inside - expects an embedded font object.
    */
   const drawPageNumber = useCallback(
-    (page: PDFPage, font: PDFFont, actualPageNumber: number, currentSettings: PageNumberSettings) => {
+    (
+      page: PDFPage,
+      font: PDFFont,
+      actualPageNumber: number,
+      currentSettings: PageNumberSettings,
+      rgb: typeof import("pdf-lib").rgb,
+    ) => {
       const { width, height } = page.getSize();
 
       // Calculate page number to display
@@ -144,8 +153,11 @@ export default function AddPageNumberPDF() {
     setIsUpdatingPreview(true);
 
     try {
+      // Lazy-load pdf-lib at handler time to keep it out of the initial bundle
+      const pdfLib = await lazyLoadPdfLib();
+
       // Create a temporary PDF for preview
-      const tempPdf = await PDFDocument.create();
+      const tempPdf = await pdfLib.PDFDocument.create();
 
       // Copy only the current page (efficient for preview)
       const [copiedPage] = await tempPdf.copyPages(pdfDoc, [currentPage - 1]);
@@ -154,11 +166,11 @@ export default function AddPageNumberPDF() {
       // Only add page number if current page is within the selected range
       if (currentPage >= settings.pageRange.from && currentPage <= settings.pageRange.to) {
         // Embed font ONCE for this preview doc
-        const fontName = fontMap[settings.fontFamily] ?? StandardFonts.HelveticaBold;
+        const fontName = fontMap[settings.fontFamily] ?? "Helvetica-Bold";
         const font = await tempPdf.embedFont(fontName);
 
         // Use the shared drawing logic
-        drawPageNumber(tempPdf.getPage(0), font, currentPage, settings);
+        drawPageNumber(tempPdf.getPage(0), font, currentPage, settings, pdfLib.rgb);
       }
 
       // Render to PDF bytes
@@ -218,6 +230,7 @@ export default function AddPageNumberPDF() {
     try {
       const arrayBuffer = await selectedFile.arrayBuffer();
       // Load PDF
+      const { PDFDocument } = await lazyLoadPdfLib();
       const pdf = await PDFDocument.load(arrayBuffer);
       const pages = pdf.getPageCount();
 
@@ -251,12 +264,15 @@ export default function AddPageNumberPDF() {
     setIsProcessing(true);
 
     try {
+      // Lazy-load pdf-lib at handler time to keep it out of the initial bundle
+      const pdfLib = await lazyLoadPdfLib();
+
       // Clone the document for output
-      const pdfDocCopy = await PDFDocument.load(await pdfDoc.save());
+      const pdfDocCopy = await pdfLib.PDFDocument.load(await pdfDoc.save());
 
       // IMPORTANT: Embed font ONCE for the whole document
       // This prevents file bloat and corruption issues compared to embedding inside the loop
-      const fontName = fontMap[settings.fontFamily] ?? StandardFonts.HelveticaBold;
+      const fontName = fontMap[settings.fontFamily] ?? "Helvetica-Bold";
       const font = await pdfDocCopy.embedFont(fontName);
 
       // Add page numbers to pages within range
@@ -264,7 +280,7 @@ export default function AddPageNumberPDF() {
       for (let i = settings.pageRange.from - 1; i < settings.pageRange.to; i++) {
         // Safe check for index bounds
         if (i >= 0 && i < pdfDocCopy.getPageCount()) {
-          drawPageNumber(pdfDocCopy.getPage(i), font, i + 1, settings);
+          drawPageNumber(pdfDocCopy.getPage(i), font, i + 1, settings, pdfLib.rgb);
         }
       }
 
