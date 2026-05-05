@@ -10,9 +10,6 @@
     "lint": "biome lint .",
     "lint:fix": "biome check --write .",
     "create:admin": "tsx scripts/create-admin.ts",
-    "migrate:pages": "tsx --env-file=.env scripts/migrate-pages-content.ts",
-    "seed:static-pages": "tsx --env-file=.env scripts/seed-static-pages.ts",
-    "audit:orphan-pages": "tsx --env-file=.env scripts/audit-orphan-pages.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
