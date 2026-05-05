@@ -7,10 +7,10 @@ import { baseProcedure, createTRPCRouter } from "../init";
 
 const createJobSchema = z.object({
   tool: z.string().min(1, {
-    message: "Tool name is required.",
+    message: "O nome da ferramenta é obrigatório.",
   }),
   inputFile: z.string().min(1, {
-    message: "Input file is required.",
+    message: "O arquivo de entrada é obrigatório.",
   }),
   metadata: z.record(z.string(), z.any()).optional(),
 });
@@ -36,7 +36,7 @@ export const jobsRouter = createTRPCRouter({
   getById: baseProcedure.input(z.object({ jobId: z.string().min(1) })).query(async ({ input }) => {
     const job = await JobModel.findById(input.jobId).lean();
     if (!job) {
-      throw new Error("Job not found");
+      throw new Error("Trabalho não encontrado");
     }
     let downloadUrl = "";
     if (job.outputFile) {

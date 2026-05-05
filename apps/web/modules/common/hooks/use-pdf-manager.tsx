@@ -28,7 +28,7 @@ export function usePdfManager() {
 
       if (tooLarge.length > 0) {
         tooLarge.forEach((t) => {
-          toast.error(`File "${t.file.name}" is too large. Maximum file size is 50MB.`);
+          toast.error(`O arquivo "${t.file.name}" é muito grande. O tamanho máximo é 50MB.`);
         });
       }
 
@@ -80,13 +80,13 @@ export function usePdfManager() {
               setPages((prev) => prev.map((p) => (p.id === `${uploadedFile.id}-page-${i}` ? { ...p, preview } : p)));
             }
           } catch {
-            toast.error(`Failed to generate thumbnail for page ${i}.`);
+            toast.error(`Falha ao gerar miniatura da página ${i}.`);
           }
         }
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to process some files. Please try again.");
+      toast.error("Falha ao processar alguns arquivos. Tente novamente.");
     } finally {
       setIsProcessing(false);
     }

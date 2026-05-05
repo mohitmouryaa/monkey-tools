@@ -15,9 +15,11 @@ export const ToolFAQ = ({ faqs }: ToolFAQProps) => {
   return (
     <Accordion type="single" collapsible className="w-full">
       {faqs.map((faq, index) => (
-        <AccordionItem key={faq.question} value={`item-${index}`}>
-          <AccordionTrigger className="text-lg font-semibold text-left text-muted-foreground">{faq.question}</AccordionTrigger>
-          <AccordionContent className="leading-relaxed text-muted-foreground">{faq.answer}</AccordionContent>
+        <AccordionItem key={faq.question} value={`item-${index}`} className="border-b border-border/60 last:border-b-0">
+          <AccordionTrigger className="py-5 text-left text-base md:text-[17px] font-semibold text-foreground hover:no-underline">
+            {faq.question}
+          </AccordionTrigger>
+          <AccordionContent className="pb-5 text-muted-foreground leading-relaxed">{faq.answer}</AccordionContent>
         </AccordionItem>
       ))}
     </Accordion>

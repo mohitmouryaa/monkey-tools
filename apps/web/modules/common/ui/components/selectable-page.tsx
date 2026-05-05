@@ -33,14 +33,14 @@ export function SelectablePage({ page, index, isSelected, onSelect, onRotate, on
       }}
       tabIndex={0}
       role="button"
-      aria-label={`Select page ${index + 1}${isSelected ? " (selected)" : ""}`}
+      aria-label={`Selecionar página ${index + 1}${isSelected ? " (selecionada)" : ""}`}
     >
       {/* Page Preview */}
       <div className="absolute inset-0 flex items-center justify-center p-2 bg-gray-100 dark:bg-gray-900/50">
         {page.preview ? (
           <Image
             src={page.preview}
-            alt={`Page ${page.pageIndex + 1}`}
+            alt={`Página ${page.pageIndex + 1}`}
             fill
             className="object-contain p-2 transition-transform duration-300"
             style={{ transform: `rotate(${page.rotation}deg)` }}
@@ -84,7 +84,7 @@ export function SelectablePage({ page, index, isSelected, onSelect, onRotate, on
               e.stopPropagation();
               onRotate(page.id);
             }}
-            title="Rotate"
+            title="Girar"
           >
             <RotateCw className="w-4 h-4" />
           </Button>
@@ -98,7 +98,7 @@ export function SelectablePage({ page, index, isSelected, onSelect, onRotate, on
               e.stopPropagation();
               onRemove(page.id);
             }}
-            title="Remove"
+            title="Remover"
           >
             <Trash2 className="w-4 h-4" />
           </Button>

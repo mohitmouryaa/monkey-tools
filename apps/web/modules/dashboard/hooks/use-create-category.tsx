@@ -9,11 +9,11 @@ export const useCreateCategory = () => {
   return useMutation(
     trpc.categories.create.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Category "${data.name}" created`);
+        toast.success(`Categoria "${data.name}" criada`);
         queryClient.invalidateQueries(trpc.categories.getMany.queryOptions({}));
       },
       onError: (error) => {
-        toast.error(`Failed to create category: ${error.message}`);
+        toast.error(`Falha ao criar categoria: ${error.message}`);
       },
     }),
   );

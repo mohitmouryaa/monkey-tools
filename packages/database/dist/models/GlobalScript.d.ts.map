@@ -1,0 +1,1 @@
+{"version":3,"file":"GlobalScript.d.ts","sourceRoot":"","sources":["../../src/models/GlobalScript.ts"],"names":[],"mappings":"AAAA,OAAO,kBAAkB,CAAC;AAI1B,qBAUa,YAAY;IAChB,GAAG,CAAC,EAAE,MAAM,CAAC;IAGb,IAAI,EAAG,MAAM,CAAC;IAGd,OAAO,EAAG,MAAM,CAAC;IAGjB,QAAQ,EAAG,MAAM,GAAG,MAAM,CAAC;IAG3B,QAAQ,EAAG,OAAO,CAAC;CAC3B;AAQD,eAAO,MAAM,iBAAiB,6HAAyB,CAAC"}

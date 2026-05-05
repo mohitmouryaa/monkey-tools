@@ -67,7 +67,7 @@ export function SortablePage({ page, index, onRotate, onRemove }: SortablePagePr
         {page.preview ? (
           <Image
             src={page.preview}
-            alt={`Page ${page.pageIndex + 1}`}
+            alt={`Página ${page.pageIndex + 1}`}
             fill
             className="object-contain p-2 transition-transform duration-300"
             style={{ transform: `rotate(${page.rotation}deg)` }}
@@ -96,7 +96,7 @@ export function SortablePage({ page, index, onRotate, onRemove }: SortablePagePr
               e.stopPropagation();
               onRotate(page.id);
             }}
-            title="Rotate"
+            title="Girar"
           >
             <RotateCw className="w-4 h-4" />
           </Button>
@@ -110,7 +110,7 @@ export function SortablePage({ page, index, onRotate, onRemove }: SortablePagePr
               e.stopPropagation();
               onRemove(page.id);
             }}
-            title="Remove"
+            title="Remover"
           >
             <Trash2 className="w-4 h-4" />
           </Button>
@@ -176,7 +176,7 @@ export function SortablePDFGrid({ pages, onPagesChange, onRotate, onRemove }: So
                   {page.preview && (
                     <Image
                       src={page.preview}
-                      alt="Dragging page"
+                      alt="Página sendo arrastada"
                       fill
                       className="object-contain p-2"
                       style={{ transform: `rotate(${page.rotation}deg)` }}

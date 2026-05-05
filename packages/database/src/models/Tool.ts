@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import mongoose from "mongoose";
 import { Category } from "./Category.js";
+import type { Post } from "./Post.js";
 import { prop, getModelForClass, modelOptions, Severity, type Ref } from "@typegoose/typegoose";
 
 @modelOptions({
@@ -19,7 +20,7 @@ export class Tool {
   @prop({ required: true, minlength: 2 })
   public title!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, unique: true, index: true })
   public link!: string;
 
   @prop({ required: true, minlength: 2 })
@@ -82,8 +83,30 @@ export class Tool {
   @prop({ default: "" })
   public closingText?: string;
 
+  // YouTube tutorial fields (optional)
+  @prop()
+  public videoId?: string;
+
+  @prop()
+  public videoTitle?: string;
+
+  @prop()
+  public videoDescription?: string;
+
+  @prop()
+  public videoThumbnailUrl?: string;
+
+  @prop()
+  public videoUploadDate?: Date;
+
+  @prop()
+  public videoDurationISO?: string;
+
   @prop({ default: true })
   public isActive!: boolean;
+
+  @prop({ ref: "Post", type: () => mongoose.Schema.Types.ObjectId, default: null })
+  public featuredPostId?: Ref<Post> | null;
 
   @prop()
   // biome-ignore lint/suspicious/noExplicitAny: <No proper type defination is available>

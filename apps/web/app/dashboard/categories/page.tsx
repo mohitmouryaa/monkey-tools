@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { HydrateClient } from "@/trpc/server";
 import type { SearchParams } from "nuqs/server";
@@ -8,6 +9,11 @@ import { CategoriesView } from "@/modules/dashboard/ui/views/categories-view";
 import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
 import { categoriesParamsLoader } from "@/modules/dashboard/server/params-loader";
 import { CategoriesContainer } from "@/modules/dashboard/ui/components/categories-container";
+
+export const metadata: Metadata = {
+  title: "Categorias",
+  description: "Gerenciar categorias de ferramentas.",
+};
 
 type Props = {
   searchParams: Promise<SearchParams>;

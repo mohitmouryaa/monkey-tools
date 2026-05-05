@@ -1,57 +1,73 @@
 "use client";
 
-import Link from "next/link";
-import { Button } from "@workspace/ui/components/button";
+import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { Skeleton } from "@workspace/ui/components/skeleton";
+import { DashboardBreadcrumb } from "@/modules/common/ui/components/dashboard-breadcrumb";
 import { EditCustomPageForm } from "../components/edit-custom-page-form";
 import { usePageById } from "../../hooks/use-page-by-id";
-import { Skeleton } from "@workspace/ui/components/skeleton";
+import type { UpdateCustomPageFormValues } from "../../schema/page";
 
 interface EditCustomPageViewProps {
   pageId: string;
 }
 
 export const EditCustomPageView = ({ pageId }: EditCustomPageViewProps) => {
+  const router = useRouter();
   const { data: page, isLoading } = usePageById(pageId);
 
-  return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/pages">
-          <Button variant="outline" size="icon">
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold">Edit Custom Page</h1>
-          <p className="text-muted-foreground mt-2">Update your custom page content and settings</p>
-        </div>
-      </div>
+  const title = page?.title || page?.seoTitle || "Editar página personalizada";
 
-      {isLoading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-64 w-full" />
-          <Skeleton className="h-64 w-full" />
-        </div>
-      ) : page ? (
-        <EditCustomPageForm
-          defaultValues={{
-            id: page._id,
-            title: page.title || "",
-            slug: page.slug,
-            seoTitle: page.seoTitle,
-            seoDescription: page.seoDescription,
-            seoKeywords: page.seoKeywords,
-            content: page.content || "",
-            showInFooter: page.showInFooter ?? true,
-            footerOrder: page.footerOrder ?? 0,
-            footerLabel: page.footerLabel || "",
-            isActive: page.isActive,
-          }}
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <DashboardBreadcrumb
+          className="mb-6"
+          items={[{ label: "Dashboard", href: "/dashboard" }, { label: "Páginas", href: "/dashboard/pages" }, { label: title }]}
         />
-      ) : (
-        <div className="text-center py-12 text-muted-foreground">Page not found</div>
-      )}
+
+        <header className="flex flex-col gap-4 pb-6 mb-8 border-b sm:flex-row sm:items-end sm:justify-between border-border/50">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.push("/dashboard/pages")}
+              className="flex items-center justify-center transition-all rounded-lg group size-10 hover:bg-muted"
+              aria-label="Voltar"
+              type="button"
+            >
+              <ArrowLeft className="w-5 h-5 transition-colors text-muted-foreground group-hover:text-foreground" />
+            </button>
+            <div className="space-y-1.5 min-w-0">
+              <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-foreground truncate">{title}</h1>
+              <p className="text-sm text-muted-foreground">Atualize o conteúdo, blocos e SEO da página personalizada.</p>
+            </div>
+          </div>
+        </header>
+
+        {isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-64 w-full" />
+            <Skeleton className="h-64 w-full" />
+          </div>
+        ) : page ? (
+          <EditCustomPageForm
+            defaultValues={{
+              id: page._id,
+              title: page.title || "",
+              slug: page.slug,
+              seoTitle: page.seoTitle,
+              seoDescription: page.seoDescription,
+              seoKeywords: page.seoKeywords,
+              content: (page.content ?? "") as UpdateCustomPageFormValues["content"] | string,
+              showInFooter: page.showInFooter ?? true,
+              footerOrder: page.footerOrder ?? 0,
+              footerLabel: page.footerLabel || "",
+              isActive: page.isActive,
+            }}
+          />
+        ) : (
+          <div className="text-center py-12 text-muted-foreground">Página não encontrada.</div>
+        )}
+      </div>
     </div>
   );
 };

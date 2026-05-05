@@ -1,0 +1,1 @@
+{"version":3,"file":"pdf-compression.d.ts","sourceRoot":"","sources":["../../src/utils/pdf-compression.ts"],"names":[],"mappings":"AAKA,MAAM,MAAM,iBAAiB,GAAG,KAAK,GAAG,QAAQ,GAAG,MAAM,CAAC;AAE1D,qBAAa,qBAAqB;YAClB,UAAU;YA2CV,WAAW;YAMX,gBAAgB;YA8BhB,aAAa;YAcb,YAAY;YA6BZ,cAAc;IAUtB,QAAQ,CAAC,SAAS,EAAE,MAAM,EAAE,UAAU,EAAE,MAAM,EAAE,MAAM,GAAE,iBAA4B,GAAG,OAAO,CAAC,IAAI,CAAC;CAwE3G"}

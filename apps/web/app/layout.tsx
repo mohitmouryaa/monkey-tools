@@ -1,27 +1,27 @@
 import { Fragment } from "react";
 import parse from "html-react-parser";
-import { DM_Sans, Fredoka, Inter } from "next/font/google";
+import { Inter, Fredoka } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/modules/common/ui/components/providers";
 import { connectToDatabase, GlobalScriptModel } from "@workspace/database";
+import { defaultMetadata, defaultViewport } from "@/lib/seo";
 import "@workspace/ui/globals.css";
 
-const dmSans = DM_Sans({
+export const metadata = defaultMetadata;
+export const viewport = defaultViewport;
+
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
 });
 
 const fredoka = Fredoka({
   subsets: ["latin"],
   variable: "--font-fredoka",
   weight: ["300", "400", "500", "600", "700"],
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
 });
 
 async function getScripts() {
@@ -44,13 +44,13 @@ export default async function RootLayout({
   const bodyScripts = scripts.filter((s) => s.location === "BODY");
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" dir="ltr" suppressHydrationWarning className="scroll-smooth">
       <head>
         {headScripts.map((script) => (
           <Fragment key={script._id.toString()}>{parse(script.content)}</Fragment>
         ))}
       </head>
-      <body className={`${dmSans.className} ${fredoka.variable} ${inter.variable} antialiased`}>
+      <body className={`${inter.className} ${inter.variable} ${fredoka.variable} antialiased `}>
         <Providers>
           {children}
           <Toaster closeButton />

@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@workspace/ui/components/button";
 import { useCreateTool } from "@/modules/dashboard/hooks/use-create-tool";
 import { ToolForm, type ToolFormValues } from "@/modules/dashboard/ui/components/tool-form";
+import { DashboardBreadcrumb } from "@/modules/common/ui/components/dashboard-breadcrumb";
 
 export const CreateToolView = () => {
   const router = useRouter();
@@ -22,29 +20,25 @@ export const CreateToolView = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container px-6 py-8 mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-start justify-between">
-            <div className="flex items-start gap-8">
-              <Link href="/dashboard/tools" className="mt-2">
-                <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-muted/50">
-                  <ArrowLeft className="w-5 h-5" />
-                </Button>
-              </Link>
-
-              <div className="space-y-4">
-                <div>
-                  <h1 className="text-4xl font-bold tracking-tight text-foreground">Create New Tool</h1>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className="text-sm text-muted-foreground">Add a new tool to the platform with SEO configurations</span>
-                  </div>
-                </div>
-              </div>
+        <div className="space-y-6 mb-8">
+          <DashboardBreadcrumb
+            items={[
+              { label: "Dashboard", href: "/dashboard" },
+              { label: "Ferramentas", href: "/dashboard/tools" },
+              { label: "Nova ferramenta" },
+            ]}
+          />
+          <div className="flex flex-col gap-6 pb-6 border-b border-border sm:flex-row sm:items-end sm:justify-between sm:pb-8">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground">Criar nova ferramenta</h1>
+              <p className="text-base text-muted-foreground">
+                Adicione uma nova ferramenta à plataforma, com conteúdo, visual e configurações de SEO.
+              </p>
             </div>
           </div>
         </div>
 
-        <ToolForm onSubmit={onSubmit} submitLabel="Create Tool" disabled={createToolMutation.isPending} />
+        <ToolForm onSubmit={onSubmit} submitLabel="Criar ferramenta" disabled={createToolMutation.isPending} />
       </div>
     </div>
   );

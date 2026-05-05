@@ -8,10 +8,10 @@ export const useCreateJob = () => {
   return useMutation(
     trpc.jobs.create.mutationOptions({
       onSuccess: () => {
-        toast.success("Job created successfully");
+        toast.success("Trabalho criado com sucesso");
       },
       onError: (error) => {
-        toast.error(`Failed to create job: ${error.message}`);
+        toast.error(`Falha ao criar trabalho: ${error.message}`);
       },
     }),
   );

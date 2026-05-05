@@ -97,7 +97,7 @@ export const EntityPagination = ({ page, totalPages, onPageChange, disabled }: E
   return (
     <div className="flex items-center justify-between w-full gap-x-2">
       <div className="flex-1 text-sm text-muted-foreground">
-        Page {page} of {totalPages || 1}
+        Página {page} de {totalPages || 1}
       </div>
       <div className="flex items-center justify-end py-4 space-x-2">
         <Button
@@ -108,7 +108,7 @@ export const EntityPagination = ({ page, totalPages, onPageChange, disabled }: E
             onPageChange(Math.max(1, page - 1));
           }}
         >
-          Previous
+          Anterior
         </Button>
         <Button
           disabled={page === totalPages || totalPages === 0 || disabled}
@@ -118,7 +118,7 @@ export const EntityPagination = ({ page, totalPages, onPageChange, disabled }: E
             onPageChange(Math.min(totalPages || 1, page + 1));
           }}
         >
-          Next
+          Próximo
         </Button>
       </div>
     </div>
@@ -164,11 +164,11 @@ export const EmptyView = ({ message, onNew }: EmptyViewProps) => {
           <PackageOpenIcon />
         </EmptyMedia>
       </EmptyHeader>
-      <EmptyTitle>No items</EmptyTitle>
+      <EmptyTitle>Nenhum item</EmptyTitle>
       {!!message && <EmptyDescription>{message}</EmptyDescription>}
       {!!onNew && (
         <EmptyContent>
-          <Button onClick={onNew}>Add item</Button>
+          <Button onClick={onNew}>Adicionar item</Button>
         </EmptyContent>
       )}
     </Empty>
@@ -251,7 +251,7 @@ export const EntityItem = (props: EntityItemsProps) => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleRemove}>
                       <TrashIcon className="size-4" />
-                      Delete
+                      Excluir
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -3,9 +3,15 @@ import type { inferInput } from "@trpc/tanstack-react-query";
 
 type Input = inferInput<typeof trpc.tools.getMany>;
 type CategoryInput = inferInput<typeof trpc.categories.getMany>;
+type ScriptInput = inferInput<typeof trpc.globalScripts.getMany>;
+type PagesInput = inferInput<typeof trpc.pages.getMany>;
 
 export const prefetchTools = (params: Input) => {
   return prefetch(trpc.tools.getMany.queryOptions(params));
+};
+
+export const prefetchToolsStats = () => {
+  return prefetch(trpc.tools.getStats.queryOptions());
 };
 
 export const prefetchTool = (id: string) => {
@@ -26,4 +32,16 @@ export const prefetchCategoryWithTools = (categorySlug: string) => {
 
 export const prefetchPages = () => {
   return prefetch(trpc.pages.getAll.queryOptions());
+};
+
+export const prefetchPagesPaginated = (params: PagesInput) => {
+  return prefetch(trpc.pages.getMany.queryOptions(params));
+};
+
+export const prefetchScripts = (params: ScriptInput) => {
+  return prefetch(trpc.globalScripts.getMany.queryOptions(params));
+};
+
+export const prefetchScript = (id: string) => {
+  return prefetch(trpc.globalScripts.getById.queryOptions({ id }));
 };

@@ -2,6 +2,8 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PageModel } from "@workspace/database";
 import { PageType } from "@workspace/types";
+import { PAGINATION } from "@/modules/common/constants";
+import { pageOutputDataSchema } from "@/modules/dashboard/schema/page-blocks";
 import { baseProcedure, protectedProcedure, createTRPCRouter } from "../init";
 
 // Input schemas
@@ -52,25 +54,38 @@ const updateAllToolsPageSchema = z.object({
   isActive: z.boolean(),
 });
 
-const createCustomPageSchema = z.object({
+const customPageBaseShape = {
+  pageType: z.enum([PageType.CUSTOM, PageType.COMPARISON]).default(PageType.CUSTOM),
   title: z.string().min(1),
   slug: z
     .string()
     .min(1)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers, and hyphens only"),
+    .regex(/^[a-z0-9-]+$/, "O slug deve conter apenas letras minúsculas, números e hífens"),
   seoTitle: z.string().min(1),
   seoDescription: z.string().min(1),
   seoKeywords: z.string(),
-  content: z.string().min(1),
+  content: pageOutputDataSchema,
   showInFooter: z.boolean().default(true),
   footerOrder: z.number().default(0),
   footerLabel: z.string().optional(),
   isActive: z.boolean().default(true),
-});
+  competitorName: z.string().optional(),
+  competitorLogo: z.string().url("URL inválida").optional().or(z.literal("")),
+} as const;
 
-const updateCustomPageSchema = createCustomPageSchema.extend({
-  id: z.string().min(1),
-});
+const competitorRefine = <T extends { pageType: PageType; competitorName?: string }>(data: T) =>
+  data.pageType !== PageType.COMPARISON || (data.competitorName !== undefined && data.competitorName.trim().length > 0);
+
+const competitorRefineMessage = {
+  message: "Nome do concorrente é obrigatório quando o tipo é Comparison",
+  path: ["competitorName"],
+};
+
+const createCustomPageSchema = z.object(customPageBaseShape).refine(competitorRefine, competitorRefineMessage);
+
+const updateCustomPageSchema = z
+  .object({ ...customPageBaseShape, id: z.string().min(1) })
+  .refine(competitorRefine, competitorRefineMessage);
 
 const deleteCustomPageSchema = z.object({
   id: z.string().min(1),
@@ -79,12 +94,28 @@ const deleteCustomPageSchema = z.object({
 export const pagesRouter = createTRPCRouter({
   // Public procedures (Frontend)
   getBySlug: baseProcedure.input(getBySlugSchema).query(async ({ input }) => {
-    const page = await PageModel.findOne({ slug: input.slug, isActive: true }).lean();
+    const page = await PageModel.findOne({ slug: input.slug, pageType: PageType.CUSTOM, isActive: true }).lean();
 
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
+      });
+    }
+
+    return {
+      ...page,
+      _id: page._id.toString(),
+    };
+  }),
+
+  getComparisonBySlug: baseProcedure.input(getBySlugSchema).query(async ({ input }) => {
+    const page = await PageModel.findOne({ slug: input.slug, pageType: PageType.COMPARISON, isActive: true }).lean();
+
+    if (!page) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Comparação não encontrada",
       });
     }
 
@@ -100,7 +131,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Homepage not found",
+        message: "Página inicial não encontrada",
       });
     }
 
@@ -116,7 +147,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "All Tools page not found",
+        message: "Página Todas as Ferramentas não encontrada",
       });
     }
 
@@ -150,13 +181,60 @@ export const pagesRouter = createTRPCRouter({
     }));
   }),
 
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        page: z.number().default(PAGINATION.DEFAULT_PAGE),
+        pageSize: z.number().min(PAGINATION.MIN_PAGE_SIZE).max(PAGINATION.MAX_PAGE_SIZE).default(PAGINATION.DEFAULT_PAGE_SIZE),
+        search: z.string().default(""),
+        pageType: z.union([z.nativeEnum(PageType), z.array(z.nativeEnum(PageType))]).optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { page, pageSize, search, pageType } = input;
+      const trimmedSearch = search.trim();
+
+      const matchStage: Record<string, unknown> = {};
+      if (pageType) {
+        matchStage.pageType = Array.isArray(pageType) ? { $in: pageType } : pageType;
+      }
+      if (trimmedSearch.length > 0) {
+        const searchRegex = new RegExp(trimmedSearch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+        matchStage.$or = [{ title: searchRegex }, { slug: searchRegex }, { seoTitle: searchRegex }];
+      }
+
+      const [items, totalCount] = await Promise.all([
+        PageModel.find(matchStage)
+          .sort({ pageType: 1, footerOrder: 1, createdAt: -1 })
+          .skip((page - 1) * pageSize)
+          .limit(pageSize)
+          .lean(),
+        PageModel.countDocuments(matchStage),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+      return {
+        items: items.map((p) => ({
+          ...p,
+          _id: p._id.toString(),
+        })),
+        page,
+        pageSize,
+        totalCount,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      };
+    }),
+
   getById: protectedProcedure.input(getByIdSchema).query(async ({ input }) => {
     const page = await PageModel.findById(input.id).lean();
 
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
@@ -183,7 +261,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to update homepage",
+        message: "Falha ao atualizar página inicial",
       });
     }
 
@@ -210,7 +288,7 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to update all tools page",
+        message: "Falha ao atualizar página de ferramentas",
       });
     }
 
@@ -226,12 +304,12 @@ export const pagesRouter = createTRPCRouter({
     if (existingPage) {
       throw new TRPCError({
         code: "CONFLICT",
-        message: "A page with this slug already exists",
+        message: "Uma página com este slug já existe",
       });
     }
 
     const page = await PageModel.create({
-      pageType: PageType.CUSTOM,
+      pageType: input.pageType,
       slug: input.slug,
       title: input.title,
       seoTitle: input.seoTitle,
@@ -242,6 +320,8 @@ export const pagesRouter = createTRPCRouter({
       footerOrder: input.footerOrder,
       footerLabel: input.footerLabel,
       isActive: input.isActive,
+      competitorName: input.pageType === PageType.COMPARISON ? input.competitorName : undefined,
+      competitorLogo: input.pageType === PageType.COMPARISON && input.competitorLogo ? input.competitorLogo : undefined,
     });
 
     const pageObj = page.toObject();
@@ -257,14 +337,14 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
-    if (page.pageType !== PageType.CUSTOM) {
+    if (page.pageType !== PageType.CUSTOM && page.pageType !== PageType.COMPARISON) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot update non-custom pages with this method",
+        message: "Não é possível atualizar páginas fixas com este método",
       });
     }
 
@@ -274,21 +354,26 @@ export const pagesRouter = createTRPCRouter({
       if (existingPage) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "A page with this slug already exists",
+          message: "Uma página com este slug já existe",
         });
       }
     }
 
+    page.pageType = input.pageType;
     page.slug = input.slug;
     page.title = input.title;
     page.seoTitle = input.seoTitle;
     page.seoDescription = input.seoDescription;
     page.seoKeywords = input.seoKeywords;
     page.content = input.content;
+    page.markModified("content");
     page.showInFooter = input.showInFooter;
     page.footerOrder = input.footerOrder;
     page.footerLabel = input.footerLabel;
     page.isActive = input.isActive;
+    page.competitorName = input.pageType === PageType.COMPARISON ? input.competitorName : undefined;
+    page.competitorLogo =
+      input.pageType === PageType.COMPARISON && input.competitorLogo ? input.competitorLogo : undefined;
 
     await page.save();
 
@@ -305,14 +390,14 @@ export const pagesRouter = createTRPCRouter({
     if (!page) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Page not found",
+        message: "Página não encontrada",
       });
     }
 
-    if (page.pageType !== PageType.CUSTOM) {
+    if (page.pageType !== PageType.CUSTOM && page.pageType !== PageType.COMPARISON) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot delete fixed pages (Homepage, All Tools)",
+        message: "Não é possível excluir páginas fixas (Página Inicial, Todas as Ferramentas)",
       });
     }
 
@@ -320,7 +405,7 @@ export const pagesRouter = createTRPCRouter({
 
     return {
       success: true,
-      message: "Custom page deleted successfully",
+      message: "Página personalizada excluída com sucesso",
     };
   }),
 });

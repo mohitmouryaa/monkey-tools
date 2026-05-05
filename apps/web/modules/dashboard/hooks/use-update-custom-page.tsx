@@ -11,13 +11,13 @@ export const useUpdateCustomPage = () => {
   return useMutation(
     trpc.pages.updateCustomPage.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Page "${data.title || data.slug}" updated successfully`);
+        toast.success(`Página "${data.title || data.slug}" atualizada com sucesso`);
         queryClient.invalidateQueries(trpc.pages.getAll.queryOptions());
         // Invalidate all getById queries
         queryClient.invalidateQueries({ queryKey: ["pages", "getById"] });
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update custom page");
+        toast.error(error.message || "Falha ao atualizar página personalizada");
       },
     }),
   );

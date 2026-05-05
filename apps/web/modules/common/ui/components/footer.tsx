@@ -1,94 +1,138 @@
-import Link from "next/link";
 import { caller } from "@/trpc/server";
-
-const PDF_CATEGORY_SLUGS = ["pdf-tools", "pdf", "ferramentas-pdf"];
-const FIRST_COLUMN_TOOLS = 4;
-const SECOND_COLUMN_TOOLS = 4;
-
-async function getPdfToolLinks(): Promise<Array<{ _id: string; name: string; href: string }>> {
-  let pdfCategory: Awaited<ReturnType<typeof caller.categories.getCategoryWithTools>> | null = null;
-  for (const slug of PDF_CATEGORY_SLUGS) {
-    try {
-      pdfCategory = await caller.categories.getCategoryWithTools({ slug });
-      break;
-    } catch {
-      console.error(`Category with slug "${slug}" not found.`);
-    }
-  }
-  if (!pdfCategory) {
-    const { items: categories } = await caller.categories.getMany({});
-    const pdfBySlug = categories.find((c) => c.slug.toLowerCase().includes("pdf"));
-    if (pdfBySlug) {
-      try {
-        pdfCategory = await caller.categories.getCategoryWithTools({ slug: pdfBySlug.slug });
-      } catch {
-        return [];
-      }
-    } else {
-      return [];
-    }
-  }
-  const categorySlug = pdfCategory.slug;
-  const maxTools = FIRST_COLUMN_TOOLS + SECOND_COLUMN_TOOLS;
-  return pdfCategory.tools.slice(0, maxTools).map((tool) => ({
-    _id: tool._id as string,
-    name: tool.title,
-    href: `/tools/${categorySlug}/${(tool.link as string).replace(/^\//, "")}`,
-  }));
-}
+import Link from "next/link";
+import { Heart } from "lucide-react";
+import { Logo } from "./logo";
 
 export const Footer = async () => {
-  const [toolLinks, customPages] = await Promise.all([getPdfToolLinks(), caller.pages.getFooterPages()]);
+  const [categories, customPages] = await Promise.all([caller.categories.getMany({}), caller.pages.getFooterPages()]);
+
+  const popular = categories.items.flatMap((c) => c.tools ?? []).slice(0, 4);
 
   return (
-    <footer className="border-t bg-card py-10 mt-16">
-      <div className="container px-4 mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-sm">
-          <div>
-            <h4 className="font-bold mb-4 text-foreground">Ferramentas PDF</h4>
-            <ul className="space-y-2.5 text-muted-foreground">
-              {toolLinks.slice(0, FIRST_COLUMN_TOOLS).map((link) => (
-                <li key={link._id}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-4 text-foreground">Mais Ferramentas</h4>
-            <ul className="space-y-2.5 text-muted-foreground">
-              {toolLinks.slice(FIRST_COLUMN_TOOLS, FIRST_COLUMN_TOOLS + SECOND_COLUMN_TOOLS).map((link) => (
-                <li key={link._id}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-4 text-foreground">Legal</h4>
-            <ul className="space-y-2.5 text-muted-foreground">
-              {customPages.map((page) => (
-                <li key={page._id}>
-                  <Link href={`/${page.slug}`} className="hover:text-primary transition-colors">
-                    {page.footerLabel || page.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold mb-4 text-foreground">Sobre</h4>
-            <p className="text-muted-foreground leading-relaxed">
-              Ferramentas online gratuitas, rápidas e seguras. Sem cadastro necessário.
+    <footer className="bg-background border-t border-border">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+          <div className="md:col-span-1">
+            <Logo />
+            <p className="mt-5 text-sm text-muted-foreground leading-relaxed">
+              A plataforma brasileira de ferramentas online para trabalhar com arquivos PDF de forma simples, rápida e segura. Sem
+              cadastro, sem instalação.
             </p>
           </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Ferramentas</h4>
+            <ul className="space-y-3">
+              {categories.items.slice(0, 4).map((category) => (
+                <li key={category._id}>
+                  <Link
+                    href={`/ferramentas/${category.slug}`}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Populares</h4>
+            <ul className="space-y-3">
+              {popular.length > 0 ? (
+                popular.map((tool: { _id?: string; title?: string; link?: string; categorySlug?: string } | undefined, idx) =>
+                  tool?.title && tool?.link ? (
+                    <li key={tool._id ?? `${tool.link}-${idx}`}>
+                      <Link
+                        href={`/ferramentas/${tool.categorySlug ?? categories.items[0]?.slug ?? ""}/${tool.link}`}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {tool.title}
+                      </Link>
+                    </li>
+                  ) : null,
+                )
+              ) : (
+                <>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Juntar PDF
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Comprimir PDF
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      PDF para Word
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/ferramentas" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Assinar PDF
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-4">Institucional</h4>
+            <ul className="space-y-3">
+              {customPages.length > 0 ? (
+                customPages.map((page) => (
+                  <li key={page._id}>
+                    <Link href={`/${page.slug}`} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {page.footerLabel || page.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li>
+                    <Link href="/sobre" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Sobre
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/como-funciona" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Como Funciona
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/seguranca" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Segurança
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/privacidade" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Privacidade
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/termos-de-uso" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Termos de Uso
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/contato" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                      Contato
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
-        <div className="mt-10 pt-6 border-t text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} pdfs.com.br — Todos os direitos reservados.
+
+        <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-sm text-muted-foreground">© 2026 PDFS.com.br — O padrão brasileiro para PDFs</p>
+          <p className="text-sm text-muted-foreground inline-flex items-center gap-1.5">
+            Feito com <Heart className="w-4 h-4 fill-red-500 text-red-500" /> no Brasil
+          </p>
         </div>
       </div>
     </footer>

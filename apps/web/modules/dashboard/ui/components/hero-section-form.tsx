@@ -14,8 +14,8 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">Hero Section</h3>
-        <p className="text-sm text-muted-foreground">Configure the main hero section of the homepage</p>
+        <h3 className="text-lg font-semibold">Seção Hero</h3>
+        <p className="text-sm text-muted-foreground">Configure a seção principal (hero) da página inicial</p>
       </div>
 
       <FormField
@@ -23,9 +23,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
         name="heroSection.badge"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Badge Text</FormLabel>
+            <FormLabel>Texto do Badge</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., New Feature" {...field} />
+              <Input placeholder="ex: Novo Recurso" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -37,9 +37,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
         name="heroSection.heading"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Main Heading</FormLabel>
+            <FormLabel>Título Principal</FormLabel>
             <FormControl>
-              <Textarea placeholder="Enter main heading" rows={2} {...field} />
+              <Textarea placeholder="Digite o título principal" rows={2} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -51,9 +51,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
         name="heroSection.description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>Descrição</FormLabel>
             <FormControl>
-              <Textarea placeholder="Enter hero description" rows={3} {...field} />
+              <Textarea placeholder="Digite a descrição do hero" rows={3} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -66,9 +66,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
           name="heroSection.primaryButtonText"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Primary Button Text</FormLabel>
+              <FormLabel>Texto do Botão Primário</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Get Started" {...field} />
+                <Input placeholder="ex: Começar Agora" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,9 +80,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
           name="heroSection.primaryButtonLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Primary Button Link</FormLabel>
+              <FormLabel>Link do Botão Primário</FormLabel>
               <FormControl>
-                <Input placeholder="/tools" {...field} />
+                <Input placeholder="/ferramentas" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,9 +96,9 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
           name="heroSection.secondaryButtonText"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Secondary Button Text</FormLabel>
+              <FormLabel>Texto do Botão Secundário</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Learn More" {...field} />
+                <Input placeholder="ex: Saiba Mais" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +110,7 @@ export const HeroSectionForm = ({ form }: HeroSectionFormProps) => {
           name="heroSection.secondaryButtonLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Secondary Button Link</FormLabel>
+              <FormLabel>Link do Botão Secundário</FormLabel>
               <FormControl>
                 <Input placeholder="/about" {...field} />
               </FormControl>
