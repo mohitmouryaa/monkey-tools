@@ -17,7 +17,7 @@ import { ToolAudienceBenefits } from "@/modules/tools/ui/components/tool-audienc
 import { ToolLoading } from "@/modules/common/ui/components/tool-loading";
 import { Breadcrumb } from "@/modules/common/ui/components/breadcrumb";
 import { PDFLibProvider } from "@/modules/common/providers/pdf-lib-provider";
-import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
+import { notFound } from "next/navigation";
 import { AdPlaceholder } from "@/modules/common/ui/components/ad-placeholder";
 import { PostCard } from "@/modules/blog/ui/components/post-card";
 
@@ -38,7 +38,7 @@ interface FeaturedPostSummary {
 
 export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   if (!toolCategory || !tool) {
-    return <InvalidToolSelection />;
+    notFound();
   }
 
   const category = await unstable_cache(
@@ -49,7 +49,7 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
   const toolData = category.tools.find((t) => [`/${tool}`, tool].includes(t.link));
 
   if (!toolData) {
-    return <InvalidToolSelection />;
+    notFound();
   }
 
   let featuredPost: FeaturedPostSummary | null = null;
@@ -334,6 +334,6 @@ export const ToolView = async ({ toolCategory, tool }: ToolViewProps) => {
       </div>
     );
   } catch {
-    return <InvalidToolSelection />;
+    notFound();
   }
 };

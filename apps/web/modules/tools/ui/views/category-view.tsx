@@ -6,9 +6,9 @@ import { ToolFAQ } from "@/modules/tools/ui/components/tool-faq";
 import { FAQSchema } from "@/modules/tools/ui/components/faq-schema";
 import { BreadcrumbSchema } from "@/modules/tools/ui/components/breadcrumb-schema";
 import { ToolAudienceBenefits } from "@/modules/tools/ui/components/tool-audience-benefits";
-import { InvalidToolSelection } from "@/modules/common/ui/components/invalid-tool-selection";
 import { Breadcrumb } from "@/modules/common/ui/components/breadcrumb";
 import { caller } from "@/trpc/server";
+import { notFound } from "next/navigation";
 
 interface CategoryViewProps {
   toolCategory: string;
@@ -79,14 +79,14 @@ function buildCategoryContent(name: string) {
 
 export const CategoryView = async ({ toolCategory }: CategoryViewProps) => {
   if (!toolCategory) {
-    return <InvalidToolSelection />;
+    notFound();
   }
 
   let category: Awaited<ReturnType<typeof caller.categories.getCategoryWithTools>>;
   try {
     category = await caller.categories.getCategoryWithTools({ slug: toolCategory });
   } catch {
-    return <InvalidToolSelection />;
+    notFound();
   }
 
   const allCategories = await caller.categories.getMany({ pageSize: 50, page: 1 });
