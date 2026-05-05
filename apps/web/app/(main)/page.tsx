@@ -1,90 +1,82 @@
 import type { Metadata } from "next";
 import { caller } from "@/trpc/server";
-import { ErrorBoundary } from "react-error-boundary";
 import { NewHeroSection } from "@/modules/hero/ui/components/new-hero-section";
-import { TrustSection } from "@/modules/hero/ui/components/trust-section";
-import { HomeSeoSection } from "@/modules/hero/ui/components/home-seo-section";
+import { NewToolsGrid } from "@/modules/hero/ui/components/new-tools-grid";
+import { HowItWorks } from "@/modules/hero/ui/components/how-it-works";
+import { JsonLd } from "@/modules/common/ui/components/json-ld";
+import { SectionErrorBoundary } from "@/modules/common/ui/components/section-error-boundary";
+import { buildMetadata, buildOrganizationJsonLd, buildWebsiteJsonLd } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
     const homepage = await caller.pages.getHomepage();
-
-    return {
+    return buildMetadata({
       title: homepage.seoTitle,
       description: homepage.seoDescription,
       keywords: homepage.seoKeywords,
-      openGraph: {
-        title: homepage.seoTitle,
-        description: homepage.seoDescription,
-        type: "website",
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: homepage.seoTitle,
-        description: homepage.seoDescription,
-      },
-    };
+      path: "/",
+    });
   } catch {
-    // Fallback metadata if page not found
-    return {
-      title: "Ferramentas PDF Online Grátis – pdfs.com.br",
+    return buildMetadata({
+      title: "pdfs.com.br - Ferramentas Online Grátis para Todos",
       description:
-        "Ferramentas online gratuitas para comprimir, converter, juntar e dividir PDFs. Rápido, seguro e fácil. Sem cadastro.",
-      keywords: "ferramentas PDF, PDF online grátis, comprimir PDF, converter PDF, juntar PDF",
-    };
+        "Oferecemos ferramentas online de PDF, texto, imagem e muito mais para facilitar sua vida. Rápido, seguro e sem cadastro.",
+      keywords: "ferramentas online, ferramentas grátis, pdf online, conversor online, compressor, mesclar pdf",
+      path: "/",
+    });
   }
 }
 
-const PDF_CATEGORY_SLUGS = ["pdf-tools", "pdf", "ferramentas-pdf"];
-
 export default async function Home() {
+  // Fetch homepage data
   const homepage = await caller.pages.getHomepage();
 
-  let pdfCategory: Awaited<ReturnType<typeof caller.categories.getCategoryWithTools>> | null = null;
-  for (const slug of PDF_CATEGORY_SLUGS) {
-    try {
-      pdfCategory = await caller.categories.getCategoryWithTools({ slug });
-      break;
-    } catch {
-      console.error(`Category with slug "${slug}" not found.`);
-    }
-  }
+  // Fetch categories
+  const categories = await caller.categories.getMany({});
 
-  if (!pdfCategory) {
-    const { items: categories } = await caller.categories.getMany({});
-    const pdfBySlug = categories.find((c) => c.slug.toLowerCase().includes("pdf"));
-    if (pdfBySlug) {
-      try {
-        pdfCategory = await caller.categories.getCategoryWithTools({ slug: pdfBySlug.slug });
-      } catch {
-        // keep null
-      }
-    }
-  }
-
-  const allTools =
-    pdfCategory?.tools
-      .filter((tool) => tool._id)
-      .map((tool) => ({
-        _id: tool._id as string,
-        title: tool.title,
-        description: tool.description,
-        link: tool.link,
-        icon: tool.icon,
-        iconColor: tool.iconColor,
-        bgColor: tool.bgColor,
+  // Fetch 5 tools per category
+  const toolsByCategory = await Promise.all(
+    categories.items.slice(0, 4).map(async (category) => {
+      const tools = await caller.tools.getMany({
+        categoryId: category._id,
+        pageSize: 5,
+        page: 1,
+      });
+      return {
         category: {
-          _id: pdfCategory._id,
-          name: pdfCategory.name,
-          slug: pdfCategory.slug,
+          _id: category._id,
+          name: category.name,
+          slug: category.slug,
         },
-      })) ?? [];
+        tools: tools.items
+          .filter((tool) => tool._id) // Filter out tools without _id
+          .map((tool) => ({
+            _id: tool._id as string, // Type assertion since we filtered
+            title: tool.title,
+            description: tool.description,
+            link: tool.link,
+            icon: tool.icon,
+            iconColor: tool.iconColor,
+            bgColor: tool.bgColor,
+            category: {
+              _id: category._id,
+              name: category.name,
+              slug: category.slug,
+            },
+          })),
+      };
+    }),
+  );
 
   return (
-    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-      <NewHeroSection heroSection={homepage.heroSection} tools={allTools} />
-      <TrustSection />
-      <HomeSeoSection />
-    </ErrorBoundary>
+    <>
+      <JsonLd id="ld-organization" data={buildOrganizationJsonLd()} />
+      <JsonLd id="ld-website" data={buildWebsiteJsonLd()} />
+      <NewHeroSection heroSection={homepage.heroSection} />
+      <SectionErrorBoundary message="Não foi possível carregar a lista de ferramentas agora.">
+        <NewToolsGrid toolsByCategory={toolsByCategory} />
+      </SectionErrorBoundary>
+      <HowItWorks howItWorksSection={homepage.howItWorksSection} />
+    </>
   );
 }

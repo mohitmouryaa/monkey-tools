@@ -1,17 +1,24 @@
 "use client";
 
-import { PagesHeader } from "@/modules/dashboard/ui/components/pages-header";
-import { PagesContainer } from "@/modules/dashboard/ui/components/pages-container";
-import { useSuspensePages } from "@/modules/dashboard/hooks/use-suspense-pages";
+import { usePagesParams } from "@/modules/dashboard/hooks/use-pages-params";
+import { usePagesQuery } from "@/modules/dashboard/hooks/use-suspense-pages";
+import { PagesCustomList } from "@/modules/dashboard/ui/components/pages-custom-list";
+import { PagesFixedList } from "@/modules/dashboard/ui/components/pages-fixed-list";
+import { PagesListSkeleton } from "@/modules/dashboard/ui/components/pages-list-skeleton";
 
 export const PagesView = () => {
-  const { data: pages } = useSuspensePages();
+  const [params] = usePagesParams();
+  const pagesQuery = usePagesQuery();
 
-  return (
-    <div className="container mx-auto p-6 space-y-6">
-      <PagesHeader />
+  if (params.tab === "fixed") {
+    return <PagesFixedList />;
+  }
 
-      {pages ? <PagesContainer pages={pages} /> : <div className="text-center py-12 text-muted-foreground">No pages found</div>}
-    </div>
-  );
+  if (pagesQuery.isPending) {
+    return <PagesListSkeleton />;
+  }
+
+  const items = pagesQuery.data?.items ?? [];
+
+  return <PagesCustomList items={items} />;
 };

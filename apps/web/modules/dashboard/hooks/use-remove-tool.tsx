@@ -12,8 +12,9 @@ export const useRemoveTool = () => {
     trpc.tools.delete.mutationOptions({
       onSuccess: (data) => {
         queryClient.invalidateQueries(trpc.tools.getMany.queryOptions({}));
+        queryClient.invalidateQueries(trpc.tools.getStats.queryOptions());
         queryClient.invalidateQueries(trpc.tools.getOne.queryOptions({ id: data.id }));
-        toast.success(`Tool "${data.title}" removed`);
+        toast.success(`Ferramenta "${data.title}" removida`);
       },
     }),
   );

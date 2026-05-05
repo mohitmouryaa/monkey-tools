@@ -1,20 +1,13 @@
-"use client";
-import { useRouter } from "next/navigation";
 import { EntityHeader } from "@/modules/common/ui/components/entity-components";
 
-export const ScriptsHeader = () => {
-  const router = useRouter();
-
-  const handleCreate = () => {
-    router.push("/dashboard/scripts/create");
-  };
-
+export const ScriptsHeader = ({ disabled }: { disabled?: boolean }) => {
   return (
     <EntityHeader
-      title="Global Scripts"
-      description="Manage external scripts (Analytics, Chatbots, etc.)"
-      onNew={handleCreate}
-      newButtonLabel="New Script"
+      title="Scripts globais"
+      description="Gerencie scripts externos (Analytics, chatbots, pixels) injetados no site."
+      newButtonHref="/dashboard/scripts/create"
+      newButtonLabel="Novo script"
+      disabled={disabled}
     />
   );
 };

@@ -70,8 +70,11 @@ export class Page {
   @prop()
   title?: string;
 
-  @prop()
-  content?: string;
+  // `content` é um Mongoose Mixed. Use SEMPRE atribuição direta
+  // (page.content = newValue) — nunca mutate in-place sem markModified('content').
+  @prop({ type: () => Object })
+  // biome-ignore lint/suspicious/noExplicitAny: <Editor.js OutputData shape is dynamic; string for legacy HTML>
+  content?: Record<string, any> | string;
 
   @prop({ default: true })
   showInFooter?: boolean;
@@ -81,6 +84,13 @@ export class Page {
 
   @prop()
   footerLabel?: string;
+
+  // Comparison pages specific (pageType === COMPARISON)
+  @prop()
+  competitorName?: string;
+
+  @prop()
+  competitorLogo?: string;
 
   public createdAt?: Date;
   public updatedAt?: Date;

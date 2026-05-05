@@ -1,29 +1,26 @@
-import { Suspense } from "react";
-import { HydrateClient } from "@/trpc/server";
-import { ErrorBoundary } from "react-error-boundary";
-import { prefetchCategory } from "@/modules/common/prefetch";
-import { CategoryView } from "@/modules/dashboard/ui/views/category-view";
-import { SuspenseLoader } from "@/modules/common/ui/components/suspense-loader";
+import type { Metadata } from "next";
 import { requireAuth } from "@/lib/auth-utils";
+import { caller } from "@/trpc/server";
+import { CategoryView } from "@/modules/dashboard/ui/views/category-view";
+
+export const metadata: Metadata = {
+  title: "Categoria",
+  description: "Detalhes da categoria de ferramentas.",
+};
 
 interface CategoryPageProps {
   params: Promise<{
     id: string;
   }>;
 }
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   await requireAuth();
   const { id } = await params;
-  prefetchCategory(id);
+  const category = await caller.categories.getOne({ id });
   return (
-    <HydrateClient>
-      <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-        <Suspense fallback={<SuspenseLoader />}>
-          <main className="flex-1">
-            <CategoryView id={id} />
-          </main>
-        </Suspense>
-      </ErrorBoundary>
-    </HydrateClient>
+    <main className="flex-1">
+      <CategoryView category={category} />
+    </main>
   );
 }

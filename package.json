@@ -1,5 +1,5 @@
 {
-  "name": "monkey-tools",
+  "name": "pdfs-com-br",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,13 +7,29 @@
     "dev": "turbo dev",
     "lint": "biome check .",
     "check": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "i18n:audit": "tsx scripts/i18n-audit.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.12",
     "@workspace/typescript-config": "workspace:*",
+    "mongodb": "^6.12.0",
+    "playwright": "^1.50.0",
+    "tsx": "^4.19.2",
     "turbo": "^2.7.6",
     "typescript": "5.7.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@swc/core",
+      "core-js",
+      "core-js-pure",
+      "esbuild",
+      "msgpackr-extract",
+      "protobufjs",
+      "sharp"
+    ]
   },
   "packageManager": "pnpm@10.28.1+sha512.7d7dbbca9e99447b7c3bf7a73286afaaf6be99251eb9498baefa7d406892f67b879adb3a1d7e687fc4ccc1a388c7175fbaae567a26ab44d1067b54fcb0d6a316",
   "engines": {

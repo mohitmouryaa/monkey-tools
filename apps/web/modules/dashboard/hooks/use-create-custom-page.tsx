@@ -13,12 +13,12 @@ export const useCreateCustomPage = () => {
   return useMutation(
     trpc.pages.createCustomPage.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Page "${data.title || data.slug}" created successfully`);
+        toast.success(`Página "${data.title || data.slug}" criada com sucesso`);
         queryClient.invalidateQueries(trpc.pages.getAll.queryOptions());
         router.push("/dashboard/pages");
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to create custom page");
+        toast.error(error.message || "Falha ao criar página personalizada");
       },
     }),
   );

@@ -11,11 +11,11 @@ export const useUpdateAllToolsPage = () => {
   return useMutation(
     trpc.pages.updateAllToolsPage.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Page "${data.title || data.slug}" updated successfully`);
+        toast.success(`Página "${data.title || data.slug}" atualizada com sucesso`);
         queryClient.invalidateQueries(trpc.pages.getAllToolsPage.queryOptions());
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update all tools page");
+        toast.error(error.message || "Falha ao atualizar página de ferramentas");
       },
     }),
   );

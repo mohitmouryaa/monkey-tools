@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FileText } from "lucide-react";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { toLucideIconName } from "../lib/lucide-icon-name";
+import { ArrowRight, FileText } from "lucide-react";
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface ToolCardProps {
   name: string;
@@ -14,88 +13,85 @@ interface ToolCardProps {
   icon?: string;
   iconColor?: string;
   bgColor?: string;
-  seoSnippet?: string;
-  /** When set, color is picked from a shuffled palette by index (for random-looking order on homepage) */
-  colorIndex?: number;
 }
 
-/** Pastel colors in shuffled order so cards get varied sequence */
-const PASTEL_COLORS_BY_INDEX: Array<{ colorClass: string; bgColorClass: string }> = [
-  { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" },
-  { colorClass: "bg-tool-qr", bgColorClass: "bg-tool-qr-bg" },
-  { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
-  { colorClass: "bg-tool-split", bgColorClass: "bg-tool-split-bg" },
-  { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
-  { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
-  { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
-];
+const categoryVar: Record<string, string> = {
+  "pdf-tools": "var(--category-pdf)",
+  "image-tools": "var(--category-image)",
+  "text-tools": "var(--category-text)",
+  "text-ai-tools": "var(--category-text)",
+  converters: "var(--category-converter)",
+};
 
-/** Map tool slug or category to pastel card color (icon + top strip) */
-function getToolColorClasses(categorySlug: string, toolSlug: string): { colorClass: string; bgColorClass: string } {
-  const s = toolSlug.replace(/^\//, "").toLowerCase();
-  const byTool: Record<string, { colorClass: string; bgColorClass: string }> = {
-    "compress-pdf": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
-    "advanced-pdf-compressor": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
-    "pdf-to-word": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
-    "pdf-to-word-converter": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
-    "word-to-pdf": { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
-    "merge-pdf": { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" },
-    "split-pdf": { colorClass: "bg-tool-split", bgColorClass: "bg-tool-split-bg" },
-    "remove-background": { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
-    "qr-code": { colorClass: "bg-tool-qr", bgColorClass: "bg-tool-qr-bg" },
-  };
-  const fallback = { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" };
-  const exact = byTool[s];
-  if (exact) return exact;
-  if (s.includes("compress")) return byTool["compress-pdf"] ?? fallback;
-  if (s.includes("pdf-to-word") || s.includes("pdf-word")) return byTool["pdf-to-word"] ?? fallback;
-  if (s.includes("word-to-pdf") || s.includes("word-pdf")) return byTool["word-to-pdf"] ?? fallback;
-  if (s.includes("merge") || s.includes("juntar")) return byTool["merge-pdf"] ?? fallback;
-  if (s.includes("split") || s.includes("dividir")) return byTool["split-pdf"] ?? fallback;
-  if (s.includes("remove") || s.includes("background") || s.includes("fundo")) return byTool["remove-background"] ?? fallback;
-  if (s.includes("qr")) return byTool["qr-code"] ?? fallback;
-  const byCategory: Record<string, { colorClass: string; bgColorClass: string }> = {
-    "pdf-tools": { colorClass: "bg-tool-compress", bgColorClass: "bg-tool-compress-bg" },
-    "image-tools": { colorClass: "bg-tool-bg-remove", bgColorClass: "bg-tool-bg-remove-bg" },
-    "text-tools": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
-    "text-ai-tools": { colorClass: "bg-tool-pdf-word", bgColorClass: "bg-tool-pdf-word-bg" },
-    converters: { colorClass: "bg-tool-word-pdf", bgColorClass: "bg-tool-word-pdf-bg" },
-  };
-  return byCategory[categorySlug] ?? { colorClass: "bg-tool-merge", bgColorClass: "bg-tool-merge-bg" };
-}
-
-export const ToolCard = ({ name, description, categorySlug, toolSlug, icon, seoSnippet, colorIndex }: ToolCardProps) => {
-  const slug = toolSlug.replace(/^\//, "");
-  const { colorClass, bgColorClass } =
-    typeof colorIndex === "number"
-      ? (PASTEL_COLORS_BY_INDEX[colorIndex % PASTEL_COLORS_BY_INDEX.length] ?? getToolColorClasses(categorySlug, slug))
-      : getToolColorClasses(categorySlug, slug);
-  const iconName = icon ? toLucideIconName(icon) : null;
+export const ToolCard = ({ name, description, category, categorySlug, toolSlug, icon, iconColor, bgColor }: ToolCardProps) => {
+  const accentVar = categoryVar[categorySlug] ?? "var(--category-pdf)";
+  const accent = iconColor || bgColor || `hsl(${accentVar})`;
+  const accentSoft = `hsl(${accentVar} / 0.12)`;
+  const accentRing = `hsl(${accentVar} / 0.35)`;
+  const accentGlow = `hsl(${accentVar} / 0.45)`;
 
   return (
-    <Link
-      href={`/tools/${categorySlug}/${slug}`}
-      className="block overflow-hidden border group rounded-2xl bg-card tool-card-hover"
-      style={{ boxShadow: "var(--shadow-sm)" }}
-    >
-      <div className={`px-6 pt-6 pb-4 ${bgColorClass}`}>
-        <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl mb-3 ${colorClass}`}>
-          {iconName ? (
-            <DynamicIcon
-              name={iconName as IconName}
-              className="h-7 w-7 text-primary-foreground"
-              fallback={() => <FileText className="h-7 w-7 text-primary-foreground" />}
+    <Link href={`/ferramentas/${categorySlug}/${toolSlug}`} className="group relative block h-full">
+      <article
+        className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-500 ease-out group-hover:-translate-y-1"
+        style={{ ["--accent" as string]: accent }}
+      >
+        {/* Halo radial colorido */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-60"
+          style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
+        />
+        {/* Borda iluminada + sombra colorida */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ boxShadow: `inset 0 0 0 1px ${accentRing}, 0 18px 50px -18px ${accentGlow}` }}
+        />
+        {/* Linha sutil de topo */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-6 top-0 h-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+          style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }}
+        />
+
+        <div className="relative mb-5 flex items-start justify-between gap-3">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3"
+            style={{
+              background: `linear-gradient(135deg, ${accentSoft}, ${accentRing})`,
+              boxShadow: `inset 0 0 0 1px ${accentRing}`,
+            }}
+          >
+            <SafeDynamicIcon
+              name={icon}
+              className="h-6 w-6"
+              style={{ color: accent }}
+              fallback={<FileText className="h-6 w-6" style={{ color: accent }} />}
             />
-          ) : (
-            <FileText className="h-7 w-7 text-primary-foreground" />
-          )}
+          </div>
+          <span
+            className="rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition-colors duration-300"
+            style={{ color: accent, borderColor: accentRing, backgroundColor: accentSoft }}
+          >
+            {category}
+          </span>
         </div>
-        <h3 className="mb-1 text-lg font-bold transition-colors text-foreground group-hover:text-primary">{name}</h3>
-        <p className="text-sm text-muted-foreground line-clamp-3">{description}</p>
-      </div>
-      <div className="px-6 py-4 border-t bg-card">
-        <p className="text-xs leading-relaxed text-muted-foreground line-clamp-3">{seoSnippet || description}</p>
-      </div>
+
+        <h3 className="relative mb-2 line-clamp-1 text-base font-semibold text-foreground">{name}</h3>
+        <p className="relative mb-6 line-clamp-2 flex-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
+
+        <div className="relative flex items-center justify-between">
+          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 transition-all duration-300 group-hover:gap-2.5 group-hover:text-foreground">
+            Usar agora
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </span>
+          <div
+            className="h-1 w-8 rounded-full opacity-50 transition-all duration-500 ease-out group-hover:w-14 group-hover:opacity-100"
+            style={{ background: `linear-gradient(90deg, ${accentSoft}, ${accent})` }}
+          />
+        </div>
+      </article>
     </Link>
   );
 };

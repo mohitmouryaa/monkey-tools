@@ -1,61 +1,42 @@
 "use client";
 
-import { Wrench } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { Category, Tool } from "@workspace/database";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { useRemoveTool } from "@/modules/dashboard/hooks/use-remove-tool";
-import { useSuspenseTools } from "@/modules/dashboard/hooks/use-suspense-tools";
-import { EmptyView, EntityItem, EntityList } from "@/modules/common/ui/components/entity-components";
+import type { ToolWithCategory } from "@/trpc/routers/toolsRouter";
+import { useToolsParams } from "@/modules/dashboard/hooks/use-tools-params";
+import { useToolsQuery } from "@/modules/dashboard/hooks/use-suspense-tools";
+import { ToolsTable } from "@/modules/dashboard/ui/components/tools-table";
+import { ToolsGrid } from "@/modules/dashboard/ui/components/tools-grid";
+import { ToolsGridSkeleton, ToolsTableSkeleton } from "@/modules/dashboard/ui/components/tools-table-skeleton";
+import { EmptyView } from "@/modules/common/ui/components/entity-components";
 
 export const ToolsView = () => {
-  const tools = useSuspenseTools();
-  return (
-    <EntityList
-      items={tools.data.items}
-      getKey={(tool) => tool._id as string}
-      renderItem={(tool) => <ToolItem data={tool as Tool} />}
-      emptyView={<ToolsEmpty />}
-      className=""
-    />
-  );
-};
-
-export const ToolsEmpty = () => {
   const router = useRouter();
+  const [params] = useToolsParams();
+  const { data, isPending, isPlaceholderData } = useToolsQuery();
+  const showSkeleton = isPending || isPlaceholderData;
 
-  const handleCreate = () => {
-    router.push("/dashboard/tools/create");
-  };
+  if (showSkeleton) {
+    return params.view === "grid" ? <ToolsGridSkeleton /> : <ToolsTableSkeleton />;
+  }
 
-  return <EmptyView message="No tools found. Get started by creating a tool" onNew={handleCreate} />;
-};
+  const items = (data?.items ?? []) as unknown as ToolWithCategory[];
 
-export const ToolItem = ({ data }: { data: Tool }) => {
-  const removeTool = useRemoveTool();
-
-  const handleRemove = () => {
-    removeTool.mutate({ id: data._id as string });
-  };
-
-  const categoryName = (data.category as Category)?.name || "No Category";
-
-  return (
-    <EntityItem
-      href={`/dashboard/tools/${data._id}`}
-      title={data.title}
-      subtitle={categoryName}
-      image={
-        <div className="flex items-center justify-center size-8">
-          {data.icon ? (
-            <DynamicIcon name={data.icon as IconName} className="size-5" fallback={() => <Wrench className="size-5" />} />
-          ) : (
-            <Wrench className="size-5" />
-          )}
+  if (items.length === 0) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="max-w-md mx-auto">
+          <EmptyView
+            message="Nenhuma ferramenta encontrada. Comece criando uma."
+            onNew={() => router.push("/dashboard/tools/create")}
+          />
         </div>
-      }
-      onRemove={handleRemove}
-      isRemoving={removeTool.isPending}
-    />
-  );
+      </div>
+    );
+  }
+
+  if (params.view === "grid") {
+    return <ToolsGrid items={items} />;
+  }
+
+  return <ToolsTable items={items} />;
 };

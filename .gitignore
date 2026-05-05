@@ -27,6 +27,7 @@ coverage
 out/
 build
 dist
+next-env.d.ts
 
 
 # Debug
@@ -35,4 +36,9 @@ npm-debug.log*
 # Misc
 .DS_Store
 *.pem
-remix-of-pdf-tools-pro-main
+
+# IDE
+.idea/
+
+# Auditoria i18n (screenshots locais)
+.claude/i18n-screenshots/

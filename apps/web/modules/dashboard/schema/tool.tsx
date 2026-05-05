@@ -2,23 +2,35 @@ import z from "zod";
 
 export const createToolSchema = z.object({
   title: z.string().min(2, {
-    message: "Tool name must be at least 2 characters.",
+    message: "O nome da ferramenta deve ter pelo menos 2 caracteres.",
   }),
-  link: z.string().min(1, {
-    message: "Tool URL is required.",
-  }),
+  link: z
+    .string()
+    .min(1, { message: "A URL da ferramenta é obrigatória." })
+    .regex(
+      /^\/?[a-z0-9]+(-[a-z0-9]+)*$/,
+      "Caminho deve ser kebab-case: apenas letras minúsculas, números e hífens (sem espaços, underscores, maiúsculas ou acentos). Barra inicial opcional.",
+    ),
   componentName: z.string().min(2, {
-    message: "Component name must be at least 2 characters.",
+    message: "O nome do componente deve ter pelo menos 2 caracteres.",
   }),
   description: z.string(),
   categoryId: z.string().min(1, {
-    message: "Category is required.",
+    message: "A categoria é obrigatória.",
   }),
   icon: z.string(),
   iconColor: z.string(),
   bgColor: z.string(),
-  seoTitle: z.string(),
-  seoDescription: z.string(),
+  seoTitle: z
+    .string()
+    .refine((v) => v === "" || (v.length >= 50 && v.length <= 60), {
+      message: "Title deve ter entre 50 e 60 caracteres (ou ficar vazio).",
+    }),
+  seoDescription: z
+    .string()
+    .refine((v) => v === "" || (v.length >= 150 && v.length <= 160), {
+      message: "Meta description deve ter entre 150 e 160 caracteres (ou ficar vazia).",
+    }),
   seoKeywords: z.string(),
   // Page Content
   h1Heading: z.string().optional(),
@@ -45,5 +57,17 @@ export const createToolSchema = z.object({
     )
     .optional(),
   closingText: z.string().optional(),
+  // Vídeo tutorial (YouTube) — opcional
+  videoId: z.string().optional(),
+  videoTitle: z.string().optional(),
+  videoDescription: z.string().optional(),
+  videoThumbnailUrl: z.string().url("URL da thumbnail inválida").optional().or(z.literal("")),
+  videoUploadDate: z.string().optional(),
+  videoDurationISO: z
+    .string()
+    .regex(/^PT(\d+H)?(\d+M)?(\d+S)?$/, "Formato ISO 8601 inválido (ex: PT5M30S)")
+    .optional()
+    .or(z.literal("")),
   isActive: z.boolean(),
+  featuredPostId: z.string().nullable().optional(),
 });

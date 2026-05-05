@@ -11,11 +11,11 @@ export const useUpdateHomepage = () => {
   return useMutation(
     trpc.pages.updateHomepage.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Homepage "${data.title || data.slug}" updated successfully`);
+        toast.success(`Página inicial "${data.title || data.slug}" atualizada com sucesso`);
         queryClient.invalidateQueries(trpc.pages.getHomepage.queryOptions());
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to update homepage");
+        toast.error(error.message || "Falha ao atualizar página inicial");
       },
     }),
   );

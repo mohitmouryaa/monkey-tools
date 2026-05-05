@@ -43,22 +43,22 @@ export const FAQManager = ({ faqs = [], onChange }: FAQManagerProps) => {
               <div className="flex-1 space-y-4">
                 <div>
                   <Label htmlFor={`question-${index}`} className="block mb-2 text-sm font-medium">
-                    Question {index + 1}
+                    Pergunta {index + 1}
                   </Label>
                   <Input
                     id={`question-${index}`}
-                    placeholder="Enter question..."
+                    placeholder="Digite a pergunta..."
                     value={faq.question}
                     onChange={(e) => updateFAQ(index, "question", e.target.value)}
                   />
                 </div>
                 <div>
                   <Label htmlFor={`answer-${index}`} className="block mb-2 text-sm font-medium">
-                    Answer
+                    Resposta
                   </Label>
                   <Textarea
                     id={`answer-${index}`}
-                    placeholder="Enter answer..."
+                    placeholder="Digite a resposta..."
                     value={faq.answer}
                     onChange={(e) => updateFAQ(index, "answer", e.target.value)}
                     rows={4}
@@ -75,12 +75,12 @@ export const FAQManager = ({ faqs = [], onChange }: FAQManagerProps) => {
 
       <Button type="button" onClick={addFAQ} variant="outline" className="w-full">
         <Plus className="w-4 h-4 mr-2" />
-        Add FAQ {faqs.length > 0 && `(${faqs.length})`}
+        Adicionar FAQ {faqs.length > 0 && `(${faqs.length})`}
       </Button>
 
       {faqs.length === 0 && (
         <p className="py-4 text-sm text-center text-muted-foreground">
-          No FAQs added yet. Click the button above to add your first FAQ.
+          Nenhuma FAQ adicionada. Clique no botão acima para adicionar a primeira FAQ.
         </p>
       )}
     </div>

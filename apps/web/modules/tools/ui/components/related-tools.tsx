@@ -1,23 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Wrench } from "lucide-react";
 import type { Tool } from "@workspace/database";
-import { toLucideIconName } from "@/modules/common/ui/lib/lucide-icon-name";
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
-import { Wrench } from "lucide-react";
-
-const CATEGORY_COLOR_CLASS: Record<string, string> = {
-  "pdf-tools": "bg-tool-merge-bg hover:bg-tool-merge-bg/90",
-  "image-tools": "bg-tool-bg-remove-bg hover:bg-tool-bg-remove-bg/90",
-  "text-tools": "bg-tool-pdf-word-bg hover:bg-tool-pdf-word-bg/90",
-  "text-ai-tools": "bg-tool-pdf-word-bg hover:bg-tool-pdf-word-bg/90",
-  converters: "bg-tool-word-pdf-bg hover:bg-tool-word-pdf-bg/90",
-};
-
-function getRelatedColorClass(categorySlug: string): string {
-  return CATEGORY_COLOR_CLASS[categorySlug] ?? "bg-tool-merge-bg hover:bg-tool-merge-bg/90";
-}
+import { SafeDynamicIcon } from "@/modules/common/ui/components/safe-dynamic-icon";
 
 interface RelatedToolsProps {
   currentToolId: string;
@@ -25,44 +11,40 @@ interface RelatedToolsProps {
   categorySlug: string;
 }
 
-export function RelatedTools({ currentToolId, tools, categorySlug }: RelatedToolsProps) {
+export const RelatedTools = ({ currentToolId, tools, categorySlug }: RelatedToolsProps) => {
   const related = tools.filter((t) => t._id !== currentToolId).slice(0, 6);
+
   if (related.length === 0) return null;
 
-  const colorClass = getRelatedColorClass(categorySlug);
-
   return (
-    <div className="seo-section">
-      <h2 className="mb-4 text-xl font-bold text-foreground">Ferramentas Relacionadas</h2>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
+      <h2 className="mb-6 text-xl md:text-2xl font-bold text-foreground">Ferramentas Relacionadas</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {related.map((tool) => {
           const href = tool.link.startsWith("/")
-            ? `/tools/${categorySlug}${tool.link}`
-            : `/tools/${categorySlug}/${tool.link.replace(/^\//, "")}`;
-          const iconName = tool.icon ? toLucideIconName(tool.icon) : null;
+            ? `/ferramentas/${categorySlug}${tool.link}`
+            : `/ferramentas/${categorySlug}/${tool.link}`;
+
           return (
             <Link
               key={tool._id as string}
               href={href}
-              className={`flex items-center justify-between px-4 py-3 rounded-xl ${colorClass} text-foreground font-medium text-sm hover:opacity-90 transition-opacity`}
+              className="group flex items-center justify-between gap-3 rounded-full border border-emerald-100 bg-emerald-50/70 px-5 py-3 text-foreground transition-all hover:bg-emerald-100 hover:border-emerald-200"
             >
-              <span className="flex items-center min-w-0 gap-2">
-                {iconName ? (
-                  <DynamicIcon
-                    name={iconName as IconName}
-                    className="w-4 h-4 shrink-0"
-                    fallback={() => <Wrench className="w-4 h-4 shrink-0" />}
-                  />
-                ) : (
-                  <Wrench className="w-4 h-4 shrink-0" />
-                )}
-                <span className="truncate">{tool.title}</span>
+              <span className="flex items-center gap-3 min-w-0">
+                <SafeDynamicIcon
+                  name={tool.icon}
+                  className="w-4 h-4 shrink-0 text-foreground/70"
+                  fallback={<Wrench className="w-4 h-4 shrink-0 text-foreground/70" />}
+                />
+                <span className="text-sm font-medium truncate">{tool.title}</span>
               </span>
-              <ArrowRight className="w-4 h-4 ml-2 shrink-0" />
+              <ArrowRight className="w-4 h-4 shrink-0 text-foreground/60 transition-transform group-hover:translate-x-1" />
             </Link>
           );
         })}
       </div>
-    </div>
+    </section>
   );
-}
+};

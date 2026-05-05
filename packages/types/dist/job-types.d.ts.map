@@ -1,0 +1,1 @@
+{"version":3,"file":"job-types.d.ts","sourceRoot":"","sources":["../src/job-types.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,SAAS;;;;;;CAOZ,CAAC;AAEX,MAAM,MAAM,OAAO,GAAG,CAAC,OAAO,SAAS,CAAC,CAAC,MAAM,OAAO,SAAS,CAAC,CAAC;AAEjE,oBAAY,MAAM;IAChB,WAAW,gBAAgB;IAC3B,SAAS,cAAc;IACvB,MAAM,WAAW;CAClB"}

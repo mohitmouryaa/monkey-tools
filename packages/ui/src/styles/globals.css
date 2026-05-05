@@ -8,170 +8,137 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* DesignOnline Dark Theme - Blue-Purple + Neon Green */
-  --background: 222 47% 7%;
-  --foreground: 0 0% 100%;
-  
-  --card: 222 40% 12%;
-  --card-foreground: 0 0% 100%;
-  
-  --popover: 222 40% 12%;
-  --popover-foreground: 0 0% 100%;
-  
-  /* Primary: Deep blue-purple (#635BFF) */
-  --primary: 243 100% 68%;
+  /* PDFs.com.br Light Theme — espelho do felipelayoun/pdf-simples */
+  --background: 0 0% 100%;
+  --foreground: 220 20% 10%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 20% 10%;
+
+  /* Primary: azul vibrante (matches .claude/screens) */
+  --primary: 217 91% 60%;
   --primary-foreground: 0 0% 100%;
-  
-  /* Secondary: Neon green (#00E5A8) */
-  --secondary: 162 100% 45%;
-  --secondary-foreground: 222 47% 7%;
-  
-  --muted: 222 30% 20%;
-  --muted-foreground: 222 20% 70%;
-  
-  --accent: 162 100% 45%;
-  --accent-foreground: 222 47% 7%;
-  
+
+  /* Secondary / muted / accent: cinza claro neutro (idêntico ao ref) */
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 20% 10%;
+
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 10% 46%;
+
+  --accent: 220 14% 96%;
+  --accent-foreground: 220 20% 10%;
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
-  --border: 222 30% 20%;
-  --input: 222 30% 20%;
-  --ring: 243 100% 68%;
-  
-  --radius: 1rem;
-  
-  /* Category colors */
-  --category-pdf: 0 85% 60%;
-  --category-image: 162 100% 45%;
-  --category-text: 243 100% 68%;
-  --category-converter: 45 100% 55%;
-  
-  /* Chart colors (keep existing) */
+
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 217 91% 60%;
+
+  --radius: 0.75rem;
+
+  /* Categorias do nosso CMS */
+  --category-pdf: 217 91% 60%;
+  --category-image: 145 65% 42%;
+  --category-text: 210 80% 55%;
+  --category-converter: 35 95% 55%;
+
+  /* Tool-specific colors (idênticos ao ref) */
+  --tool-pdf-word: 210 80% 55%;
+  --tool-juntar: 145 65% 42%;
+  --tool-comprimir: 35 95% 55%;
+  --tool-dividir: 265 70% 58%;
+  --tool-assinar: 340 75% 55%;
+
+  /* Chart colors (mantidos) */
   --chart-1: 0.646 0.222 41.116;
   --chart-2: 0.6 0.118 184.704;
   --chart-3: 0.398 0.07 227.392;
   --chart-4: 0.828 0.189 84.429;
   --chart-5: 0.769 0.188 70.08;
-  
-  /* Sidebar (match dark theme) */
-  --sidebar: 222 40% 12%;
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 243 100% 68%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 222 30% 20%;
-  --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-border: 222 30% 20%;
-  --sidebar-ring: 243 100% 68%;
-  
-  /* Logo colors */
-  --logo-primary: 243 100% 68%;
-  --logo-secondary: 162 100% 45%;
 
-  /* Tool colors (pastel card tops to match reference design) */
-  /* Compress PDF: light pinkish-peach / blush */
-  --tool-compress: 15 80% 65%;
-  --tool-compress-bg: 15 70% 96%;
-  /* PDF to Word: periwinkle blue / pale lavender */
-  --tool-pdf-word: 230 60% 65%;
-  --tool-pdf-word-bg: 230 50% 96%;
-  /* Word to PDF: sky blue / pale cyan */
-  --tool-word-pdf: 199 70% 60%;
-  --tool-word-pdf-bg: 199 55% 94%;
-  /* Merge PDF: mint green */
-  --tool-merge: 152 45% 55%;
-  --tool-merge-bg: 152 45% 94%;
-  /* Split PDF: pinkish-peach / pale coral */
-  --tool-split: 20 75% 65%;
-  --tool-split-bg: 20 65% 96%;
-  /* Remove Background: lavender / pale purple */
-  --tool-bg-remove: 270 45% 65%;
-  --tool-bg-remove-bg: 270 45% 96%;
-  /* QR Code: peach / pale orange */
-  --tool-qr: 30 70% 68%;
-  --tool-qr-bg: 30 65% 96%;
+  /* Sidebar (idêntico ao ref — neutro) */
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 
-  /* Shadows and gradients (primary-tinted) */
-  --shadow-sm: 0 1px 3px 0 hsl(243 100% 68% / 0.06), 0 1px 2px -1px hsl(243 100% 68% / 0.06);
-  --shadow-md: 0 4px 16px -2px hsl(243 100% 68% / 0.1), 0 2px 4px -2px hsl(243 100% 68% / 0.06);
-  --shadow-lg: 0 12px 40px -4px hsl(243 100% 68% / 0.15), 0 4px 12px -4px hsl(243 100% 68% / 0.08);
-  --hero-gradient: linear-gradient(135deg, hsl(243 100% 68%), hsl(199 89% 48%));
-}
-
-/* Light theme (remix-style) for public main site */
-.light {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
-  --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 222 47% 11%;
-  --primary: 217 91% 60%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 210 40% 94%;
-  --secondary-foreground: 222 47% 11%;
-  --muted: 210 30% 95%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 217 91% 95%;
-  --accent-foreground: 217 91% 40%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 217 91% 60%;
-  --shadow-sm: 0 1px 3px 0 hsl(217 91% 60% / 0.06), 0 1px 2px -1px hsl(217 91% 60% / 0.06);
-  --shadow-md: 0 4px 16px -2px hsl(217 91% 60% / 0.1), 0 2px 4px -2px hsl(217 91% 60% / 0.06);
-  --shadow-lg: 0 12px 40px -4px hsl(217 91% 60% / 0.15), 0 4px 12px -4px hsl(217 91% 60% / 0.08);
-  --hero-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
+  /* Logo colors (azul matching primary) */
+  --logo-primary: 217 91% 60%;
+  --logo-secondary: 217 91% 70%;
 }
 
 .dark {
   /* Same as root for consistent dark theme */
   --background: 222 47% 7%;
   --foreground: 0 0% 100%;
-  
+
   --card: 222 40% 12%;
   --card-foreground: 0 0% 100%;
-  
+
   --popover: 222 40% 12%;
   --popover-foreground: 0 0% 100%;
-  
-  --primary: 243 100% 68%;
+
+  --primary: 4 85% 55%;
   --primary-foreground: 0 0% 100%;
-  
-  --secondary: 162 100% 45%;
-  --secondary-foreground: 222 47% 7%;
-  
+
+  --secondary: 14 90% 55%;
+  --secondary-foreground: 0 0% 100%;
+
   --muted: 222 30% 20%;
   --muted-foreground: 222 20% 70%;
-  
-  --accent: 162 100% 45%;
-  --accent-foreground: 222 47% 7%;
-  
+
+  --accent: 14 90% 55%;
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
-  
+
   --border: 222 30% 20%;
   --input: 222 30% 20%;
-  --ring: 243 100% 68%;
-  
+  --ring: 4 85% 55%;
+
+  /* Category colors */
+  --category-pdf: 4 85% 60%;
+  --category-image: 145 65% 55%;
+  --category-text: 210 80% 65%;
+  --category-converter: 35 95% 60%;
+
+  /* Tool-specific colors */
+  --tool-pdf-word: 210 80% 55%;
+  --tool-juntar: 145 65% 50%;
+  --tool-comprimir: 35 95% 55%;
+  --tool-dividir: 265 70% 60%;
+  --tool-assinar: 340 75% 55%;
+
   /* Chart colors (keep existing) */
   --chart-1: 0.488 0.243 264.376;
   --chart-2: 0.696 0.17 162.48;
   --chart-3: 0.769 0.188 70.08;
   --chart-4: 0.627 0.265 303.9;
   --chart-5: 0.645 0.246 16.439;
-  
+
   /* Sidebar */
   --sidebar: 222 40% 12%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 243 100% 68%;
+  --sidebar-primary: 4 85% 55%;
   --sidebar-primary-foreground: 0 0% 100%;
   --sidebar-accent: 222 30% 20%;
   --sidebar-accent-foreground: 0 0% 100%;
   --sidebar-border: 222 30% 20%;
-  --sidebar-ring: 243 100% 68%;
+  --sidebar-ring: 4 85% 55%;
+
+  /* Logo colors */
+  --logo-primary: 4 85% 55%;
+  --logo-secondary: 14 90% 55%;
 }
 
 @theme inline {
@@ -198,6 +165,11 @@
   --color-category-image: hsl(var(--category-image));
   --color-category-text: hsl(var(--category-text));
   --color-category-converter: hsl(var(--category-converter));
+  --color-tool-pdf-word: hsl(var(--tool-pdf-word));
+  --color-tool-juntar: hsl(var(--tool-juntar));
+  --color-tool-comprimir: hsl(var(--tool-comprimir));
+  --color-tool-dividir: hsl(var(--tool-dividir));
+  --color-tool-assinar: hsl(var(--tool-assinar));
   --color-chart-1: oklch(var(--chart-1));
   --color-chart-2: oklch(var(--chart-2));
   --color-chart-3: oklch(var(--chart-3));
@@ -215,21 +187,6 @@
   --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
-  /* Tool colors for cards */
-  --color-tool-compress: hsl(var(--tool-compress));
-  --color-tool-compress-bg: hsl(var(--tool-compress-bg));
-  --color-tool-pdf-word: hsl(var(--tool-pdf-word));
-  --color-tool-pdf-word-bg: hsl(var(--tool-pdf-word-bg));
-  --color-tool-word-pdf: hsl(var(--tool-word-pdf));
-  --color-tool-word-pdf-bg: hsl(var(--tool-word-pdf-bg));
-  --color-tool-merge: hsl(var(--tool-merge));
-  --color-tool-merge-bg: hsl(var(--tool-merge-bg));
-  --color-tool-split: hsl(var(--tool-split));
-  --color-tool-split-bg: hsl(var(--tool-split-bg));
-  --color-tool-bg-remove: hsl(var(--tool-bg-remove));
-  --color-tool-bg-remove-bg: hsl(var(--tool-bg-remove-bg));
-  --color-tool-qr: hsl(var(--tool-qr));
-  --color-tool-qr-bg: hsl(var(--tool-qr-bg));
 }
 
 @layer base {
@@ -239,6 +196,10 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
   }
 }
 
@@ -252,59 +213,30 @@
 
 /* Custom button gradients */
 .btn-gradient-primary {
-  background: linear-gradient(135deg, hsl(243 100% 68%) 0%, hsl(260 100% 65%) 100%);
+  background: linear-gradient(135deg, hsl(4 85% 55%) 0%, hsl(14 90% 55%) 100%);
 }
 
 .btn-gradient-secondary {
-  background: linear-gradient(135deg, hsl(162 100% 45%) 0%, hsl(170 100% 40%) 100%);
+  background: linear-gradient(135deg, hsl(14 90% 55%) 0%, hsl(24 90% 55%) 100%);
 }
 
 /* Card hover glow effect */
 .card-glow:hover {
-  box-shadow: 0 0 30px -5px hsl(243 100% 68% / 0.4);
+  box-shadow: 0 0 30px -5px hsl(4 85% 55% / 0.4);
 }
 
-/* Remix-style utility/component classes */
-.hero-gradient {
-  background: var(--hero-gradient);
-}
-
-.hero-section {
-  background: linear-gradient(180deg, hsl(var(--primary) / 0.06) 0%, hsl(var(--background)) 100%);
-}
-.upload-zone {
-  border: 2px dashed hsl(var(--primary) / 0.3);
-  background-color: hsl(var(--primary) / 0.02);
-  border-radius: var(--radius-lg);
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.upload-zone:hover,
-.upload-zone.drag-over {
-  border-color: hsl(var(--primary));
-  background-color: hsl(var(--primary) / 0.06);
-}
-
-.seo-section {
-  background: hsl(var(--card));
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  border: 1px solid hsl(var(--border));
-  box-shadow: var(--shadow-sm);
-}
-
-@media (min-width: 768px) {
-  .seo-section {
-    padding: 2rem;
+@layer components {
+  .tool-card {
+    @apply rounded-2xl p-6 transition-all duration-200 cursor-pointer border-2 border-transparent;
   }
-}
-
-.tool-card-hover {
-  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-}
-
-.tool-card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  .tool-card:hover {
+    @apply shadow-lg -translate-y-1;
+  }
+  .upload-zone {
+    @apply border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 cursor-pointer;
+    @apply border-muted-foreground/25 hover:border-primary/50 hover:bg-primary/5;
+  }
+  .upload-zone.dragging {
+    @apply border-primary bg-primary/10 scale-[1.02];
+  }
 }

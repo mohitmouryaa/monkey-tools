@@ -56,17 +56,17 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
               <div className="grid grid-cols-12 gap-4">
                 {/* Icon Picker */}
                 <div className="col-span-4">
-                  <span className="block mb-2 text-sm font-medium">Icon</span>
+                  <span className="block mb-2 text-sm font-medium">Ícone</span>
                   <IconPicker
                     value={step.icon}
                     onChange={(icon) => updateStep(index, "icon", icon)}
-                    placeholder="Select icon..."
+                    placeholder="Selecione o ícone..."
                   />
                 </div>
 
                 {/* Icon Color */}
                 <div className="col-span-3">
-                  <span className="block mb-2 text-sm font-medium">Icon Color</span>
+                  <span className="block mb-2 text-sm font-medium">Cor do Ícone</span>
                   <Input
                     type="text"
                     placeholder="#ffffff"
@@ -77,7 +77,7 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
                 {/* Background Color */}
                 <div className="col-span-3">
-                  <span className="block mb-2 text-sm font-medium">BG Color</span>
+                  <span className="block mb-2 text-sm font-medium">Cor de Fundo</span>
                   <Input
                     type="text"
                     placeholder="#3b82f6"
@@ -96,9 +96,9 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
               {/* Second Row: Title */}
               <div>
-                <span className="block mb-2 text-sm font-medium">Step Title</span>
+                <span className="block mb-2 text-sm font-medium">Título do Passo</span>
                 <Input
-                  placeholder="e.g., Upload your PDF file"
+                  placeholder="ex: Envie seu arquivo PDF"
                   value={step.title}
                   onChange={(e) => updateStep(index, "title", e.target.value)}
                 />
@@ -106,9 +106,9 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
               {/* Third Row: Description */}
               <div>
-                <span className="block mb-2 text-sm font-medium">Step Description</span>
+                <span className="block mb-2 text-sm font-medium">Descrição do Passo</span>
                 <Textarea
-                  placeholder="Describe this step..."
+                  placeholder="Descreva este passo..."
                   value={step.description}
                   onChange={(e) => updateStep(index, "description", e.target.value)}
                   rows={2}
@@ -121,13 +121,13 @@ export const VisualStepsBuilder = ({ value = [], onChange }: VisualStepsBuilderP
 
       {value.length < 5 && (
         <Button type="button" onClick={addStep} variant="outline" className="w-full">
-          Add Step {value.length > 0 && `(${value.length}/5)`}
+          Adicionar Passo {value.length > 0 && `(${value.length}/5)`}
         </Button>
       )}
 
       {value.length === 0 && (
         <p className="py-4 text-sm text-center text-muted-foreground">
-          No steps added yet. Click the button above to add your first step.
+          Nenhum passo adicionado. Clique no botão acima para adicionar o primeiro passo.
         </p>
       )}
     </div>

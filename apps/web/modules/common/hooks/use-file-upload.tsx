@@ -34,8 +34,8 @@ export const useFileUpload = () => {
       setIsUploading(false);
       return { url, fileKey };
     } catch (err) {
-      console.error("Upload failed:", err);
-      setError(err instanceof Error ? err.message : "Upload failed");
+      console.error("Falha no upload:", err);
+      setError(err instanceof Error ? err.message : "Falha no upload");
       setIsUploading(false);
       throw err;
     }

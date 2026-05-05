@@ -8,7 +8,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <TRPCReactProvider>
       <NuqsAdapter>
-        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange enableColorScheme>
+        <NextThemesProvider attribute="class" defaultTheme="light" disableTransitionOnChange enableColorScheme>
           {children}
         </NextThemesProvider>
       </NuqsAdapter>
