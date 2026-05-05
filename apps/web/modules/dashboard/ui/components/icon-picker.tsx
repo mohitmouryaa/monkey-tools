@@ -142,7 +142,7 @@ interface IconPickerProps {
   placeholder?: string;
 }
 
-export const IconPicker = ({ value, onChange, placeholder = "Select icon..." }: IconPickerProps) => {
+export const IconPicker = ({ value, onChange, placeholder = "Selecione um ícone..." }: IconPickerProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -175,9 +175,9 @@ export const IconPicker = ({ value, onChange, placeholder = "Select icon..." }: 
       </PopoverTrigger>
       <PopoverContent className="p-0 w-75" align="start">
         <Command shouldFilter={false}>
-          <CommandInput placeholder="Search icons..." value={search} onValueChange={setSearch} />
+          <CommandInput placeholder="Buscar ícones..." value={search} onValueChange={setSearch} />
           <CommandList className="max-h-75">
-            <CommandEmpty>No icon found.</CommandEmpty>
+            <CommandEmpty>Nenhum ícone encontrado.</CommandEmpty>
             <CommandGroup>
               {filteredIcons.map((icon) => (
                 <CommandItem

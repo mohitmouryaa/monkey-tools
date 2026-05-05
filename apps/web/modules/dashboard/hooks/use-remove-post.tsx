@@ -10,12 +10,12 @@ export const useRemovePost = () => {
   return useMutation(
     trpc.posts.delete.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Post removed`);
+        toast.success(`Post removido`);
         queryClient.invalidateQueries({ queryKey: trpc.posts.list.queryKey() });
         queryClient.invalidateQueries(trpc.posts.getById.queryOptions({ id: data.id }));
       },
       onError: (error) => {
-        toast.error(`Failed to remove post: ${error.message}`);
+        toast.error(`Falha ao remover post: ${error.message}`);
       },
     }),
   );

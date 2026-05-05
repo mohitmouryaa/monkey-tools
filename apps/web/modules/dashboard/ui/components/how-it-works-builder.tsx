@@ -32,8 +32,8 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">How It Works Section</h3>
-        <p className="text-sm text-muted-foreground">Configure the step-by-step guide section</p>
+        <h3 className="text-lg font-semibold">Seção Como Funciona</h3>
+        <p className="text-sm text-muted-foreground">Configure a seção de guia passo a passo</p>
       </div>
 
       <FormField
@@ -41,9 +41,9 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
         name="howItWorksSection.title"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Section Title</FormLabel>
+            <FormLabel>Título da Seção</FormLabel>
             <FormControl>
-              <Input placeholder="e.g., How It Works" {...field} />
+              <Input placeholder="ex.: Como Funciona" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -55,9 +55,9 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
         name="howItWorksSection.subtitle"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Section Subtitle</FormLabel>
+            <FormLabel>Subtítulo da Seção</FormLabel>
             <FormControl>
-              <Textarea placeholder="Enter subtitle" rows={2} {...field} />
+              <Textarea placeholder="Digite o subtítulo" rows={2} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -66,10 +66,10 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h4 className="text-sm font-semibold">Steps</h4>
+          <h4 className="text-sm font-semibold">Passos</h4>
           <Button type="button" onClick={addStep} size="sm" variant="outline">
             <Plus className="w-4 h-4 mr-2" />
-            Add Step
+            Adicionar Passo
           </Button>
         </div>
 
@@ -80,7 +80,7 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <GripVertical className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Step {index + 1}</span>
+                    <span className="text-sm font-medium">Passo {index + 1}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     {index > 0 && (
@@ -104,7 +104,7 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
                   name={`howItWorksSection.steps.${index}.iconName`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Icon</FormLabel>
+                      <FormLabel>Ícone</FormLabel>
                       <FormControl>
                         <IconPicker value={field.value} onChange={field.onChange} />
                       </FormControl>
@@ -118,9 +118,9 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
                   name={`howItWorksSection.steps.${index}.title`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel>Título</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter step title" {...field} />
+                        <Input placeholder="Digite o título do passo" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -132,9 +132,9 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
                   name={`howItWorksSection.steps.${index}.description`}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>Descrição</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Enter step description" rows={2} {...field} />
+                        <Textarea placeholder="Digite a descrição do passo" rows={2} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -146,7 +146,7 @@ export const HowItWorksBuilder = ({ form }: HowItWorksBuilderProps) => {
         ))}
 
         {fields.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground">No steps added yet. Click "Add Step" to create one.</div>
+          <div className="text-center py-8 text-muted-foreground">Nenhum passo adicionado ainda. Clique em "Adicionar Passo" para criar um.</div>
         )}
       </div>
     </div>

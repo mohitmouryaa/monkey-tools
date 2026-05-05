@@ -296,7 +296,7 @@ export const ToolForm = ({ defaultValues, onSubmit, onCancel, submitLabel = "Sal
                     <FormItem>
                       <FormLabel>Nome do Componente</FormLabel>
                       <FormControl>
-                        <Input placeholder="ex: pdf-to-jpg" {...field} disabled={disabled} />
+                        <Input placeholder="ex: pdf-para-jpg" {...field} disabled={disabled} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

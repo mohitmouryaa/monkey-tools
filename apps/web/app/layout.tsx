@@ -53,7 +53,7 @@ export default async function RootLayout({
       <body className={`${inter.className} ${inter.variable} ${fredoka.variable} antialiased `}>
         <Providers>
           {children}
-          <Toaster closeButton />
+          <Toaster closeButton richColors position="top-right" />
           <Analytics />
           <SpeedInsights />
         </Providers>

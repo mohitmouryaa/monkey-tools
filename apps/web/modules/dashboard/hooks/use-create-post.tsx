@@ -10,11 +10,11 @@ export const useCreatePost = () => {
   return useMutation(
     trpc.posts.create.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Post "${data.title}" created`);
+        toast.success(`Post "${data.title}" criado`);
         queryClient.invalidateQueries({ queryKey: trpc.posts.list.queryKey() });
       },
       onError: (error) => {
-        toast.error(`Failed to create post: ${error.message}`);
+        toast.error(`Falha ao criar post: ${error.message}`);
       },
     }),
   );

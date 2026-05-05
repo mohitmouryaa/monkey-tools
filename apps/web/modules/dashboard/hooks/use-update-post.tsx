@@ -10,12 +10,12 @@ export const useUpdatePost = () => {
   return useMutation(
     trpc.posts.update.mutationOptions({
       onSuccess: (data) => {
-        toast.success(`Post "${data.title}" updated`);
+        toast.success(`Post "${data.title}" atualizado`);
         queryClient.invalidateQueries({ queryKey: trpc.posts.list.queryKey() });
         queryClient.invalidateQueries(trpc.posts.getById.queryOptions({ id: data._id }));
       },
       onError: (error) => {
-        toast.error(`Failed to update post: ${error.message}`);
+        toast.error(`Falha ao atualizar post: ${error.message}`);
       },
     }),
   );

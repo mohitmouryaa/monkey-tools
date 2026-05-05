@@ -225,6 +225,13 @@
   box-shadow: 0 0 30px -5px hsl(4 85% 55% / 0.4);
 }
 
+/* Sonner: move close button to the right side of the toast */
+[data-sonner-toast] [data-close-button] {
+  left: auto !important;
+  right: 0 !important;
+  transform: translate(35%, -35%) !important;
+}
+
 @layer components {
   .tool-card {
     @apply rounded-2xl p-6 transition-all duration-200 cursor-pointer border-2 border-transparent;
