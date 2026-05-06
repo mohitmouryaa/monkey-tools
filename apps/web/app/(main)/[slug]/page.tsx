@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: CustomPageProps): Promise<Met
       description: seoDescription || `Saiba mais sobre ${fallbackTitle || "esta página"} em pdfs.com.br.`,
       keywords: page.seoKeywords,
       path: `/${slug}`,
+      ogImageType: "page",
       noIndex: bothMissing,
     });
   } catch {

@@ -6,11 +6,31 @@ export const SITE_LANG = "pt-BR";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://pdfs.com.br").replace(/\/+$/, "");
 
-// TODO: substituir quando branding estiver pronto (1200x630, ≤ 1MB, PNG/JPG)
-export const DEFAULT_OG_IMAGE = "/og-default.png";
+export const DEFAULT_OG_IMAGE = "/api/og";
 export const DEFAULT_OG_IMAGE_WIDTH = 1200;
 export const DEFAULT_OG_IMAGE_HEIGHT = 630;
 export const DEFAULT_OG_IMAGE_ALT = `${SITE_NAME} — ferramentas online gratuitas`;
+
+export type OgImageType = "tool" | "page" | "blog" | "category";
+
+const OG_TITLE_MAX = 120;
+const OG_SUBTITLE_MAX = 160;
+
+const truncate = (value: string, max: number) =>
+  value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
+
+export const buildDynamicOgUrl = (input: {
+  title?: string;
+  subtitle?: string;
+  type?: OgImageType;
+}) => {
+  const params = new URLSearchParams();
+  if (input.title) params.set("title", truncate(input.title, OG_TITLE_MAX));
+  if (input.subtitle) params.set("subtitle", truncate(input.subtitle, OG_SUBTITLE_MAX));
+  if (input.type) params.set("type", input.type);
+  const qs = params.toString();
+  return `${SITE_URL}/api/og${qs ? `?${qs}` : ""}`;
+};
 
 // TODO: preencher quando criar conta no X/Twitter (ex.: "@pdfscombr")
 export const TWITTER_HANDLE: string | null = null;
@@ -24,14 +44,28 @@ export const absoluteUrl = (path: string) => {
   return `${SITE_URL}${normalized}`;
 };
 
-const buildOgImages = (image?: string) => [
+const buildOgImages = (url: string, alt?: string) => [
   {
-    url: absoluteUrl(image || DEFAULT_OG_IMAGE),
+    url,
     width: DEFAULT_OG_IMAGE_WIDTH,
     height: DEFAULT_OG_IMAGE_HEIGHT,
-    alt: DEFAULT_OG_IMAGE_ALT,
+    alt: alt || DEFAULT_OG_IMAGE_ALT,
   },
 ];
+
+const resolveOgImage = (input: {
+  ogImage?: string;
+  title?: string;
+  description?: string;
+  type?: OgImageType;
+}) => {
+  if (input.ogImage) return absoluteUrl(input.ogImage);
+  return buildDynamicOgUrl({
+    title: input.title,
+    subtitle: input.description,
+    type: input.type,
+  });
+};
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -63,14 +97,14 @@ export const defaultMetadata: Metadata = {
     title: `${SITE_NAME} — ferramentas online gratuitas`,
     description:
       "Ferramentas online gratuitas para PDF, imagens e textos. Sem cadastro, processamento rápido e seguro.",
-    images: buildOgImages(),
+    images: buildOgImages(buildDynamicOgUrl({})),
   },
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — ferramentas online gratuitas`,
     description:
       "Ferramentas online gratuitas para PDF, imagens e textos. Sem cadastro, processamento rápido e seguro.",
-    images: [absoluteUrl(DEFAULT_OG_IMAGE)],
+    images: [buildDynamicOgUrl({})],
     ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
   },
   robots: {
@@ -107,6 +141,7 @@ export interface BuildMetadataInput {
   path: string;
   keywords?: string | string[];
   ogImage?: string;
+  ogImageType?: OgImageType;
   ogType?: "website" | "article";
   noIndex?: boolean;
 }
@@ -136,12 +171,19 @@ export const buildMetadata = ({
   path,
   keywords,
   ogImage,
+  ogImageType,
   ogType = "website",
   noIndex,
 }: BuildMetadataInput): Metadata => {
   const url = absoluteUrl(path);
   const resolved = resolveTitle(title);
   const titleField = resolved.kind === "absolute" ? { absolute: resolved.absolute } : resolved.templated;
+  const resolvedOgImage = resolveOgImage({
+    ogImage,
+    title: stripSiteSuffix(title),
+    description,
+    type: ogImageType ?? (ogType === "article" ? "blog" : undefined),
+  });
 
   return {
     title: titleField,
@@ -160,13 +202,13 @@ export const buildMetadata = ({
       url,
       title: resolved.social,
       description,
-      images: buildOgImages(ogImage),
+      images: buildOgImages(resolvedOgImage),
     },
     twitter: {
       card: "summary_large_image",
       title: resolved.social,
       description,
-      images: [absoluteUrl(ogImage || DEFAULT_OG_IMAGE)],
+      images: [resolvedOgImage],
       ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
     },
     robots: noIndex

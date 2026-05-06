@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
       description,
       keywords: `${category.name}, ferramentas ${lower}, ${lower} online, ${lower} grátis, ${category.slug}`,
       path: `/ferramentas/${toolCategory}`,
+      ogImageType: "category",
     });
   } catch {
     return buildMetadata({

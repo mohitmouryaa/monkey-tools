@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: ToolsPageProps): Promise<Meta
       description: toolData.seoDescription || toolData.description,
       keywords: toolData.seoKeywords || "",
       path: `/ferramentas/${toolCategory}/${tool}`,
+      ogImageType: "tool",
     });
   } catch {
     return buildMetadata({

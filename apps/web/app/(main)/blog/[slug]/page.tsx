@@ -94,6 +94,8 @@ export async function generateMetadata({ params }: BlogSlugPageProps): Promise<M
     keywords: keywords.length > 0 ? keywords : undefined,
     path: `/blog/${post.slug}`,
     ogImage,
+    ogImageType: "blog",
+    ogType: "article",
   });
 }
 
