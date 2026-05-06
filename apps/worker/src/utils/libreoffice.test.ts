@@ -59,7 +59,7 @@ describe("convertToPdf", () => {
 
     expect(out).toBe("/tmp/abc-input.pdf");
     expect(execFileMock).toHaveBeenCalledTimes(1);
-    const [bin, args] = execFileMock.mock.calls[0];
+    const [bin, args] = execFileMock.mock.calls[0]!;
     expect(bin).toBe("soffice");
     expect(args).toContain("--headless");
     expect(args).toContain("--convert-to");

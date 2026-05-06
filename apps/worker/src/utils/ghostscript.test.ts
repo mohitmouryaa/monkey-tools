@@ -27,7 +27,7 @@ describe("runGhostscript", () => {
     await expect(promise).resolves.toBeUndefined();
 
     expect(spawnMock).toHaveBeenCalledTimes(1);
-    const [cmd, args] = spawnMock.mock.calls[0];
+    const [cmd, args] = spawnMock.mock.calls[0]!;
     expect(cmd).toBe("gs");
     expect(args).toContain("-dPDFSETTINGS=/screen");
     expect(args).toContain("-sOutputFile=/tmp/out.pdf");
@@ -44,7 +44,7 @@ describe("runGhostscript", () => {
     proc.emit("close", 0);
     await promise;
 
-    const args = spawnMock.mock.calls[0][1] as string[];
+    const args = spawnMock.mock.calls[0]![1] as string[];
     expect(args).toContain("-dPDFSETTINGS=/ebook");
   });
 
