@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { EmpresasView } from "@/modules/empresas/ui/views/empresas-view";
 
 export const metadata: Metadata = {
@@ -18,5 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default function EmpresasPage() {
+  notFound();
   return <EmpresasView />;
 }

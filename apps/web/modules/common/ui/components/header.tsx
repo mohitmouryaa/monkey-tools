@@ -21,9 +21,11 @@ export const Header = async () => {
           <Link href="/blog" className="font-medium text-muted-foreground hover:text-foreground transition-colors">
             Blog
           </Link>
+          {/* Oculto temporariamente — não excluir.
           <Link href="/empresas" className="font-medium text-muted-foreground hover:text-foreground transition-colors">
             Para empresas
           </Link>
+          */}
         </nav>
 
         <div className="hidden md:block w-72">

@@ -89,6 +89,7 @@ export const MobileNav = ({ categories, searchIndex }: MobileNavProps) => {
                 Blog
               </Link>
             </li>
+            {/* Oculto temporariamente — não excluir.
             <li>
               <Link
                 href="/empresas"
@@ -98,6 +99,7 @@ export const MobileNav = ({ categories, searchIndex }: MobileNavProps) => {
                 Para empresas
               </Link>
             </li>
+            */}
           </ul>
         </div>
       </SheetContent>
