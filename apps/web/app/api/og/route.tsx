@@ -8,6 +8,8 @@ const FONT_INTER_REGULAR =
   "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.8/files/inter-latin-400-normal.woff";
 const FONT_INTER_SEMIBOLD =
   "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.8/files/inter-latin-600-normal.woff";
+const FONT_INTER_BOLD =
+  "https://cdn.jsdelivr.net/npm/@fontsource/inter@5.2.8/files/inter-latin-700-normal.woff";
 
 const TYPE_LABEL: Record<string, string> = {
   tool: "Ferramenta",
@@ -19,6 +21,14 @@ const TYPE_LABEL: Record<string, string> = {
 const DEFAULT_TITLE = "Ferramentas online gratuitas para PDF, imagens e textos";
 const DEFAULT_SUBTITLE = "Comprima, converta, mescle e divida arquivos em segundos — sem cadastro.";
 
+const TITLE_MAX = 80;
+const SUBTITLE_MAX = 110;
+
+const truncate = (value: string, max: number) => {
+  if (value.length <= max) return value;
+  return `${value.slice(0, max - 1).trimEnd()}…`;
+};
+
 async function loadFont(url: string) {
   const res = await fetch(url, { cache: "force-cache" });
   if (!res.ok) throw new Error(`failed to fetch ${url}`);
@@ -28,17 +38,22 @@ async function loadFont(url: string) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  const title = searchParams.get("title")?.slice(0, 120) || DEFAULT_TITLE;
-  const subtitle = searchParams.get("subtitle")?.slice(0, 160) || DEFAULT_SUBTITLE;
+  const rawTitle = searchParams.get("title")?.trim();
+  const rawSubtitle = searchParams.get("subtitle")?.trim();
+  const title = rawTitle ? truncate(rawTitle, TITLE_MAX) : DEFAULT_TITLE;
+  const subtitle = rawSubtitle ? truncate(rawSubtitle, SUBTITLE_MAX) : DEFAULT_SUBTITLE;
   const type = searchParams.get("type");
   const badge = type && TYPE_LABEL[type] ? TYPE_LABEL[type] : null;
 
-  const [interRegular, interSemibold] = await Promise.all([
+  const [interRegular, interSemibold, interBold] = await Promise.all([
     loadFont(FONT_INTER_REGULAR),
     loadFont(FONT_INTER_SEMIBOLD),
+    loadFont(FONT_INTER_BOLD),
   ]);
 
-  const titleSize = title.length > 80 ? 64 : title.length > 50 ? 80 : title.length > 28 ? 96 : 108;
+  const titleSize =
+    title.length > 70 ? 56 : title.length > 55 ? 64 : title.length > 40 ? 76 : title.length > 25 ? 92 : 108;
+  const subtitleSize = subtitle.length > 90 ? 24 : subtitle.length > 60 ? 28 : 32;
 
   return new ImageResponse(
     <div
@@ -75,37 +90,60 @@ export async function GET(req: NextRequest) {
         style={{
           display: "flex",
           alignItems: "center",
-          gap: 14,
+          gap: 20,
           marginBottom: 56,
           zIndex: 1,
         }}
       >
         <div
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 10,
+            width: 88,
+            height: 88,
+            borderRadius: 22,
             backgroundColor: "#ffffff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 26,
-            color: "#1d4ed8",
-            fontWeight: 600,
-            letterSpacing: "-0.04em",
           }}
         >
-          P
+          <svg
+            width="52"
+            height="52"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#5088f8"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+            <path d="M10 9H8" />
+            <path d="M16 13H8" />
+            <path d="M16 17H8" />
+          </svg>
         </div>
-        <span
+        <div
           style={{
-            fontSize: 30,
-            fontWeight: 600,
-            letterSpacing: "-0.02em",
+            display: "flex",
+            alignItems: "baseline",
+            lineHeight: 1,
+            fontSize: 60,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
           }}
         >
-          pdfs.com.br
-        </span>
+          <span>PDFS</span>
+          <span
+            style={{
+              fontSize: 30,
+              fontWeight: 600,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            .com.br
+          </span>
+        </div>
       </div>
 
       {badge ? (
@@ -135,7 +173,10 @@ export async function GET(req: NextRequest) {
           fontWeight: 600,
           lineHeight: 1.08,
           letterSpacing: "-0.035em",
-          display: "flex",
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 3,
+          overflow: "hidden",
           textAlign: "center",
           maxWidth: 1000,
           zIndex: 1,
@@ -147,11 +188,14 @@ export async function GET(req: NextRequest) {
       <div
         style={{
           marginTop: 28,
-          fontSize: 30,
+          fontSize: subtitleSize,
           fontWeight: 400,
           lineHeight: 1.35,
           color: "#7dd3fc",
-          display: "flex",
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          WebkitLineClamp: 3,
+          overflow: "hidden",
           textAlign: "center",
           maxWidth: 880,
           zIndex: 1,
@@ -166,6 +210,7 @@ export async function GET(req: NextRequest) {
       fonts: [
         { name: "Inter", data: interRegular, style: "normal", weight: 400 },
         { name: "Inter", data: interSemibold, style: "normal", weight: 600 },
+        { name: "Inter", data: interBold, style: "normal", weight: 700 },
       ],
       headers: {
         "Cache-Control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",

@@ -1,12 +1,17 @@
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import Image from "next/image";
 
 export const Logo = () => {
   return (
     <Link href="/" className="flex items-center gap-3 group">
-      <div className="w-11 h-11 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
-        <FileText className="w-6 h-6 text-primary-foreground" strokeWidth={2.5} />
-      </div>
+      <Image
+        src="/logo.png"
+        alt="PDFS.com.br"
+        width={44}
+        height={44}
+        priority
+        className="w-11 h-11 rounded-xl transition-transform group-hover:scale-105"
+      />
       <span className="text-xl font-bold tracking-tight text-foreground">
         PDFS<span className="text-primary">.com.br</span>
       </span>

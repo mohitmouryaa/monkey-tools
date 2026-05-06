@@ -13,8 +13,8 @@ export const DEFAULT_OG_IMAGE_ALT = `${SITE_NAME} — ferramentas online gratuit
 
 export type OgImageType = "tool" | "page" | "blog" | "category";
 
-const OG_TITLE_MAX = 120;
-const OG_SUBTITLE_MAX = 160;
+const OG_TITLE_MAX = 80;
+const OG_SUBTITLE_MAX = 110;
 
 const truncate = (value: string, max: number) =>
   value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
@@ -234,7 +234,7 @@ export const buildOrganizationJsonLd = () => ({
   "@type": "Organization",
   name: SITE_NAME,
   url: SITE_URL,
-  logo: `${SITE_URL}/logo.svg`,
+  logo: `${SITE_URL}/logo.png`,
   sameAs: [],
 });
 
