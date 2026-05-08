@@ -1,0 +1,28 @@
+{
+  "Rules": [
+    {
+      "ID": "expire-uploads-1d",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "uploads/" },
+      "Expiration": { "Days": 1 }
+    },
+    {
+      "ID": "expire-advanced-compressed-7d",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "advanced-compressed/" },
+      "Expiration": { "Days": 7 }
+    },
+    {
+      "ID": "expire-compressed-7d",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "compressed/" },
+      "Expiration": { "Days": 7 }
+    },
+    {
+      "ID": "expire-converted-7d",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "converted/" },
+      "Expiration": { "Days": 7 }
+    }
+  ]
+}
