@@ -12,6 +12,9 @@ const s3 = new S3Client({
     secretAccessKey: process.env.DO_SPACES_SECRET_KEY || "",
   },
   forcePathStyle: true,
+  // AWS SDK v3 ≥ 3.729 injeta x-amz-checksum-* na URL assinada; DO Spaces rejeita com 403.
+  requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
 });
 
 export const BUCKET_NAME = process.env.DO_SPACES_BUCKET;
@@ -22,7 +25,6 @@ export async function getUploadUrl(key: string, contentType: string) {
     Bucket: BUCKET_NAME,
     Key: key,
     ContentType: contentType,
-    ACL: "public-read",
   });
   // URL expires in 60 seconds (security best practice)
   return getSignedUrl(s3, command, { expiresIn: 60 });
