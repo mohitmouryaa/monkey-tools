@@ -42,3 +42,12 @@ npm-debug.log*
 
 # Auditoria i18n (screenshots locais)
 .claude/i18n-screenshots/
+.env*.local
+
+# Diretórios de trabalho local (planos, contextos do Claude, scratch)
+.claude/
+.tmp/
+
+# AWS CLI bundle (instale via gerenciador do sistema; não versionar)
+aws/
+awscliv2.zip

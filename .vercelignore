@@ -1,0 +1,36 @@
+# Dependencies (Vercel reinstala)
+node_modules
+**/node_modules
+
+# Build outputs e caches (Vercel rebuilda)
+.next
+**/.next
+.turbo
+**/.turbo
+dist
+**/dist
+build
+**/build
+out
+**/out
+coverage
+**/coverage
+
+# Git e Vercel meta
+.git
+.vercel
+
+# IDE / scratch / planos locais
+.idea
+.claude
+.tmp
+
+# Lixo de instalação local
+aws
+awscliv2.zip
+*.zip
+
+# Env locais (Vercel injeta env do dashboard)
+.env
+.env.local
+.env.*.local
