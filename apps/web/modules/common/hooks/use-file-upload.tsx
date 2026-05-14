@@ -14,17 +14,26 @@ export const useFileUpload = () => {
     setError(null);
 
     try {
-      // 1. Get Presigned URL
+      // 1. Get presigned POST (url + fields).
       const { data } = await axios.post("/api/upload", {
         filename: file.name,
         contentType: file.type,
       });
 
-      const { url, fileKey } = data;
+      const { url, fields, fileKey } = data as {
+        url: string;
+        fields: Record<string, string>;
+        fileKey: string;
+      };
 
-      // 2. Upload Directly to S3 (High Scale!)
-      await axios.put(url, file, {
-        headers: { "Content-Type": file.type },
+      // 2. POST multipart direto pro S3. Sem header Content-Type explícito —
+      // axios injeta multipart/form-data com boundary, que é "simple request"
+      // e não dispara preflight CORS (ver packages/storage/src/index.ts).
+      const formData = new FormData();
+      for (const [k, v] of Object.entries(fields)) formData.append(k, v);
+      formData.append("file", file);
+
+      await axios.post(url, formData, {
         onUploadProgress: (p) => {
           const percent = Math.round((p.loaded * 100) / (p.total || 1));
           setUploadProgress(percent);

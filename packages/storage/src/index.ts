@@ -2,6 +2,7 @@ import { pipeline } from "node:stream/promises";
 import { Upload } from "@aws-sdk/lib-storage";
 import { createReadStream, createWriteStream } from "node:fs";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { createPresignedPost, type PresignedPost } from "@aws-sdk/s3-presigned-post";
 import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
 const s3 = new S3Client({
@@ -19,15 +20,38 @@ const s3 = new S3Client({
 
 export const BUCKET_NAME = process.env.DO_SPACES_BUCKET;
 
-// 1. Generate URL for Frontend to Upload DIRECTLY to S3
-export async function getUploadUrl(key: string, contentType: string) {
-  const command = new PutObjectCommand({
-    Bucket: BUCKET_NAME,
+// Limite de 100 MiB por upload direto. Bate com o que o worker aguenta processar
+// e protege contra abuso da policy assinada (qualquer um com a URL podia subir
+// arquivo gigante, já que ContentLengthRange entra na policy assinada).
+const MAX_UPLOAD_BYTES = 100 * 1024 * 1024;
+
+// 1. Generate presigned POST for browser upload.
+//
+// Por que POST presigned (e não PUT presigned):
+// - PUT com Content-Type: <não-simple> dispara preflight CORS no browser.
+// - DigitalOcean Spaces tem bug: rejeita OPTIONS preflight com 403 AccessDenied
+//   quando a URL contém X-Amz-Signature (tenta validar signature de PUT contra
+//   request OPTIONS).
+// - POST multipart/form-data é "simple request" → sem preflight → sem bug.
+export async function getUploadUrl(key: string, contentType: string): Promise<PresignedPost> {
+  return createPresignedPost(s3, {
+    Bucket: BUCKET_NAME!,
     Key: key,
-    ContentType: contentType,
+    Conditions: [
+      ["content-length-range", 0, MAX_UPLOAD_BYTES],
+      ["eq", "$Content-Type", contentType],
+    ],
+    Fields: {
+      "Content-Type": contentType,
+    },
+    Expires: 60,
   });
-  // URL expires in 60 seconds (security best practice)
-  return getSignedUrl(s3, command, { expiresIn: 60 });
+}
+
+// URL pública canônica do objeto no Spaces (path-style, bucket public-read).
+// Usada pelo CMS para gravar src de imagens em posts.
+export function getPublicUrl(key: string): string {
+  return `${process.env.DO_SPACES_ENDPOINT}/${BUCKET_NAME}/${key}`;
 }
 
 // 2. Generate URL for downloading processed files

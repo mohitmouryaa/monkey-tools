@@ -24,31 +24,33 @@ export const usePostFileUpload = () => {
     setError(null);
 
     try {
-      // 1. Get presigned URL (com prefix "cms")
+      // 1. Get presigned POST (com prefix "cms")
       const { data } = await axios.post("/api/upload", {
         filename: file.name,
         contentType: file.type,
         prefix: "cms",
       });
 
-      const { url, fileKey } = data as { url: string; fileKey: string };
+      const { url, fields, fileKey, publicUrl } = data as {
+        url: string;
+        fields: Record<string, string>;
+        fileKey: string;
+        publicUrl: string;
+      };
 
-      // 2. PUT direto no S3
-      await axios.put(url, file, {
-        headers: { "Content-Type": file.type },
+      // 2. POST multipart direto pro S3. Sem header Content-Type explícito —
+      // axios injeta multipart/form-data com boundary, que é "simple request"
+      // e não dispara preflight CORS (ver packages/storage/src/index.ts).
+      const formData = new FormData();
+      for (const [k, v] of Object.entries(fields)) formData.append(k, v);
+      formData.append("file", file);
+
+      await axios.post(url, formData, {
         onUploadProgress: (p) => {
           const percent = Math.round((p.loaded * 100) / (p.total || 1));
           setUploadProgress(percent);
         },
       });
-
-      // 3. URL pública final
-      // Estratégia: o bucket é configurado public-read (ACL no PutObjectCommand
-      // em packages/storage e `mc anonymous set public` em docker-compose), e o
-      // S3Client usa `forcePathStyle: true`. Logo, a presigned URL tem o shape
-      // `${endpoint}/${bucket}/${key}?X-Amz-...` e remover a query string
-      // retorna exatamente a URL pública canônica do objeto.
-      const publicUrl = url.split("?")[0] ?? url;
 
       setIsUploading(false);
       return { url: publicUrl, fileKey };
